@@ -8,8 +8,10 @@ FILELIST=$1
 MAXFILES=$2
 JOBNUMBER=$3
 
+OUTPATH=`dirname $FILELIST`
+OUTPATH=ntuple/`basename $OUTPATH`/`basename $FILELIST | sed -e 's;.txt;;g' -e 's;dataset_;;g'`
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
-OUTPATH=ntuple/`basename $FILELIST | sed -e 's;.txt;;g' -e 's;dataset_;;g'`
+
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 
 python $CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/nano_postproc.py --friend \

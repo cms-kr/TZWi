@@ -4,31 +4,38 @@ import sys, os
 runScript = sys.argv[1]
 fileLists = sys.argv[2:]
 
-maxFiles = 25
+maxFiles = 100
 
-fout = open("condor.jds", "w")
-print>>fout, """# condor jds
+jds = """# condor jds
 universe   = vanilla
 log = ntuple/condor.log
 getenv     = True
 should_transfer_files = YES
-
-output = ntuple/log/job_$(Process).log
-error = ntuple/log/job_$(Process).err
 #requirements = "OpSysMajorVer == 6"
 
 executable = %s
 """ % runScript
 
-if not os.path.exists("ntuple/log"): os.makedirs("ntuple/log")
-
 for fileList in fileLists:
-    print>>fout, "arguments  = %s %d $(Process)" % (fileList, maxFiles)
+    pathName = os.path.basename(os.path.dirname(fileList))
+    jobName = os.path.basename(fileList).replace(".txt", "").replace("dataset_", "")
+
     nFiles = len(open(fileList).readlines())
     if nFiles % maxFiles == 0: nJobs = nFiles/maxFiles
     else: nJobs = nFiles/maxFiles+1
+
+    if not os.path.exists("job/%s/%s" % (pathName, jobName)):
+        os.makedirs("job/%s/%s" % (pathName, jobName))
+    if not os.path.exists("ntuple/%s/%s" % (pathName, jobName)):
+        os.makedirs("ntuple/%s/%s" % (pathName, jobName))
+
+    fout = open("job/%s/%s/condor.jds" % (pathName, jobName), "w")
+    print>>fout, jds
+    print>>fout, "arguments  = %s %d $(Process)" % (fileList, maxFiles)
+    print>>fout, "output = job/%s/%s/job_$(Process).log" % (pathName, jobName)
+    print>>fout, "error = job/%s/%s/job_$(Process).err" % (pathName, jobName)
     print>>fout, "queue %d" % nJobs
     print>>fout, ""
-fout.close()
+    fout.close()
 
-os.system("condor_submit condor.jds")
+    os.system("condor_submit job/%s/%s/condor.jds" % (pathName, jobName))
