@@ -44,12 +44,12 @@ void ttbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
   outputTree->Branch("MET_pt", &out_MET_pt, "MET_pt/F");
   outputTree->Branch("MET_phi", &out_MET_phi, "MET_phi/F");
 
-  outputTree->Branch("NJets", &out_NJets, "NJets/s");
+  outputTree->Branch("nJets", &out_nJets, "nJets/s");
   for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Jets_%s", varNames[i].c_str()), out_Jets_p4[i], Form("Jets_%s[NJets]/F", varNames[i].c_str()));
+    outputTree->Branch(Form("Jets_%s", varNames[i].c_str()), out_Jets_p4[i], Form("Jets_%s[nJets]/F", varNames[i].c_str()));
   }
-  outputTree->Branch("Jets_bDiscr", out_Jets_bDiscr, "Jets_bDiscr[NJets]/F");
-  outputTree->Branch("NBjets", &out_NBjets, "NBjets/s");
+  outputTree->Branch("Jets_bDiscr", out_Jets_bDiscr, "Jets_bDiscr[nJets]/F");
+  outputTree->Branch("nBjets", &out_nBjets, "nBjets/s");
 }
 
 typedef ttbarDoubleLeptonCppWorker::TRAF TRAF;
@@ -103,7 +103,7 @@ void ttbarDoubleLeptonCppWorker::resetValues() {
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
-  out_NJets = out_NBjets = 0;
+  out_nJets = out_nBjets = 0;
   for ( unsigned k=0; k<maxNJetsToKeep_; ++k ) {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
   }
@@ -268,18 +268,18 @@ bool ttbarDoubleLeptonCppWorker::analyze() {
     if ( lepton2P4.DeltaR(jetP4) < 0.4 ) continue;
     jetIdxsByPt.push_back(i);
     jetIdxsByBDiscr.push_back(i);
-    if ( in_Jets_bDiscr->At(i) > minBjetBDiscr_ ) ++out_NBjets;
+    if ( in_Jets_bDiscr->At(i) > minBjetBDiscr_ ) ++out_nBjets;
   }
-  out_NJets = jetIdxsByPt.size();
-  if ( out_NJets < int(minEventNJets_) ) return false;
-  if ( out_NBjets < int(minEventNBjets_) ) return false;
+  out_nJets = jetIdxsByPt.size();
+  if ( out_nJets < int(minEventNJets_) ) return false;
+  if ( out_nBjets < int(minEventNBjets_) ) return false;
 
   // Sort jets by bDiscriminator
   std::sort(jetIdxsByPt.begin(), jetIdxsByPt.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jets_p4[0]->At(i) > in_Jets_p4[0]->At(j); });
   std::sort(jetIdxsByBDiscr.begin(), jetIdxsByBDiscr.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jets_bDiscr->At(i) > in_Jets_bDiscr->At(j); });
-  for ( unsigned k=0, n=std::min(maxNJetsToKeep_, out_NJets); k<n; ++k ) { 
+  for ( unsigned k=0, n=std::min(maxNJetsToKeep_, out_nJets); k<n; ++k ) { 
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(k);
     out_Jets_bDiscr[k] = in_Jets_bDiscr->At(k);
   }

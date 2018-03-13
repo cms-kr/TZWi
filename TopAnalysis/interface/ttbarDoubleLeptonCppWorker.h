@@ -79,7 +79,7 @@ private:
   float out_MET_pt, out_MET_phi;
 
   const static unsigned short maxNJetsToKeep_ = 100;
-  unsigned short out_NJets, out_NBjets;
+  unsigned short out_nJets, out_nBjets;
   float out_Jets_p4[4][maxNJetsToKeep_];
   float out_Jets_bDiscr[maxNJetsToKeep_];
 
