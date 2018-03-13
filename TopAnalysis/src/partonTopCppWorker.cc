@@ -95,16 +95,12 @@ bool partonTopCppWorker::genEvent(){
     ++out_nPartons;
   }
 
-cout << "---\n";
   // Continue to bosons. This might not be slow, but OK with just one or two top quarks in the event
   for ( unsigned i : bosons ) {
     int motherIdx = in_GenPart_genPartIdxMother->At(i);
-cout << in_GenPart_pdgId->At(i) << ' ' << motherIdx << ' ';
     if ( motherIdx >= 0 ) motherIdx = findFirst(motherIdx);
-cout << motherIdx << ' ';
     auto match = indexMap.find(motherIdx);
     if ( match != indexMap.end() ) motherIdx = match->second;
-cout << motherIdx << endl;
 
     out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
     out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
@@ -188,7 +184,6 @@ cout << motherIdx << endl;
     ++out_nPartons;
   }
 
-for ( int i=0; i<out_nPartons; ++i ) cout << out_Partons_pdgId[i] << ' ' << i << ' ' << out_Partons_mother[i] << ' ' << out_Partons_pt[i] << endl;
   return true;
 }
 
