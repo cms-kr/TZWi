@@ -44,7 +44,8 @@ bool partonTopCppWorker::hasSpecificAncestor(const unsigned i, const unsigned an
   return hasSpecificAncestor(motherIdx, ancIdx);
 }
 
-int partonTopCppWorker::findFirst(const unsigned i) const {
+int partonTopCppWorker::findFirst(const int i) const {
+  if ( i < 0 ) return -1; // for safety check
   const int motherIdx = in_GenPart_genPartIdxMother->At(i);
   if ( motherIdx < 0 ) return i; // already the first particle
   const int motherId = in_GenPart_pdgId->At(motherIdx);
@@ -79,7 +80,7 @@ bool partonTopCppWorker::genEvent(){
     else if ( aid == 11 or aid == 13 ) leptons.insert(findFirst(i));
     else if ( aid == 15 ) taus.insert(findFirst(i));
     else if ( aid == 12 or aid == 14 or aid == 16 ) neutrinos.insert(findFirst(i));
-    //else if ( aid >= 1  and aid <= 5  ) quarks.insert(findFirst(i));
+    else if ( aid >= 1  and aid <= 5  ) quarks.insert(findFirst(i));
   }
 
   // Fill top quarks first
@@ -97,10 +98,11 @@ bool partonTopCppWorker::genEvent(){
 
   // Continue to bosons. This might not be slow, but OK with just one or two top quarks in the event
   for ( unsigned i : bosons ) {
-    int motherIdx = in_GenPart_genPartIdxMother->At(i);
-    if ( motherIdx >= 0 ) motherIdx = findFirst(motherIdx);
-    auto match = indexMap.find(motherIdx);
-    if ( match != indexMap.end() ) motherIdx = match->second;
+    int motherIdx = findFirst(in_GenPart_genPartIdxMother->At(i));
+    if ( motherIdx >= 0 ) {
+      auto match = indexMap.find(motherIdx);
+      motherIdx = (match == indexMap.end()) ? -1 : match->second;
+    }
 
     out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
     out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
@@ -113,10 +115,11 @@ bool partonTopCppWorker::genEvent(){
   }
 
   for ( unsigned i : quarks ) {
-    int motherIdx = in_GenPart_genPartIdxMother->At(i);
-    if ( motherIdx >= 0 ) motherIdx = findFirst(motherIdx);
-    auto match = indexMap.find(motherIdx);
-    if ( match != indexMap.end() ) motherIdx = match->second;
+    int motherIdx = findFirst(in_GenPart_genPartIdxMother->At(i));
+    if ( motherIdx >= 0 ) {
+      auto match = indexMap.find(motherIdx);
+      motherIdx = (match == indexMap.end()) ? -1 : match->second;
+    }
 
     out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
     out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
@@ -135,10 +138,11 @@ bool partonTopCppWorker::genEvent(){
 
   for ( unsigned i : taus ) {
     if ( !isFromBosons(i) ) continue;
-    int motherIdx = in_GenPart_genPartIdxMother->At(i);
-    if ( motherIdx >= 0 ) motherIdx = findFirst(motherIdx);
-    auto match = indexMap.find(motherIdx);
-    if ( match != indexMap.end() ) motherIdx = match->second;
+    int motherIdx = findFirst(in_GenPart_genPartIdxMother->At(i));
+    if ( motherIdx >= 0 ) {
+      auto match = indexMap.find(motherIdx);
+      motherIdx = (match == indexMap.end()) ? -1 : match->second;
+    }
 
     out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
     out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
@@ -152,10 +156,11 @@ bool partonTopCppWorker::genEvent(){
 
   for ( unsigned i : leptons ) {
     if ( !isFromBosons(i) ) continue;
-    int motherIdx = in_GenPart_genPartIdxMother->At(i);
-    if ( motherIdx >= 0 ) motherIdx = findFirst(motherIdx);
-    auto match = indexMap.find(motherIdx);
-    if ( match != indexMap.end() ) motherIdx = match->second;
+    int motherIdx = findFirst(in_GenPart_genPartIdxMother->At(i));
+    if ( motherIdx >= 0 ) {
+      auto match = indexMap.find(motherIdx);
+      motherIdx = (match == indexMap.end()) ? -1 : match->second;
+    }
 
     out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
     out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
@@ -169,10 +174,11 @@ bool partonTopCppWorker::genEvent(){
 
   for ( unsigned i : neutrinos ) {
     if ( !isFromBosons(i) ) continue;
-    int motherIdx = in_GenPart_genPartIdxMother->At(i);
-    if ( motherIdx >= 0 ) motherIdx = findFirst(motherIdx);
-    auto match = indexMap.find(motherIdx);
-    if ( match != indexMap.end() ) motherIdx = match->second;
+    int motherIdx = findFirst(in_GenPart_genPartIdxMother->At(i));
+    if ( motherIdx >= 0 ) {
+      auto match = indexMap.find(motherIdx);
+      motherIdx = (match == indexMap.end()) ? -1 : match->second;
+    }
 
     out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
     out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);

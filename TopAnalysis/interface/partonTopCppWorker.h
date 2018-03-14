@@ -26,7 +26,7 @@ public:
 
 private:
   bool hasSpecificAncestor(const unsigned i, const unsigned ancId) const;
-  int findFirst(const unsigned i) const;
+  int findFirst(const int i) const;
 
 private:
   TTreeReaderValue<unsigned> *in_nGenPart = nullptr;
@@ -48,7 +48,7 @@ private:
   float out_Partons_phi[maxNPartons_];
   float out_Partons_mass[maxNPartons_];
   int out_Partons_pdgId[maxNPartons_];
-  int out_Partons_mother[maxNPartons_];
+  short out_Partons_mother[maxNPartons_];
 
 };
 
