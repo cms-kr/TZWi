@@ -74,13 +74,16 @@ bool partonTopCppWorker::genEvent(){
   for ( unsigned i=0; i<nGenPart; ++i ) {
     const int aid = abs(in_GenPart_pdgId->At(i));
     if ( aid > 25 ) continue;
+    const unsigned ii = findFirst(i);
 
-    if      ( aid == 6 ) tQuarks.insert(findFirst(i));
-    else if ( aid >= 23 and aid <= 25 ) bosons.insert(findFirst(i));
-    else if ( aid == 11 or aid == 13 ) leptons.insert(findFirst(i));
-    else if ( aid == 15 ) taus.insert(findFirst(i));
-    else if ( aid == 12 or aid == 14 or aid == 16 ) neutrinos.insert(findFirst(i));
-    else if ( aid >= 1  and aid <= 5  ) quarks.insert(findFirst(i));
+    if ( std::abs(in_GenPart_eta->At(ii)) > 20 ) continue;
+
+    if      ( aid == 6 ) tQuarks.insert(ii);
+    else if ( aid >= 23 and aid <= 25 ) bosons.insert(ii);
+    else if ( aid == 11 or aid == 13 ) leptons.insert(ii);
+    else if ( aid == 15 ) taus.insert(ii);
+    else if ( aid == 12 or aid == 14 or aid == 16 ) neutrinos.insert(ii);
+    else if ( aid >= 1  and aid <= 5  ) quarks.insert(ii);
   }
 
   // Fill top quarks first

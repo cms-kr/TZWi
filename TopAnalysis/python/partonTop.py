@@ -17,9 +17,9 @@ class partonTopEvent(Module, object):
             if base:
                 ROOT.gROOT.ProcessLine(".L %s/src/partonTopCppWorker.cc+O" % base)
             else:
-                base = "%s/src/AnalysisKeg/TopAnalysis"%os.getenv("CMSSW_BASE")
+                base = "%s/src/NanoCAT/TopAnalysis"%os.getenv("CMSSW_BASE")
                 ROOT.gSystem.Load("libPhysicsToolsNanoAODTools.so")
-                ROOT.gSystem.Load("libAnalysisKegTopAnalysis.so")
+                ROOT.gSystem.Load("libNanoCATTopAnalysis.so")
                 ROOT.gROOT.ProcessLine(".L %s/interface/partonTopCppWorker.h" % base)
         pass
     def beginJob(self):

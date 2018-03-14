@@ -17,9 +17,9 @@ class ttbarSingleLeptonEvent(Module, object):
             if base:
                 ROOT.gROOT.ProcessLine(".L %s/src/ttbarSingleLeptonCppWorker.cc+O" % base)
             else:
-                base = "%s/src/PhysicsTools/ChickenChicken"%os.getenv("CMSSW_BASE")
+                base = "%s/src/NanoCAT/TopAnalysis"%os.getenv("CMSSW_BASE")
                 ROOT.gSystem.Load("libPhysicsToolsNanoAODTools.so")
-                ROOT.gSystem.Load("libPhysicsToolsChickenChicken.so")
+                ROOT.gSystem.Load("libNanoCATTopAnalysis.so")
                 ROOT.gROOT.ProcessLine(".L %s/interface/ttbarSingleLeptonCppWorker.h" % base)
         pass
     def beginJob(self):
