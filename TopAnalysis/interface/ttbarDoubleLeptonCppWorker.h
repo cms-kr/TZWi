@@ -23,7 +23,7 @@ public:
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                 TRAF relIso, TRAB id);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                    TRAF relIso, TRAI id, TRAI idTrig, TRAF dEtaSC);
+                    TRAF relIso, TRAI id, TRAI idTrig, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
                TRAI id, TRAF bDiscr, TRAF bDeepB, TRAF bDeepC);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
@@ -63,6 +63,7 @@ private:
   TRAF in_Electrons_relIso = nullptr;
   TRAI in_Electrons_id = nullptr, in_Electrons_idTrg = nullptr;
   TRAF in_Electrons_dEtaSC = nullptr;
+  TRAF in_Electrons_eCorr = nullptr;
   TRAF in_Jets_p4[4];
   TRAI in_Jets_id = nullptr;
   TRAF in_Jets_bDiscr = nullptr;

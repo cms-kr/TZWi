@@ -41,7 +41,7 @@ class ttbarDoubleLeptonEvent(Module, object):
         objName = "Electron"
         setattr(self, "n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso03_all", "cutBased", "cutBased_HLTPreSel", "deltaEtaSC",]:
+                        "pfRelIso03_all", "cutBased", "cutBased_HLTPreSel", "deltaEtaSC", "eCorr",]:
             setattr(self, "%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Muon"
