@@ -12,6 +12,6 @@ FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | s
 
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 
-echo python $CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/nano_postproc.py --friend \
+python $CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/nano_postproc.py --friend \
         -I Kitten.TopAnalysis.ttbarDoubleLepton ttbarDoubleLepton \
         $OUTPATH $FILENAMES
