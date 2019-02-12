@@ -22,6 +22,21 @@ def customise_particletop(process):
         )
     )
 
+    process.rivetNeutrinoTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
+        src = cms.InputTag("particleLevel:neutrinos"),
+        cut = cms.string(""),
+        name= cms.string("RivetNeutrinos"),
+        doc = cms.string("Neutrinos from Rivet-based ParticleLevelProducer"),
+        singleton = cms.bool(False), # the number of entries is variable
+        extension = cms.bool(False),
+        variables = cms.PSet(
+            # Identical to GenJets, so we just extend their flavor information
+            P4Vars,
+            pdgId = Var("pdgId", int, doc="PDG id"),
+        )
+    )
+
     process.particleLevelTables += process.rivetJetTable
+    process.particleLevelTables += process.rivetNeutrinoTable
 
     return process
