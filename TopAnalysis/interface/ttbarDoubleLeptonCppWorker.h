@@ -21,11 +21,11 @@ public:
   ~ttbarDoubleLeptonCppWorker();
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                TRAF relIso, TRAB id);
+                TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                     TRAF relIso, TRAI id, TRAI idTrig, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
-               TRAI id, TRAF bDiscr, TRAF bDeepB, TRAF bDeepC);
+               TRAI id, TRAF bDiscr);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
 
   void initOutput(TTree *outputTree);
@@ -34,19 +34,15 @@ public:
   bool analyze();
 
 private:
-  const double minMuonPt_ = 30, maxMuonEta_ = 2.1;
-  const double minElectronPt_ = 30, maxElectronEta_ = 2.1;
-  const double minVetoMuonPt_ = 15, maxVetoMuonEta_ = 2.4;
-  const double minVetoElectronPt_ = 15, maxVetoElectronEta_ = 2.4;
+  const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
+  const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
   const double minJetPt_ = 30, maxJetEta_ = 2.5;
-  const double minBjetBDiscr_ = 0.5; // FIXME: give updated number
+  const double minBjetBDiscr_ = 0.8484; // FIXME: give updated number
   const unsigned short minEventNJets_ = 0, minEventNBjets_ = 0;
-  const double maxMuonRelIso_ = 0.15, maxVetoMuonRelIso_ = 0.20;
+  const double maxMuonRelIso_ = 0.15;
 
   bool isGoodMuon(const unsigned i) const;
-  bool isVetoMuon(const unsigned i) const;
   bool isGoodElectron(const unsigned i) const;
-  bool isVetoElectron(const unsigned i) const;
   bool isGoodJet(const unsigned i) const;
 
 private:
@@ -57,7 +53,10 @@ private:
   TRAF in_Muons_p4[4];
   TRAI in_Muons_charge = nullptr;
   TRAF in_Muons_relIso = nullptr;
-  TRAB in_Muons_id = nullptr;
+  TRAB in_Muons_isTight = nullptr;
+  TRAB in_Muons_isPFcand = nullptr;
+  TRAB in_Muons_isGlobal = nullptr;
+  TRAB in_Muons_isTracker = nullptr;
   TRAF in_Electrons_p4[4];
   TRAI in_Electrons_charge = nullptr;
   TRAF in_Electrons_relIso = nullptr;
@@ -67,7 +66,6 @@ private:
   TRAF in_Jets_p4[4];
   TRAI in_Jets_id = nullptr;
   TRAF in_Jets_bDiscr = nullptr;
-  TRAF in_Jets_bDeepB = nullptr, in_Jets_bDeepC = nullptr;
 
 private:
   bool _doCppOutput = false;

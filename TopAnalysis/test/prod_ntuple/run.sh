@@ -1,7 +1,5 @@
 #!/bin/bash
 
-BASEDIR=/cms/ldap_home/jhgoh/work/CMS/NanoCAT/CMSSW_9_4_0/src/PhysicsTools/ChickenChicken/test/prod_ntuple
-cd $BASEDIR
 eval `scram runtime -sh`
 
 FILELIST=$1
@@ -14,6 +12,6 @@ FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | s
 
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 
-python $CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/nano_postproc.py --friend \
-        -I PhysicsTools.ChickenChicken.topEvent.ttbarSingleLepton ttbarSingleLepton \
+echo python $CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/nano_postproc.py --friend \
+        -I Kitten.TopAnalysis.ttbarDoubleLepton ttbarDoubleLepton \
         $OUTPATH $FILENAMES

@@ -17,9 +17,9 @@ class ttbarDoubleLeptonEvent(Module, object):
             if base:
                 ROOT.gROOT.ProcessLine(".L %s/src/ttbarDoubleLeptonCppWorker.cc+O" % base)
             else:
-                base = "%s/src/NanoCAT/TopAnalysis"%os.getenv("CMSSW_BASE")
+                base = "%s/src/Kitten/TopAnalysis"%os.getenv("CMSSW_BASE")
                 ROOT.gSystem.Load("libPhysicsToolsNanoAODTools.so")
-                ROOT.gSystem.Load("libNanoCATTopAnalysis.so")
+                ROOT.gSystem.Load("libKittenTopAnalysis.so")
                 ROOT.gROOT.ProcessLine(".L %s/interface/ttbarDoubleLeptonCppWorker.h" % base)
         pass
     def beginJob(self):
@@ -47,22 +47,22 @@ class ttbarDoubleLeptonEvent(Module, object):
         objName = "Muon"
         setattr(self, "n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso04_all", "pfRelIso03_all", "tightId"]:
+                        "pfRelIso04_all", "tightId", "globalMu", "isPFcand", "trackerMu"]:
             setattr(self, "%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Jet"
         setattr(self, "n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass",
-                        "jetId", "puId", "btagCSVV2", "btagDeepB", "btagDeepC",]:
+                        "jetId", "puId", "btagCSVV2",]:
             setattr(self, "%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         self.worker.setMET(self.MET_pt, self.MET_phi)
         self.worker.setElectrons(self.Electron_pt, self.Electron_eta, self.Electron_phi, self.Electron_mass, self.Electron_charge,
-                                 self.Electron_pfRelIso03_all, self.Electron_cutBased, self.Electron_cutBased_HLTPreSel, self.Electron_deltaEtaSC)
+                                 self.Electron_pfRelIso03_all, self.Electron_cutBased, self.Electron_cutBased_HLTPreSel, self.Electron_deltaEtaSC, self.Electron_eCorr)
         self.worker.setMuons(self.Muon_pt, self.Muon_eta, self.Muon_phi, self.Muon_mass, self.Muon_charge,
-                             self.Muon_pfRelIso04_all,self.Muon_tightId)
+                             self.Muon_pfRelIso04_all,self.Muon_tightId, self.Muon_globalMu, self.Muon_isPFcand, self.Muon_trackerMu)
         self.worker.setJets(self.Jet_pt, self.Jet_eta, self.Jet_phi, self.Jet_mass,
-                            self.Jet_jetId, self.Jet_btagCSVV2, self.Jet_btagDeepB, self.Jet_btagDeepC)
+                            self.Jet_jetId, self.Jet_btagCSVV2)
         self._ttreereaderversion = tree._ttreereaderversion
 
         pass

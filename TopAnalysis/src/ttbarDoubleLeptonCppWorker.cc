@@ -71,26 +71,27 @@ void ttbarDoubleLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF 
 }
 
 void ttbarDoubleLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge, 
-                                          TRAF relIso, TRAB id) {
+                                          TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker) {
   in_Muons_p4[0] = pt;
   in_Muons_p4[1] = eta;
   in_Muons_p4[2] = phi;
   in_Muons_p4[3] = mass;
   in_Muons_charge = charge;
   in_Muons_relIso = relIso;
-  in_Muons_id = id;
+  in_Muons_isTight = isTight;
+  in_Muons_isGlobal = isGlobal;
+  in_Muons_isPFcand = isPFcand;
+  in_Muons_isTracker = isTracker;
 }
 
 void ttbarDoubleLeptonCppWorker::setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
-                                         TRAI id, TRAF bDiscr, TRAF bDeepB, TRAF bDeepC) {
+                                         TRAI id, TRAF bDiscr) {
   in_Jets_p4[0] = pt;
   in_Jets_p4[1] = eta;
   in_Jets_p4[2] = phi;
   in_Jets_p4[3] = mass;
   in_Jets_bDiscr = bDiscr;
   in_Jets_id = id;
-  in_Jets_bDeepB = bDeepB;
-  in_Jets_bDeepC = bDeepC;
 }
 
 void ttbarDoubleLeptonCppWorker::setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi) {
@@ -113,19 +114,10 @@ void ttbarDoubleLeptonCppWorker::resetValues() {
 bool ttbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
   const double pt = in_Muons_p4[0]->At(i);
   const double eta = in_Muons_p4[1]->At(i);
-  if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
-  if ( in_Muons_id->At(i) == 0 ) return false;
+  if ( pt < minLepton2Pt_ or std::abs(eta) > maxLepton2Eta_ ) return false;
+  //if ( in_Muons_isTight->At(i) == 0 ) return false;
+  if ( ! (in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0)) ) return false;
   if ( in_Muons_relIso->At(i) < maxMuonRelIso_ ) return false;
-
-  return true;
-}
-
-bool ttbarDoubleLeptonCppWorker::isVetoMuon(const unsigned i) const {
-  const double pt = in_Muons_p4[0]->At(i);
-  const double eta = in_Muons_p4[1]->At(i);
-  if ( pt < minVetoMuonPt_ or std::abs(eta) > maxVetoMuonEta_ ) return false;
-  if ( in_Muons_id->At(i) == 0 ) return false; // FIXME: to be replaced with loose cut?
-  if ( in_Muons_relIso->At(i) < maxVetoMuonRelIso_ ) return false;
 
   return true;
 }
@@ -133,19 +125,9 @@ bool ttbarDoubleLeptonCppWorker::isVetoMuon(const unsigned i) const {
 bool ttbarDoubleLeptonCppWorker::isGoodElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
-  if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
+  if ( pt < minLepton2Pt_ or std::abs(eta) > maxLepton2Eta_ ) return false;
   if ( in_Electrons_id->At(i) == 0 or in_Electrons_idTrg->At(i) == 0 ) return false;
   //if ( in_Electrons_relIso->At(i) < 0.15 ) return false; // Note: commented out since already applied in Cut based ID
-
-  return true;
-}
-
-bool ttbarDoubleLeptonCppWorker::isVetoElectron(const unsigned i) const {
-  const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
-  const double eta = in_Electrons_p4[1]->At(i);
-  if ( pt < minVetoElectronPt_ or std::abs(eta) > maxVetoElectronEta_ ) return false;
-  if ( in_Electrons_id->At(i) == 0 or in_Electrons_idTrg->At(i) == 0 ) return false; // FIXME: to be replaced with loose cut?
-  //if ( in_Electrons_relIso->At(i) < 0.15 ) return false; // Note: commneted out since already applied in Cut based ID
 
   return true;
 }
@@ -174,7 +156,6 @@ bool ttbarDoubleLeptonCppWorker::analyze() {
 
   // Select the two leading muons, keep veto muons as well up to 3
   int muon1Idx = -1, muon2Idx = -1;
-  int vetoMuon1Idx = -1, vetoMuon2Idx = -1, vetoMuon3Idx = -1;
   int nGoodMuons = 0;
   for ( unsigned i=0, n=in_Muons_p4[0]->GetSize(); i<n; ++i ) {
     const double pt = in_Muons_p4[0]->At(i);
@@ -183,15 +164,9 @@ bool ttbarDoubleLeptonCppWorker::analyze() {
       if ( muon2Idx < 0 or pt > in_Muons_p4[0]->At(muon2Idx) ) muon2Idx = i;
       if ( muon1Idx < 0 or pt > in_Muons_p4[0]->At(muon1Idx) ) std::swap(muon1Idx, muon2Idx);
     }
-    if ( isVetoMuon(i) ) {
-      if ( vetoMuon3Idx < 0 or pt > in_Muons_p4[0]->At(vetoMuon3Idx) ) vetoMuon3Idx = i;
-      if ( vetoMuon2Idx < 0 or pt > in_Muons_p4[0]->At(vetoMuon2Idx) ) std::swap(vetoMuon2Idx, vetoMuon3Idx);
-      if ( vetoMuon1Idx < 0 or pt > in_Muons_p4[0]->At(vetoMuon1Idx) ) std::swap(vetoMuon1Idx, vetoMuon2Idx);
-    }
   }
   // Select the two leading electrons, keep veto electrons as well up to 3
   int electron1Idx = -1, electron2Idx = -1;
-  int vetoElectron1Idx = -1, vetoElectron2Idx = -1, vetoElectron3Idx = -1;
   int nGoodElectrons = 0;
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
     const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
@@ -199,11 +174,6 @@ bool ttbarDoubleLeptonCppWorker::analyze() {
       ++nGoodElectrons;
       if ( electron2Idx < 0 or pt > in_Electrons_p4[0]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx) ) electron2Idx = i;
       if ( electron1Idx < 0 or pt > in_Electrons_p4[0]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx) ) std::swap(electron1Idx, electron2Idx);
-    }
-    if ( isVetoElectron(i) ) {
-      if ( vetoElectron3Idx < 0 or pt > in_Electrons_p4[0]->At(vetoElectron3Idx) * in_Electrons_eCorr->At(vetoElectron3Idx) ) vetoElectron3Idx = i;
-      if ( vetoElectron2Idx < 0 or pt > in_Electrons_p4[0]->At(vetoElectron2Idx) * in_Electrons_eCorr->At(vetoElectron2Idx) ) std::swap(vetoElectron2Idx, vetoElectron3Idx);
-      if ( vetoElectron1Idx < 0 or pt > in_Electrons_p4[0]->At(vetoElectron1Idx) * in_Electrons_eCorr->At(vetoElectron1Idx) ) std::swap(vetoElectron1Idx, vetoElectron2Idx);
     }
   }
   if ( nGoodMuons+nGoodElectrons < 2 ) return false; // Require at least two electrons.
@@ -243,6 +213,7 @@ bool ttbarDoubleLeptonCppWorker::analyze() {
     out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
     out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron1Idx);
   }
+  if ( out_Lepton1_p4[0] < minLepton1Pt_ ) return false;
 
   TLorentzVector lepton1P4, lepton2P4;
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
@@ -281,8 +252,9 @@ bool ttbarDoubleLeptonCppWorker::analyze() {
   std::sort(jetIdxsByBDiscr.begin(), jetIdxsByBDiscr.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jets_bDiscr->At(i) > in_Jets_bDiscr->At(j); });
   for ( unsigned k=0, n=std::min(maxNJetsToKeep_, out_nJets); k<n; ++k ) { 
-    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(k);
-    out_Jets_bDiscr[k] = in_Jets_bDiscr->At(k);
+    const unsigned kk = jetIdxsByBDiscr.at(k);
+    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(kk);
+    out_Jets_bDiscr[k] = in_Jets_bDiscr->At(kk);
   }
 
   return true;
