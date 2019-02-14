@@ -1,5 +1,12 @@
 # TZWi
 Yet another CMS NanoAOD tools focusing on specific analyses.
+We'd like to cover:
+
+  * ttbar dilepton analysis
+    * inclusive cross section, differential cross section
+    * ttbar+bbbar cross section ratio to ttbar+jets
+  * ttbar rare decays
+    * t->qZ, ttbar and single top
 
 **See also**
 - https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookNanoAOD
