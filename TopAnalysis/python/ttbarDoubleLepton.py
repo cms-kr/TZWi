@@ -17,9 +17,9 @@ class ttbarDoubleLeptonEvent(Module, object):
             if base:
                 ROOT.gROOT.ProcessLine(".L %s/src/ttbarDoubleLeptonCppWorker.cc+O" % base)
             else:
-                base = "%s/src/Kitten/TopAnalysis"%os.getenv("CMSSW_BASE")
+                base = "%s/src/TZWi/TopAnalysis"%os.getenv("CMSSW_BASE")
                 ROOT.gSystem.Load("libPhysicsToolsNanoAODTools.so")
-                ROOT.gSystem.Load("libKittenTopAnalysis.so")
+                ROOT.gSystem.Load("libTZWiTopAnalysis.so")
                 ROOT.gROOT.ProcessLine(".L %s/interface/ttbarDoubleLeptonCppWorker.h" % base)
         pass
     def beginJob(self):

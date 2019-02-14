@@ -5,7 +5,7 @@
 OPTS_COMMON="-s NANO --no_exec"
 OPTS_MC="--mc --eventcontent NANOAODSIM --datatier NANOAODSIM"
 OPTS_RC="--data --eventcontent NANOAOD --datatier NANOAOD"
-CUSTOMBASE="Kitten/NanoAODProduction/customise_cff"
+CUSTOMBASE="TZWi/NanoAODProduction/customise_cff"
 
 ## 2016
 ERA="Run2_2016,run2_miniAOD_80XLegacy"

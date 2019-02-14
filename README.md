@@ -1,4 +1,4 @@
-# Kitten
+# TZWi
 Yet another CMS NanoAOD tools focusing on specific analyses.
 
 **See also**
@@ -13,6 +13,6 @@ git-cms-init
 git cms-merge-topic cms-nanoAOD:master-102X
 git checkout -b nanoAOD cms-nanoAOD/master-102X
 git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODTools
-git clone https://github.com/jhgoh/Kitten
+git clone https://github.com/cms-kr/TZWi
 scram b -j
 ```
