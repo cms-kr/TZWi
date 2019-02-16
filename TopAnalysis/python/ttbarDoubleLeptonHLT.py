@@ -9,6 +9,7 @@ class CombineHLT(Module, object):
     def __init__(self, *args, **kwargs):
         #super(CombineHLT, self).__init__(*args, **kwargs)
         self.hltSetNames = kwargs.get("hltSets")
+        self.outName = kwargs.get("outName") if "outName" in kwargs else "HLT"
 
         if "/CombineHLTCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ CombineHLT worker module"
@@ -23,7 +24,7 @@ class CombineHLT(Module, object):
 
         pass
     def beginJob(self):
-        self.worker = ROOT.CombineHLTCppWorker()
+        self.worker = ROOT.CombineHLTCppWorker(self.outName)
         pass
     def endJob(self):
         pass
@@ -115,7 +116,7 @@ ttbarHLT_MuMu_Run2016H = lambda : CombineHLT(hltSets=["DoubleMuon-RD_Run2016H"])
 ttbarHLT_ElEl_Run2016H = lambda : CombineHLT(hltSets=["DoubleEG-RD_Run2016H"])
 ttbarHLT_MuEl_Run2016H = lambda : CombineHLT(hltSets=["MuonEG-RD_Run2016H"])
 
-flags_MC = lambda : CombineHLT(hltSets=["Flags-MC_RunIISummer16"])
-flags_Run2016BG = lambda : CombineHLT(hltSets=["Flags-RD_Run2016BG"])
-flags_Run2016H = lambda : CombineHLT(hltSets=["RD_Run2016H"])
+flags_MC = lambda : CombineHLT(outName="Flag", hltSets=["Flags-MC_RunIISummer16"])
+flags_Run2016BG = lambda : CombineHLT(outName="Flag", hltSets=["Flags-RD_Run2016BG"])
+flags_Run2016H = lambda : CombineHLT(outName="Flag", hltSets=["RD_Run2016H"])
 
