@@ -2,16 +2,22 @@
 
 eval `scram runtime -sh`
 
-FILELIST=$1
-MAXFILES=$2
-JOBNUMBER=$3
+ERA=$1
+CHANNEL=$2
+FILELIST=$3
+MAXFILES=$4
+JOBNUMBER=$5
 
-OUTPATH=`dirname $FILELIST`
-OUTPATH=ntuple/`basename $OUTPATH`/`basename $FILELIST | sed -e 's;.txt;;g' -e 's;dataset_;;g'`
+OUTPATH=ntuple
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
 
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 
-python $CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/nano_postproc.py --friend \
-        -I TZWi.TopAnalysis.ttbarDoubleLepton ttbarDoubleLepton \
+ARGS=""
+ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLepton ttbar$CHANNEL"
+ARGS="$ARGS -I TZWi.TopAnalysis.ttbarHLT ttbarHLT_${CHANNEL}_${ERA}"
+ARGS="$ARGS -I TZWi.TopAnalysis.ttbarHLT flags_${ERA}"
+
+nano_postproc.py --friend \
+        $ARGS \
         $OUTPATH $FILENAMES
