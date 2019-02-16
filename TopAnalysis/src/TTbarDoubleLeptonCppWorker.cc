@@ -4,7 +4,9 @@
 
 using namespace std;
 
-TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName) {
+TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName):
+  out_nCutStep(5)
+{
   if      ( modeName == "Auto" ) mode_ = MODE::Auto;
   else if ( modeName == "ElEl" ) mode_ = MODE::ElEl;
   else if ( modeName == "MuMu" ) mode_ = MODE::MuMu;
@@ -15,9 +17,6 @@ TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeNam
   }
 
   cout << "AlgoName is dummy for now..." << algoName << endl;
-}
-
-TTbarDoubleLeptonCppWorker::~TTbarDoubleLeptonCppWorker() {
 }
 
 void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
@@ -44,12 +43,15 @@ void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
   outputTree->Branch("MET_pt", &out_MET_pt, "MET_pt/F");
   outputTree->Branch("MET_phi", &out_MET_phi, "MET_phi/F");
 
-  outputTree->Branch("nJets", &out_nJets, "nJets/s");
+  outputTree->Branch("nGoodJets", &out_nGoodJets, "nGoodJets/s");
   for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Jets_%s", varNames[i].c_str()), out_Jets_p4[i], Form("Jets_%s[nJets]/F", varNames[i].c_str()));
+    outputTree->Branch(Form("Jets_%s", varNames[i].c_str()), out_Jets_p4[i], Form("Jets_%s[nGoodJets]/F", varNames[i].c_str()));
   }
-  outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nJets]/F");
-  outputTree->Branch("nBjets", &out_nBjets, "nBjets/s");
+  outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nGoodJets]/F");
+  outputTree->Branch("nGoodBjets", &out_nGoodBjets, "nGoodBjets/s");
+
+  outputTree->Branch("nCutStep", const_cast<unsigned short*>(&out_nCutStep), "nCutStep/s");
+  outputTree->Branch("CutFlowBit", &out_CutFlow, "CutFlowBit[nCutStep]/O");
 }
 
 typedef TTbarDoubleLeptonCppWorker::TRAF TRAF;
@@ -70,7 +72,7 @@ void TTbarDoubleLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF 
   in_Electrons_eCorr = eCorr;
 }
 
-void TTbarDoubleLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge, 
+void TTbarDoubleLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                                           TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker) {
   in_Muons_p4[0] = pt;
   in_Muons_p4[1] = eta;
@@ -105,9 +107,12 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
-  out_nJets = out_nBjets = 0;
-  for ( unsigned k=0; k<maxNJetsToKeep_; ++k ) {
+  out_nGoodJets = out_nGoodBjets = 0;
+  for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
+  }
+  for ( unsigned short k=0; k<out_nCutStep; ++k ) {
+    out_CutFlow[k] = false;
   }
 }
 
@@ -240,18 +245,18 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     if ( lepton2P4.DeltaR(jetP4) < 0.4 ) continue;
     jetIdxsByPt.push_back(i);
     jetIdxsByBDiscr.push_back(i);
-    if ( in_Jets_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjets;
+    if ( in_Jets_CSVv2->At(i) > minGoodBjetBDiscr_ ) ++out_nGoodBjets;
   }
-  out_nJets = jetIdxsByPt.size();
-  if ( out_nJets < int(minEventNJets_) ) return false;
-  if ( out_nBjets < int(minEventNBjets_) ) return false;
+  out_nGoodJets = jetIdxsByPt.size();
+  if ( out_nGoodJets < int(minEventNGoodJets_) ) return false;
+  if ( out_nGoodBjets < int(minEventNGoodBjets_) ) return false;
 
   // Sort jets by CSVv2iminator
   std::sort(jetIdxsByPt.begin(), jetIdxsByPt.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jets_p4[0]->At(i) > in_Jets_p4[0]->At(j); });
   std::sort(jetIdxsByBDiscr.begin(), jetIdxsByBDiscr.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jets_CSVv2->At(i) > in_Jets_CSVv2->At(j); });
-  for ( unsigned k=0, n=std::min(maxNJetsToKeep_, out_nJets); k<n; ++k ) { 
+  for ( unsigned k=0, n=std::min(maxNGoodJetsToKeep_, out_nGoodJets); k<n; ++k ) {
     const unsigned kk = jetIdxsByBDiscr.at(k);
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(kk);
     out_Jets_CSVv2[k] = in_Jets_CSVv2->At(kk);
