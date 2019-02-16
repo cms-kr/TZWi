@@ -15,8 +15,8 @@ FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | s
 
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLepton ttbar$CHANNEL"
-ARGS="$ARGS -I TZWi.TopAnalysis.ttbarHLT ttbarHLT_${CHANNEL}_${ERA}"
-ARGS="$ARGS -I TZWi.TopAnalysis.ttbarHLT flags_${ERA}"
+ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT ttbarHLT_${CHANNEL}_${ERA}"
+ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT flags_${ERA}"
 
 nano_postproc.py --friend \
         $ARGS \
