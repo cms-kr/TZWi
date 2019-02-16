@@ -13,8 +13,8 @@ We'd like to cover:
 
 ## Installation
 ```
-cmsrel CMSSW_10_2_8
-cd CMSSW_10_2_8/src
+cmsrel CMSSW_10_2_11
+cd CMSSW_10_2_11/src
 cmsenv
 git-cms-init
 git cms-merge-topic cms-nanoAOD:master-102X

@@ -1,5 +1,5 @@
-#ifndef PhysicsTools_ChickenChicken_ttbarDoubleLeptonCppWorker_H
-#define PhysicsTools_ChickenChicken_ttbarDoubleLeptonCppWorker_H
+#ifndef PhysicsTools_ChickenChicken_TTbarDoubleLeptonCppWorker_H
+#define PhysicsTools_ChickenChicken_TTbarDoubleLeptonCppWorker_H
 
 #include <memory>
 #include <string>
@@ -9,7 +9,7 @@
 #include <TTreeReaderArray.h>
 #include <TLorentzVector.h>
 
-class ttbarDoubleLeptonCppWorker {
+class TTbarDoubleLeptonCppWorker {
 public:
   enum class MODE {Auto=0, ElEl=1111, MuMu=1313, MuEl=1311} mode_ = MODE::Auto;
 
@@ -17,15 +17,15 @@ public:
   typedef TTreeReaderArray<int>* TRAI;
   typedef TTreeReaderArray<bool>* TRAB;
 
-  ttbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName);
-  ~ttbarDoubleLeptonCppWorker();
+  TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName);
+  ~TTbarDoubleLeptonCppWorker();
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                 TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                     TRAF relIso, TRAI id, TRAI idTrig, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
-               TRAI id, TRAF bDiscr);
+               TRAI id, TRAF CSVv2);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
 
   void initOutput(TTree *outputTree);
@@ -65,7 +65,7 @@ private:
   TRAF in_Electrons_eCorr = nullptr;
   TRAF in_Jets_p4[4];
   TRAI in_Jets_id = nullptr;
-  TRAF in_Jets_bDiscr = nullptr;
+  TRAF in_Jets_CSVv2 = nullptr;
 
 private:
   bool _doCppOutput = false;
@@ -80,7 +80,7 @@ private:
   const static unsigned short maxNJetsToKeep_ = 100;
   unsigned short out_nJets, out_nBjets;
   float out_Jets_p4[4][maxNJetsToKeep_];
-  float out_Jets_bDiscr[maxNJetsToKeep_];
+  float out_Jets_CSVv2[maxNJetsToKeep_];
 
 };
 
