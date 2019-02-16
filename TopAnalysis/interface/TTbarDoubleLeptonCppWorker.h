@@ -18,7 +18,7 @@ public:
   typedef TTreeReaderArray<bool>* TRAB;
 
   TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName);
-  ~TTbarDoubleLeptonCppWorker();
+  ~TTbarDoubleLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                 TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
@@ -37,8 +37,8 @@ private:
   const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
   const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
   const double minJetPt_ = 30, maxJetEta_ = 2.5;
-  const double minBjetBDiscr_ = 0.8484; // FIXME: give updated number
-  const unsigned short minEventNJets_ = 0, minEventNBjets_ = 0;
+  const double minGoodBjetBDiscr_ = 0.8484; // FIXME: give updated number
+  const unsigned short minEventNGoodJets_ = 0, minEventNGoodBjets_ = 0;
   const double maxMuonRelIso_ = 0.15;
 
   bool isGoodMuon(const unsigned i) const;
@@ -77,10 +77,14 @@ private:
 
   float out_MET_pt, out_MET_phi;
 
-  const static unsigned short maxNJetsToKeep_ = 100;
-  unsigned short out_nJets, out_nBjets;
-  float out_Jets_p4[4][maxNJetsToKeep_];
-  float out_Jets_CSVv2[maxNJetsToKeep_];
+  const static unsigned short maxNGoodJetsToKeep_ = 100;
+  unsigned short out_nGoodJets, out_nGoodBjets;
+  float out_Jets_p4[4][maxNGoodJetsToKeep_];
+  float out_Jets_CSVv2[maxNGoodJetsToKeep_];
+
+  const static unsigned short maxNCutStep = 100;
+  const unsigned short out_nCutStep;
+  bool out_CutFlow[maxNCutStep];
 
 };
 
