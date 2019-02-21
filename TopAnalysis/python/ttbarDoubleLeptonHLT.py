@@ -29,7 +29,9 @@ class CombineHLT(Module, object):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.worker.initOutput(wrappedOutputTree.tree())
+        self.out = wrappedOutputTree
+        self.b_out = self.out.branch(self.outName, "O")
+        self.worker.initOutput(self.out.tree())
         self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -65,7 +67,7 @@ class CombineHLT(Module, object):
                 "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ",
             ],
             "DoubleEG-MC_RunIISummer16":[
-                "HLT_Ele23_Ele12_CaloIdL_TrkIdL_IsoVL_DZ",
+                #"HLT_Ele23_Ele12_CaloIdL_TrkIdL_IsoVL_DZ",
                 "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL",
             ],
             "DoubleEG-RD_Run2016BG":[
