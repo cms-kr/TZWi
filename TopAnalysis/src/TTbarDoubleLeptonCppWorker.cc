@@ -50,8 +50,7 @@ void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
   outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nGoodJets]/F");
   outputTree->Branch("nGoodBjets", &out_nGoodBjets, "nGoodBjets/s");
 
-  outputTree->Branch("nCutStep", out_nCutStep, "nCutStep/s");
-  outputTree->Branch("CutFlowBit", &out_CutFlow, "CutFlowBit[nCutStep]/O");
+  outputTree->Branch("nCutStep", <unsigned short*>(&out_nCutStep(, "nCutStep/s");
 }
 
 typedef TTbarDoubleLeptonCppWorker::TRAF TRAF;
@@ -264,23 +263,23 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
 
   // Get CutStep
   if ( actualMode == MODE::MuMu ) {
-    if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) out_nCutStep = 1;
-      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) out_nCutStep = 2;
-        if ( out_MET_pt > 40 ) out_nCutStep = 3;
-          if ( out_nGoodJets > 3 ) out_nCutStep = 4;
-            if ( out_nGoodBjets > 1 ) out_nCutStep = 5;
+    if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_nCutStep = 1;}
+      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_nCutStep = 2;}
+        if ( out_MET_pt > 40 ) {out_nCutStep = 3;}
+          if ( out_nGoodJets > 3 ) {out_nCutStep = 4;}
+            if ( out_nGoodBjets > 1 ) {out_nCutStep = 5;}
   }
   else if ( actualMode == MODE::ElEl ) {
-   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) out_nCutStep = 1;
-      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) out_nCutStep = 2;
-        if ( out_MET_pt > 40 ) out_nCutStep = 3;
-          if ( out_nGoodJets > 3 ) out_nCutStep = 4;
-            if ( out_nGoodBjets > 1 ) out_nCutStep = 5;
+   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_nCutStep = 1;}
+      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_nCutStep = 2};
+        if ( out_MET_pt > 40 ) {out_nCutStep = 3;}
+          if ( out_nGoodJets > 3 ) {out_nCutStep = 4;}
+            if ( out_nGoodBjets > 1 ) {out_nCutStep = 5;}
   }
   else if ( actualMode == MODE::MuEl ) {
-   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) out_nCutStep = 3;
-     if ( out_nGoodJets > 3 ) out_nCutStep = 4;
-       if ( out_nGoodBjets > 1 ) out_nCutStep = 5;
+   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_nCutStep = 3;}
+     if ( out_nGoodJets > 3 ) {out_nCutStep = 4;}
+       if ( out_nGoodBjets > 1 ) {out_nCutStep = 5;}
   }
 
   return true;
