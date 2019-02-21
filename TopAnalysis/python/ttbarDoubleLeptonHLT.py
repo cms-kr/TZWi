@@ -29,7 +29,9 @@ class CombineHLT(Module, object):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.worker.initOutput(wrappedOutputTree.tree())
+        self.out = wrappedOutputTree
+        self.b_out = self.out.branch(self.outName, "O")
+        self.worker.initOutput(self.out.tree())
         self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
