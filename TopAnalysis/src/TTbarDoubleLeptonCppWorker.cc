@@ -4,8 +4,7 @@
 
 using namespace std;
 
-TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName):
-  out_nCutStep(5)
+TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName)
 {
   if      ( modeName == "Auto" ) mode_ = MODE::Auto;
   else if ( modeName == "ElEl" ) mode_ = MODE::ElEl;
@@ -50,8 +49,7 @@ void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
   outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nGoodJets]/F");
   outputTree->Branch("nGoodBjets", &out_nGoodBjets, "nGoodBjets/s");
 
-  outputTree->Branch("nCutStep", const_cast<unsigned short*>(&out_nCutStep), "nCutStep/s");
-  outputTree->Branch("CutFlowBit", &out_CutFlow, "CutFlowBit[nCutStep]/O");
+  outputTree->Branch("CutStep", &out_CutStep, "CutStep/s");
 }
 
 typedef TTbarDoubleLeptonCppWorker::TRAF TRAF;
@@ -111,9 +109,7 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
   for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
   }
-  for ( unsigned short k=0; k<out_nCutStep; ++k ) {
-    out_CutFlow[k] = false;
-  }
+  out_CutStep = 0;
 }
 
 bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
@@ -260,6 +256,40 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     const unsigned kk = jetIdxsByBDiscr.at(k);
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(kk);
     out_Jets_CSVv2[k] = in_Jets_CSVv2->At(kk);
+  }
+
+  // Get CutStep
+  if ( actualMode == MODE::MuMu ) {
+    if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 1;
+      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_CutStep = 2;
+        if ( out_MET_pt > 40 ) {out_CutStep = 3;
+          if ( out_nGoodJets > 3 ) {out_CutStep = 4;
+            if ( out_nGoodBjets > 1 ) {out_CutStep = 5; 
+            }
+          }
+        }
+      }
+    }
+  }
+  else if ( actualMode == MODE::ElEl ) {
+   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 1;
+      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_CutStep = 2;
+        if ( out_MET_pt > 40 ) {out_CutStep = 3;
+          if ( out_nGoodJets > 3 ) {out_CutStep = 4;
+            if ( out_nGoodBjets > 1 ) {out_CutStep = 5;
+            }
+          }
+        }
+      }
+    }
+  }
+  else if ( actualMode == MODE::MuEl ) {
+   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 3;
+     if ( out_nGoodJets > 3 ) {out_CutStep = 4;
+       if ( out_nGoodBjets > 1 ) {out_CutStep = 5;
+        }  
+      }
+    }
   }
 
   return true;

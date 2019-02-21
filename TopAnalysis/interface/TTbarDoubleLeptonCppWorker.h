@@ -82,9 +82,7 @@ private:
   float out_Jets_p4[4][maxNGoodJetsToKeep_];
   float out_Jets_CSVv2[maxNGoodJetsToKeep_];
 
-  const static unsigned short maxNCutStep = 100;
-  const unsigned short out_nCutStep;
-  bool out_CutFlow[maxNCutStep];
+  unsigned short out_CutStep;
 
 };
 
