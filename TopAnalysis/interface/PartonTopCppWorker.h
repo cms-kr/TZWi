@@ -1,5 +1,5 @@
-#ifndef PhysicsTools_ChickenChicken_partonTopCppWorker_H
-#define PhysicsTools_ChickenChicken_partonTopCppWorker_H
+#ifndef PhysicsTools_ChickenChicken_PartonTopCppWorker_H
+#define PhysicsTools_ChickenChicken_PartonTopCppWorker_H
 
 #include <memory>
 #include <string>
@@ -9,10 +9,10 @@
 #include <TTreeReaderArray.h>
 #include <TLorentzVector.h>
 
-class partonTopCppWorker {
+class PartonTopCppWorker {
 public:
-  partonTopCppWorker();
-  ~partonTopCppWorker();
+  PartonTopCppWorker();
+  ~PartonTopCppWorker();
 
   void initOutput(TTree *outputTree);
 

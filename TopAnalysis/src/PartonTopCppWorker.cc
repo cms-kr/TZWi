@@ -1,14 +1,14 @@
-#include "../interface/partonTopCppWorker.h"
+#include "../interface/PartonTopCppWorker.h"
 #include <iostream>
 #include <cmath>
 
-partonTopCppWorker::partonTopCppWorker(){
+PartonTopCppWorker::PartonTopCppWorker(){
 }
 
-partonTopCppWorker::~partonTopCppWorker(){
+PartonTopCppWorker::~PartonTopCppWorker(){
 }
 
-void partonTopCppWorker::initOutput(TTree *outputTree){
+void PartonTopCppWorker::initOutput(TTree *outputTree){
   if ( _doCppOutput ) return;
   _doCppOutput = true;
 
@@ -22,7 +22,7 @@ void partonTopCppWorker::initOutput(TTree *outputTree){
 
 }
 
-void partonTopCppWorker::setGenParticles(TTreeReaderValue<unsigned> *nGenPart,
+void PartonTopCppWorker::setGenParticles(TTreeReaderValue<unsigned> *nGenPart,
                                          TTreeReaderArray<float> *GenPart_pt, TTreeReaderArray<float> *GenPart_eta, TTreeReaderArray<float> *GenPart_phi, TTreeReaderArray<float> *GenPart_mass,
                                          TTreeReaderArray<int> *GenPart_pdgId, TTreeReaderArray<int> *GenPart_status,
                                          TTreeReaderArray<int> *GenPart_genPartIdxMother){
@@ -36,7 +36,7 @@ void partonTopCppWorker::setGenParticles(TTreeReaderValue<unsigned> *nGenPart,
   in_GenPart_genPartIdxMother = GenPart_genPartIdxMother;
 }
 
-bool partonTopCppWorker::hasSpecificAncestor(const unsigned i, const unsigned ancIdx) const {
+bool PartonTopCppWorker::hasSpecificAncestor(const unsigned i, const unsigned ancIdx) const {
   const int motherIdx = in_GenPart_genPartIdxMother->At(i);
   if ( motherIdx < 0 ) return false; // leached up to the root
   if ( motherIdx == int(ancIdx) ) return true;
@@ -44,7 +44,7 @@ bool partonTopCppWorker::hasSpecificAncestor(const unsigned i, const unsigned an
   return hasSpecificAncestor(motherIdx, ancIdx);
 }
 
-int partonTopCppWorker::findFirst(const int i) const {
+int PartonTopCppWorker::findFirst(const int i) const {
   if ( i < 0 ) return -1; // for safety check
   const int motherIdx = in_GenPart_genPartIdxMother->At(i);
   if ( motherIdx < 0 ) return i; // already the first particle
@@ -54,7 +54,7 @@ int partonTopCppWorker::findFirst(const int i) const {
   return findFirst(motherIdx);
 }
 
-void partonTopCppWorker::resetValues() {
+void PartonTopCppWorker::resetValues() {
   out_nPartons = 0;
   for ( unsigned i=0; i<maxNPartons_; ++i ) {
     out_Partons_pt[i] = out_Partons_eta[i] = out_Partons_phi[i] = out_Partons_mass[i] = 0;
@@ -62,7 +62,7 @@ void partonTopCppWorker::resetValues() {
   }
 }
 
-bool partonTopCppWorker::genEvent(){
+bool PartonTopCppWorker::genEvent(){
   using namespace std;
 
   resetValues();

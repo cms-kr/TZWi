@@ -259,38 +259,30 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   }
 
   // Get CutStep
-  if ( actualMode == MODE::MuMu ) {
-    if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 1;
-      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_CutStep = 2;
-        if ( out_MET_pt > 40 ) {out_CutStep = 3;
-          if ( out_nGoodJets > 3 ) {out_CutStep = 4;
-            if ( out_nGoodBjets > 1 ) {out_CutStep = 5; 
-            }
-          }
-        }
-      }
+  out_CutStep = 0;
+  // do-while trick, to reduce nested-if statements
+  do {
+    if ( out_Z_charge != 0 or out_Lepton1_p4[0] < 25 or out_Lepton2_p4[0] < 20 ) break;
+    ++out_CutStep;
+
+    // Z-veto and MET (no cut for e-mu channel)
+    if ( actualMode == MODE::MuEl ) {
+      out_CutStep += 2;
     }
-  }
-  else if ( actualMode == MODE::ElEl ) {
-   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 1;
-      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_CutStep = 2;
-        if ( out_MET_pt > 40 ) {out_CutStep = 3;
-          if ( out_nGoodJets > 3 ) {out_CutStep = 4;
-            if ( out_nGoodBjets > 1 ) {out_CutStep = 5;
-            }
-          }
-        }
-      }
+    else {
+      if ( out_Z_p4[0] > 75 or out_Z_p4[0] < 105 ) break;
+      ++out_CutStep;
+      if ( out_MET_pt < 40 ) break;
+      ++out_CutStep;
     }
-  }
-  else if ( actualMode == MODE::MuEl ) {
-   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 3;
-     if ( out_nGoodJets > 3 ) {out_CutStep = 4;
-       if ( out_nGoodBjets > 1 ) {out_CutStep = 5;
-        }  
-      }
-    }
-  }
+
+    if ( out_nGoodJets < 4 ) break;
+    ++out_CutStep;
+    if ( out_nGoodBjets < 1 ) break;
+    ++out_CutStep; 
+    if ( out_nGoodBjets < 2 ) break;
+    ++out_CutStep; 
+  } while ( false );
 
   return true;
 }
