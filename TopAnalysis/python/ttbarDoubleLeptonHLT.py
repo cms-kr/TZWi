@@ -65,7 +65,7 @@ class CombineHLT(Module, object):
                 "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ",
             ],
             "DoubleEG-MC_RunIISummer16":[
-                "HLT_Ele23_Ele12_CaloIdL_TrkIdL_IsoVL_DZ",
+                #"HLT_Ele23_Ele12_CaloIdL_TrkIdL_IsoVL_DZ",
                 "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL",
             ],
             "DoubleEG-RD_Run2016BG":[
