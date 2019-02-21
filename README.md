@@ -23,3 +23,16 @@ git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODT
 git clone https://github.com/cms-kr/TZWi
 scram b -j
 ```
+
+## Customized NanoAOD production
+```
+cd TZWi/NanoAODProduction/test
+./generateConfig.sh ## This will produce 3 sets of 3 cfg files...
+crab submit...
+```
+
+## Run postprocessors
+```
+cd TZWi/TopAnalysis/prod_ntuple
+./run.sh .....
+```
