@@ -5,25 +5,25 @@ import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
-class partonTopEvent(Module, object):
+class PartonTop(Module, object):
     def __init__(self, *args, **kwargs):
-        #super(partonTopEvent, self).__init__(*args, **kwargs)
+        #super(PartonTop, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
         self.algo = kwargs.get("algo")
 
-        if "/partonTop_cc.so" not in  ROOT.gSystem.GetLibraries():
-            print "Load C++ partonTop worker module"
+        if "/PartonTop_cc.so" not in  ROOT.gSystem.GetLibraries():
+            print "Load C++ PartonTop worker module"
             base = os.getenv("NANOAODTOOLS_BASE")
             if base:
-                ROOT.gROOT.ProcessLine(".L %s/src/partonTopCppWorker.cc+O" % base)
+                ROOT.gROOT.ProcessLine(".L %s/src/PartonTopCppWorker.cc+O" % base)
             else:
                 base = "%s/src/NanoCAT/TopAnalysis"%os.getenv("CMSSW_BASE")
                 ROOT.gSystem.Load("libPhysicsToolsNanoAODTools.so")
                 ROOT.gSystem.Load("libNanoCATTopAnalysis.so")
-                ROOT.gROOT.ProcessLine(".L %s/interface/partonTopCppWorker.h" % base)
+                ROOT.gROOT.ProcessLine(".L %s/interface/PartonTopCppWorker.h" % base)
         pass
     def beginJob(self):
-        self.worker = ROOT.partonTopCppWorker()
+        self.worker = ROOT.PartonTopCppWorker()
         pass
     def endJob(self):
         pass
@@ -52,4 +52,4 @@ class partonTopEvent(Module, object):
             self.initReaders(event._tree)
         return self.worker.genEvent()
 
-partonTop = lambda : partonTopEvent()
+partonTop = lambda : PartonTop()
