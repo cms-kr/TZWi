@@ -5,7 +5,7 @@
 using namespace std;
 
 TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName):
-  out_nCutStep(5)
+  out_CutStep(5)
 {
   if      ( modeName == "Auto" ) mode_ = MODE::Auto;
   else if ( modeName == "ElEl" ) mode_ = MODE::ElEl;
@@ -50,7 +50,7 @@ void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
   outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nGoodJets]/F");
   outputTree->Branch("nGoodBjets", &out_nGoodBjets, "nGoodBjets/s");
 
-  outputTree->Branch("nCutStep", <unsigned short*>(&out_nCutStep(, "nCutStep/s");
+  outputTree->Branch("CutStep", out_CutStep, "CutStep/s");
 }
 
 typedef TTbarDoubleLeptonCppWorker::TRAF TRAF;
@@ -110,8 +110,7 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
   for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
   }
-  for ( unsigned short k=0; k<out_nCutStep; ++k ) {
-    out_CutFlow[k] = false;
+  for ( unsigned short k=0; k<out_CutStep; ++k ) {
   }
 }
 
@@ -263,23 +262,36 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
 
   // Get CutStep
   if ( actualMode == MODE::MuMu ) {
-    if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_nCutStep = 1;}
-      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_nCutStep = 2;}
-        if ( out_MET_pt > 40 ) {out_nCutStep = 3;}
-          if ( out_nGoodJets > 3 ) {out_nCutStep = 4;}
-            if ( out_nGoodBjets > 1 ) {out_nCutStep = 5;}
+    if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 1;
+      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_CutStep = 2;
+        if ( out_MET_pt > 40 ) {out_CutStep = 3;
+          if ( out_nGoodJets > 3 ) {out_CutStep = 4;
+            if ( out_nGoodBjets > 1 ) {out_CutStep = 5; 
+            }
+          }
+        }
+      }
+    }
   }
   else if ( actualMode == MODE::ElEl ) {
-   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_nCutStep = 1;}
-      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_nCutStep = 2};
-        if ( out_MET_pt > 40 ) {out_nCutStep = 3;}
-          if ( out_nGoodJets > 3 ) {out_nCutStep = 4;}
-            if ( out_nGoodBjets > 1 ) {out_nCutStep = 5;}
+   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 1;
+      if ( out_Z_p4[0] < 75 or out_Z_p4[0] > 105 ) {out_CutStep = 2;
+        if ( out_MET_pt > 40 ) {out_CutStep = 3;
+          if ( out_nGoodJets > 3 ) {out_CutStep = 4;
+            if ( out_nGoodBjets > 1 ) {out_CutStep = 5;
+            }
+          }
+        }
+      }
+    }
   }
   else if ( actualMode == MODE::MuEl ) {
-   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_nCutStep = 3;}
-     if ( out_nGoodJets > 3 ) {out_nCutStep = 4;}
-       if ( out_nGoodBjets > 1 ) {out_nCutStep = 5;}
+   if ( out_Z_charge == 0 and out_Lepton1_p4[0] > 25 and out_Lepton2_p4[0] > 20 ) {out_CutStep = 3;
+     if ( out_nGoodJets > 3 ) {out_CutStep = 4;
+       if ( out_nGoodBjets > 1 ) {out_CutStep = 5;
+        }  
+      }
+    }
   }
 
   return true;

@@ -82,7 +82,7 @@ private:
   float out_Jets_p4[4][maxNGoodJetsToKeep_];
   float out_Jets_CSVv2[maxNGoodJetsToKeep_];
 
-  unsigned short out_nCutStep;
+  unsigned short out_CutStep;
 
 };
 
