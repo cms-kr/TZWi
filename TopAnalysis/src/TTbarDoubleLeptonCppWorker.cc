@@ -4,8 +4,7 @@
 
 using namespace std;
 
-TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName):
-  out_CutStep(5)
+TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName)
 {
   if      ( modeName == "Auto" ) mode_ = MODE::Auto;
   else if ( modeName == "ElEl" ) mode_ = MODE::ElEl;
@@ -111,6 +110,7 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
   }
   for ( unsigned short k=0; k<out_CutStep; ++k ) {
+    out_CutStep = 0;
   }
 }
 
