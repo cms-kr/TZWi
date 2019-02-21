@@ -83,7 +83,7 @@ private:
   float out_Jets_CSVv2[maxNGoodJetsToKeep_];
 
   const static unsigned short maxNCutStep = 100;
-  const unsigned short out_nCutStep;
+  int out_nCutStep;
   bool out_CutFlow[maxNCutStep];
 
 };
