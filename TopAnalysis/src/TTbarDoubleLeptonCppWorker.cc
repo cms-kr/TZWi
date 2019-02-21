@@ -49,7 +49,7 @@ void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
   outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nGoodJets]/F");
   outputTree->Branch("nGoodBjets", &out_nGoodBjets, "nGoodBjets/s");
 
-  outputTree->Branch("CutStep", out_CutStep, "CutStep/s");
+  outputTree->Branch("CutStep", &out_CutStep, "CutStep/s");
 }
 
 typedef TTbarDoubleLeptonCppWorker::TRAF TRAF;
@@ -109,9 +109,7 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
   for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
   }
-  for ( unsigned short k=0; k<out_CutStep; ++k ) {
-    out_CutStep = 0;
-  }
+  out_CutStep = 0;
 }
 
 bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
