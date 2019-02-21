@@ -36,7 +36,9 @@ def customise_particletop(process):
         )
     )
 
-    process.particleLevelTables += process.rivetJetTable
-    process.particleLevelTables += process.rivetNeutrinoTable
+    if process.rivetLeptonTable not in process.nanoAOD_step.moduleNames():
+        process.nanoAOD_step += process.rivetLeptonTable
+    process.nanoAOD_step += process.rivetJetTable
+    process.nanoAOD_step += process.rivetNeutrinoTable
 
     return process
