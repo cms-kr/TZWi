@@ -238,6 +238,13 @@ void PartonTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
     const LorentzVector jetP4(fjJet.px(), fjJet.py(), fjJet.pz(), fjJet.E());
     reco::GenJet qcdJet;
     reco::writeSpecific(qcdJet, jetP4, genVertex_, cons, eventSetup);
+    qcdJet.setPdgId(0);
+    for ( auto& con : cons ) {
+      const int absPdgId = abs(con->pdgId());
+      if ( (absPdgId == 5 or absPdgId == 4) and (abs(qcdJet.pdgId()) < absPdgId) ) {
+        qcdJet.setPdgId(con->pdgId());
+      }
+    }
 
     qcdJets->push_back(qcdJet);
   }

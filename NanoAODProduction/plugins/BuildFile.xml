@@ -1,6 +1,5 @@
 <library name="TZWiNanoAODProduction_plugins" file="*.cc">
   <use name="FWCore/Framework"/>
-  <use name="CATTools/CommonTools"/>
   <use name="CommonTools/UtilAlgos"/>
   <use name="PhysicsTools/Utilities"/>
   <use name="RecoJets/JetProducers" />
