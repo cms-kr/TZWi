@@ -118,7 +118,7 @@ bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
   if ( pt < minLepton2Pt_ or std::abs(eta) > maxLepton2Eta_ ) return false;
   //if ( in_Muons_isTight->At(i) == 0 ) return false;
   if ( ! (in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0)) ) return false;
-  if ( in_Muons_relIso->At(i) < maxMuonRelIso_ ) return false;
+  if ( in_Muons_relIso->At(i) > maxMuonRelIso_ ) return false;
 
   return true;
 }
