@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 from  PhysicsTools.NanoAOD.common_cff import *
 
-def customise_particletop(process):
+def customise_particleTop(process):
     if not hasattr(process, 'particleLevel'):
         process.load("PhysicsTools.NanoAOD.particlelevel_cff")
 

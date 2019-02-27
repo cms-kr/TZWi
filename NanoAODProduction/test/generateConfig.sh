@@ -7,8 +7,8 @@ OPTS_MC="--mc --eventcontent NANOAODSIM --datatier NANOAODSIM"
 OPTS_RC="--data --eventcontent NANOAOD --datatier NANOAOD"
 CUSTOMBASE="TZWi/NanoAODProduction/customise_cff"
 
-CUSTOMISE_TOP="${CUSTOMBASE}.customise_dropNanoAODTables,${CUSTOMBASE}.customise_particletop"
-CUSTOMISE_TOP="${CUSTOMISE_TOP},${CUSTOMBASE}.customise_partontop"
+CUSTOMISE_TOP="${CUSTOMBASE}.customise_dropNanoAODTables,${CUSTOMBASE}.customise_particleTop"
+CUSTOMISE_TOP="${CUSTOMISE_TOP},${CUSTOMBASE}.customise_partonTop"
 
 ## 2016
 ERA="Run2_2016,run2_miniAOD_80XLegacy"
