@@ -12,7 +12,7 @@ partonTopTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
         # Identical to GenJets, so we just extend their flavor information
         P4Vars,
         pdgId = Var("pdgId", int, doc="PDG id"),
-        genPartIdxMother = Var("?numberOfMothers>0?motherRef(0).key():-1", int, doc="index of the mother particle"),
+        partonTopIdxMother = Var("?numberOfMothers>0?motherRef(0).key():-1", int, doc="index of the mother particle"),
     )
 )
 
