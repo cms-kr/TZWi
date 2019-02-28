@@ -1,0 +1,12 @@
+#Name	Title	DatasetName	Luminosity(/fb)
+SingleMuon_Run2017B	SingleMuon	/SingleMuon/Run2017B-31Mar2018-v1/MINIAOD	0.0
+SingleMuon_Run2017C	SingleMuon	/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD	0.0
+SingleMuon_Run2017D	SingleMuon	/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD	0.0
+SingleMuon_Run2017E	SingleMuon	/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD	0.0
+SingleMuon_Run2017F	SingleMuon	/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD	0.0
+
+SingleElectron_Run2017B	SingleElectron	/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD	0.0
+SingleElectron_Run2017C	SingleElectron	/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD	0.0
+SingleElectron_Run2017D	SingleElectron	/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD	0.0
+SingleElectron_Run2017E	SingleElectron	/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD	0.0
+SingleElectron_Run2017F	SingleElectron	/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD	0.0
