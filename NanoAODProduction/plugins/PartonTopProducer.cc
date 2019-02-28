@@ -22,6 +22,7 @@ public:
 
 private:
   const reco::Candidate* getLast(const reco::Candidate* p) const;
+  const reco::Candidate* getFirst(const reco::Candidate* p) const;
   reco::GenParticleRef buildGenParticle(const reco::Candidate* p, reco::GenParticleRefProd& refHandle,
                                         std::unique_ptr<reco::GenParticleCollection>& outColl) const;
 
@@ -70,148 +71,223 @@ void PartonTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
     event.put(std::move(qcdJets), "qcdJets");
     return;
   }
-  
-  // Collect top quarks and unstable B-hadrons
-  std::vector<const reco::Candidate*> tQuarks;
+
+  // Collect vector and scalar bosons. Keep the boson and its top-mother. nullptr for orphans
+  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*>> v2tPairs;
   std::vector<int> qcdParticleIdxs;
   for ( size_t i=0, n=genParticleHandle->size(); i<n; ++i ) {
     const reco::Candidate& p = genParticleHandle->at(i);
     const int status = p.status();
     if ( status == 1 ) continue;
 
-    // Collect parton level objects.
     const int absPdgId = abs(p.pdgId());
-    if ( absPdgId == 6 ) {
-      // top quark : select one 'after radiations'
-      bool toKeep = true;
-      if ( p.numberOfDaughters() == 0 ) toKeep = false;
-      for ( size_t j=0, m=p.numberOfDaughters(); j<m; ++j ) {
-        const int dauId = p.daughter(j)->pdgId();
-        if ( dauId == p.pdgId() ) { toKeep = false; break; }
+    if ( absPdgId >= 23 and absPdgId <= 25 ) { // For Z/W/H
+      const reco::Candidate* mo = p.mother();
+      // Skip: We will not pick up this if it is a same copy or a radiation product
+      if ( mo and mo->pdgId() == p.pdgId() ) continue;
+
+      // Case0: Simplest case, an orphan by definition - no additional action
+
+      // Case1: Mother is not a top quark
+      if ( mo and abs(mo->pdgId()) != 6 ) mo = nullptr;
+
+      // Case2: Orphan if number of mother is not 1.
+      //        Particles produced from incident beam / partons
+      //          ex) q---\.
+      //                   +--- V
+      //              q'--/
+      //        For the t-channels, we also terminate tracking because mother-daughter relationship has no meaning.
+      //          ex) q--+----              q-----+---
+      //                  \q  (case2)  vs        /q (case3)
+      //              q'---+~~ V            q'--+~~~~ V
+      if ( p.numberOfMothers() != 1 ) mo = nullptr;
+
+      // Case3: Has copy of mother among its sisters.
+      //        appears in a t-channel diagram (drawing above)
+      if ( mo ) {
+        for ( int j=0, m=mo->numberOfDaughters(); j<m; ++j ) {
+          const reco::Candidate* sister = mo->daughter(j);
+          if ( sister == &p ) continue;
+          if ( sister->pdgId() == mo->pdgId() ) { mo = nullptr; break; }
+        }
       }
-      if ( toKeep ) tQuarks.push_back(&p);
+
+      v2tPairs.emplace_back(&p, mo);
     }
     else if ( absPdgId < 6 or absPdgId == 21 ) {
       // QCD particles : select one after parton shower, before hadronization
       bool toKeep = true;
       for ( size_t j=0, m=p.numberOfDaughters(); j<m; ++j ) {
         const int absDauId = abs(p.daughter(j)->pdgId());
-        if ( absDauId < 6 or absPdgId == 21 ) { toKeep = false; break; }
+        if ( absDauId < 6 or absPdgId == 21 ) { toKeep = false; break; } // do not keep if it is final parton
       }
       if ( toKeep ) qcdParticleIdxs.push_back(i);
     }
   }
+
   // Build top quark decay tree in parton level
   // Also determine decay mode from parton level information
-  size_t nElectron = 0, nMuon = 0, nTau = 0, nTauToLepton = 0;
-  for ( int i=0, n=tQuarks.size(); i<n; ++i ) {
-    const reco::Candidate* t = tQuarks.at(i);
-    const reco::Candidate* tLast = getLast(t);
+  size_t nElectronTotal = 0, nMuonTotal = 0, nTauTotal = 0;
+
+  // Fill ther top quarks first place
+  std::map<const reco::Candidate*, reco::GenParticleRef> tRefMap;
+  std::vector<std::pair<const reco::Candidate*, reco::GenParticleRef>> vvPairs;
+  for ( auto& v2tPair : v2tPairs ) {
+    //const reco::Candidate* vFirst = v2tPair.first;
+    const reco::Candidate* tLast = v2tPair.second;
+    if ( tLast == nullptr ) continue;
     reco::GenParticleRef tRef = buildGenParticle(tLast, partonRefHandle, partons);
+    tRefMap[tLast] = tRef;
   }
 
-  for ( int i=0, n=tQuarks.size(); i<n; ++i ) {
-    const reco::Candidate* tLast = getLast(tQuarks.at(i));
-    reco::GenParticleRef tRef(partonRefHandle, i);
+  // Continue to the orphan bosons
+  for ( auto& v2tPair : v2tPairs ) {
+    const reco::Candidate* vFirst = v2tPair.first;
+    const reco::Candidate* tLast = v2tPair.second;
+    if ( tLast != nullptr ) continue;
+    reco::GenParticleRef vRef = buildGenParticle(vFirst, partonRefHandle, partons);
+    vvPairs.emplace_back(vFirst, vRef);
+  }
 
-    const reco::Candidate* w = 0;
-    const reco::Candidate* b = 0;
+  // Fill the top quark decay products
+  for ( auto& v2tPair : v2tPairs ) {
+    const reco::Candidate* vFirst = v2tPair.first;
+    const reco::Candidate* tLast  = v2tPair.second;
+    if ( tLast == nullptr ) continue;
+
+    reco::GenParticleRef vRef;
+    vRef = buildGenParticle(vFirst, partonRefHandle, partons);
+    auto& tRef = tRefMap[tLast];
+    partons->at(vRef.key()).addMother(tRef);
+    partons->at(tRef.key()).addDaughter(vRef);
+    vvPairs.emplace_back(vFirst, vRef);
+
+    const reco::Candidate* qFirst = nullptr;
     for ( int j=0, m=tLast->numberOfDaughters(); j<m; ++j ) {
       const reco::Candidate* dau = tLast->daughter(j);
       const unsigned int dauAbsId = abs(dau->pdgId());
-      if ( (dauAbsId == 24 or dauAbsId == 25 or dauAbsId == 23) and !w ) w = dau; // Include top-FCNC
-      else if ( dauAbsId < 6 and !b ) b = dau;
+      if ( dauAbsId < 6 ) { qFirst = dau; break; }
     }
-    if ( !w or !b ) continue;
-    reco::GenParticleRef wRef = buildGenParticle(w, partonRefHandle, partons);
-    reco::GenParticleRef bRef = buildGenParticle(b, partonRefHandle, partons);
-    partons->at(wRef.key()).addMother(tRef);
-    partons->at(bRef.key()).addMother(tRef);
-    partons->at(tRef.key()).addDaughter(wRef);
-    partons->at(tRef.key()).addDaughter(bRef);
 
-    // W decay products
-    const reco::Candidate* wLast = getLast(w);
-    const reco::Candidate* wDau1 = 0;
-    const reco::Candidate* wDau2 = 0;
-    for ( int j=0, m=wLast->numberOfDaughters(); j<m; ++j ) {
-      const reco::Candidate* dau = wLast->daughter(j);
-      const unsigned int dauAbsId = abs(dau->pdgId());
-      if ( abs(wLast->pdgId()) != 25 and dauAbsId > 16 ) continue; // Consider quarks and leptons only for W/Z decays
+    if ( qFirst != nullptr ) {
+      reco::GenParticleRef qRef = buildGenParticle(qFirst, partonRefHandle, partons);
+      partons->at(qRef.key()).addMother(tRef);
+      partons->at(tRef.key()).addDaughter(qRef);
+    }
+  }
+
+  // Fill the V-decay products no matter it is an orphan or from top
+  for ( auto& vvPair : vvPairs ) {
+    const reco::Candidate* vFirst = vvPair.first;
+    const reco::Candidate* vLast = getLast(vFirst);
+    reco::GenParticleRef vRef = vvPair.second;
+
+    // V-decay products
+    std::vector<const reco::Candidate*> vDaus;
+    for ( int j=0, m=vLast->numberOfDaughters(); j<m; ++j ) {
+      const reco::Candidate* vDau = vLast->daughter(j);
+      const unsigned int dauAbsId = abs(vDau->pdgId());
+      if ( vLast->pdgId() != 25 and dauAbsId > 16 ) continue; // Consider quarks and leptons only for W/Z decays
       // With the line above, we allow H->ff/GG/ZZ/WW.
-      // wLast should be W/Z/H, nothing else.
+      // vLast should be W/Z/H, nothing else.
 
-      if ( !wDau1 ) wDau1 = dau;
-      else if ( !wDau2 ) wDau2 = dau;
-      else {
-        cout << "--------------------------------------" << endl;
-        cout << "WDECAY with more than 2 body!!! " << wLast->numberOfDaughters() << endl;
-        cout << " dau1 = " << wDau1->pdgId() << " dau2 = " << wDau2->pdgId() << " skipped = " << dau->pdgId() << endl;
-        cout << "--------------------------------------" << endl;
+      vDaus.push_back(vDau);
+    }
+    if ( vDaus.empty() ) continue;
+    std::sort(vDaus.begin(), vDaus.end(), [](const reco::Candidate* vDau1, const reco::Candidate* vDau2){
+              return abs(vDau1->pdgId()) < abs(vDau2->pdgId());});
+    std::vector<reco::GenParticleRef> vDauRefs;
+    for ( auto vDau : vDaus ) {
+      reco::GenParticleRef vDauRef = buildGenParticle(vDau, partonRefHandle, partons);
+      partons->at(vDauRef.key()).addMother(vRef);
+      partons->at(vRef.key()).addDaughter(vDauRef);
+      vDauRefs.push_back(vDauRef);
+    }
+
+    // Special care for FCNH, H->WW or H->ZZ because we have to add one more intermediate step
+    std::vector<const reco::Candidate*> v2vDaus;
+    std::vector<reco::GenParticleRef> v2vDauRefs;
+    for ( size_t i=0, n=vDaus.size(); i<n; ++i ) {
+      const reco::Candidate* vDau = vDaus.at(i);
+      const int absDauId = abs(vDau->pdgId());
+      if ( absDauId != 23 and absDauId != 24 ) continue;
+
+      reco::GenParticleRef vDauRef = vDauRefs.at(i);
+      const reco::Candidate* vDauLast = getLast(vDau);
+      for ( size_t j=0, m=vDauLast->numberOfDaughters(); j<m; ++j ) {
+        const reco::Candidate* v2vDau = vDauLast->daughter(j);
+        reco::GenParticleRef v2vDauRef = buildGenParticle(v2vDau, partonRefHandle, partons);
+        partons->at(v2vDauRef.key()).addMother(vDauRef);
+        partons->at(vDauRef.key()).addDaughter(v2vDauRef);
+        v2vDauRefs.push_back(v2vDauRef);
+        v2vDaus.push_back(v2vDau);
       }
     }
-    if ( !wDau1 or !wDau2 ) continue;
-    if ( abs(wDau1->pdgId()) > abs(wDau2->pdgId()) ) swap(wDau1, wDau2);
-    reco::GenParticleRef wDauRef1 = buildGenParticle(wDau1, partonRefHandle, partons);
-    reco::GenParticleRef wDauRef2 = buildGenParticle(wDau2, partonRefHandle, partons);
-    partons->at(wDauRef1.key()).addMother(wRef);
-    partons->at(wDauRef2.key()).addMother(wRef);
-    partons->at(wRef.key()).addDaughter(wDauRef1);
-    partons->at(wRef.key()).addDaughter(wDauRef2);
+
+    // Append v2vDaus to the existing vDaus collection, to account tau->lepton decays
+    vDaus.insert(vDaus.end(), v2vDaus.begin(), v2vDaus.end());
+    vDauRefs.insert(vDauRefs.end(), v2vDauRefs.begin(), v2vDauRefs.end());
 
     // Special care for tau->lepton decays
     // Note : we do not keep neutrinos from tau decays (tau->W, nu_tau, W->l, nu_l)
     // Note : Up to 6 neutrinos from top decays if both W decays to taus and all taus go into leptonic decay chain
-    std::vector<const reco::Candidate*> lepsFromTau;
-    if ( abs(wDau1->pdgId()) == 15 ) {
-      const reco::Candidate* tauLast = getLast(wDau1);
+    int nElectron = 0, nMuon = 0, nTau = 0;
+    for ( size_t i=0, n=vDaus.size(); i<n; ++i ) {
+      const reco::Candidate* vDau = vDaus.at(i);
+
+      const int aid = abs(vDau->pdgId());
+      if      ( aid == 11 ) ++nElectron;
+      else if ( aid == 13 ) ++nMuon;
+      else if ( aid == 15 ) ++nTau;
+
+      if ( aid != 15 ) continue;
+
+      std::vector<const reco::Candidate*> lepsFromTau;
+
+      const reco::Candidate* tauLast = getLast(vDau);
       for ( int j=0, m=tauLast->numberOfDaughters(); j<m; ++j ) {
         const reco::Candidate* dau = tauLast->daughter(j);
         const unsigned int dauAbsId = abs(dau->pdgId());
         if ( dauAbsId == 11 or dauAbsId == 13 ) lepsFromTau.push_back(dau);
       }
-      // Cleanup the daughter lepton if net charge is zero. This happens if a conversion photon is radiated (tau->gamma+X, gamma->e+e-)
+
+      // Skip if net charge is zero. This happens if a conversion photon is radiated (tau->gamma+X, gamma->e+e-)
       // This happens in sub-per-mil level (observed 6 among 10000 events)
+      // Note: tau->hadrons are automatically skipped with this sumQ != 0 condition.
       const int sumQ = std::accumulate(lepsFromTau.begin(), lepsFromTau.end(), 0, [](int b, const reco::Candidate* a){return a->charge()+b;});
-      if ( sumQ == 0 ) lepsFromTau.clear();
+      if ( sumQ == 0 ) continue;
+
+      reco::GenParticleRef vDauRef = vDauRefs.at(i);
+
       // Sort daughter leptons, largest pT with consistent electric charge to the original tau at the front.
       std::sort(lepsFromTau.begin(), lepsFromTau.end(), [](const reco::Candidate* a, const reco::Candidate* b){return a->pt() > b->pt();});
       std::stable_sort(lepsFromTau.begin(), lepsFromTau.end(), [&](const reco::Candidate* a, const reco::Candidate* b){return a->charge() == tauLast->charge();});
       for ( auto lepFromTau : lepsFromTau ) {
         reco::GenParticleRef lepRef = buildGenParticle(lepFromTau, partonRefHandle, partons);
-        partons->at(lepRef.key()).addMother(wDauRef1);
-        partons->at(wDauRef1.key()).addDaughter(lepRef);
+        partons->at(lepRef.key()).addMother(vDauRef);
+        partons->at(vDauRef.key()).addDaughter(lepRef);
       }
     }
-    int mode = TZWi::CH_HADRON;
-    switch ( abs(wDau1->pdgId()) ) {
-      case 11: ++nElectron; mode = TZWi::CH_ELECTRON; break;
-      case 13: ++nMuon; mode = TZWi::CH_MUON; break;
-      case 15:
-        ++nTau; mode = TZWi::CH_TAU_HADRON;
-        if ( !lepsFromTau.empty() ) {
 
-          const reco::Candidate* lepFromTau = lepsFromTau.front();
-          ++nTauToLepton;
-          if ( abs(lepFromTau->pdgId()) == 13 ) {
-            mode += 1;
-            ++nMuon;
-          }
-          else {
-            mode += 2;
-            ++nElectron;
-          }
-        }
-        break;
-    }
+    int mode = TZWi::CH_HADRON;
+    if      ( nElectron >= 1 and nMuon == 0 ) mode = TZWi::CH_ELECTRON;
+    else if ( nElectron == 0 and nMuon >= 1 ) mode = TZWi::CH_MUON;
+    else if ( nElectron >= 1 and nMuon >= 1 ) mode = TZWi::CH_MUONELECTRON;
+    if ( nTau >= 1 ) mode += TZWi::CH_TAU_HADRON;
+
+    nElectronTotal += nElectron;
+    nMuonTotal += nMuon;
+    nTauTotal += nTau;
+
     modes->push_back(mode);
   }
 
   if ( modes->size() == 2 ) {
-    const int nLepton = nElectron + nMuon;
+    const int nLepton = nElectronTotal + nMuonTotal;
     if      ( nLepton == 0 ) *channel = TZWi::CH_FULLHADRON;
     else if ( nLepton == 1 ) *channel = TZWi::CH_SEMILEPTON;
     else if ( nLepton == 2 ) *channel = TZWi::CH_FULLLEPTON;
+    else *channel = TZWi::CH_MULTILEPTON;
   }
 
   // Make genJets using particles after PS, but before hadronization
@@ -253,6 +329,13 @@ void PartonTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
   event.put(std::move(channel), "channel");
   event.put(std::move(modes), "modes");
   event.put(std::move(qcdJets), "qcdJets");
+}
+
+const reco::Candidate* PartonTopProducer::getFirst(const reco::Candidate* p) const
+{
+  const reco::Candidate* mo = p->mother();
+  if ( mo != nullptr and p->pdgId() == mo->pdgId() ) return getFirst(mo);
+  return p;
 }
 
 const reco::Candidate* PartonTopProducer::getLast(const reco::Candidate* p) const

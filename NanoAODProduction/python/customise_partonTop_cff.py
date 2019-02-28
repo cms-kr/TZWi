@@ -8,7 +8,9 @@ def customise_partonTop(process):
 
     process.load("TZWi.NanoAODProduction.tables.partonTop_cff")
 
-    process.nanoAOD_step += process.partonTopTable
-    process.nanoAOD_step += process.partonTopJetTable
+    process.nanoAOD_step += (
+        process.partonTopTable + process.partonTopJetTable
+      + process.partonTopChannelTable + process.partonTopModesTable
+    )
 
     return process
