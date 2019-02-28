@@ -10,7 +10,7 @@ def customise_partonTop(process):
 
     process.nanoAOD_step += (
         process.partonTopTable + process.partonTopJetTable
-      + process.partonTopChannelTable + process.partonTopJetTable
+      + process.partonTopChannelTable + process.partonTopModesTable
     )
 
     return process

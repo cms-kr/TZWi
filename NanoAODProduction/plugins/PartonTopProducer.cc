@@ -127,7 +127,7 @@ void PartonTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
 
   // Build top quark decay tree in parton level
   // Also determine decay mode from parton level information
-  size_t nElectron = 0, nMuon = 0, nTau = 0;
+  size_t nElectronTotal = 0, nMuonTotal = 0, nTauTotal = 0;
 
   // Fill ther top quarks first place
   std::map<const reco::Candidate*, reco::GenParticleRef> tRefMap;
@@ -195,7 +195,7 @@ void PartonTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
     }
     if ( vDaus.empty() ) continue;
     std::sort(vDaus.begin(), vDaus.end(), [](const reco::Candidate* vDau1, const reco::Candidate* vDau2){
-                return abs(vDau1->pdgId()) > abs(vDau2->pdgId());});
+              return abs(vDau1->pdgId()) < abs(vDau2->pdgId());});
     std::vector<reco::GenParticleRef> vDauRefs;
     for ( auto vDau : vDaus ) {
       reco::GenParticleRef vDauRef = buildGenParticle(vDau, partonRefHandle, partons);
@@ -231,7 +231,7 @@ void PartonTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
     // Special care for tau->lepton decays
     // Note : we do not keep neutrinos from tau decays (tau->W, nu_tau, W->l, nu_l)
     // Note : Up to 6 neutrinos from top decays if both W decays to taus and all taus go into leptonic decay chain
-    int nElectron = 0, nMuon = 0;
+    int nElectron = 0, nMuon = 0, nTau = 0;
     for ( size_t i=0, n=vDaus.size(); i<n; ++i ) {
       const reco::Candidate* vDau = vDaus.at(i);
 
@@ -275,11 +275,15 @@ void PartonTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
     else if ( nElectron >= 1 and nMuon >= 1 ) mode = TZWi::CH_MUONELECTRON;
     if ( nTau >= 1 ) mode += TZWi::CH_TAU_HADRON;
 
+    nElectronTotal += nElectron;
+    nMuonTotal += nMuon;
+    nTauTotal += nTau;
+
     modes->push_back(mode);
   }
 
   if ( modes->size() == 2 ) {
-    const int nLepton = nElectron + nMuon;
+    const int nLepton = nElectronTotal + nMuonTotal;
     if      ( nLepton == 0 ) *channel = TZWi::CH_FULLHADRON;
     else if ( nLepton == 1 ) *channel = TZWi::CH_SEMILEPTON;
     else if ( nLepton == 2 ) *channel = TZWi::CH_FULLLEPTON;

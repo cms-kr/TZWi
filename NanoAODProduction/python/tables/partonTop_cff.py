@@ -32,12 +32,12 @@ partonTopJetTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
 
 partonTopChannelTable = cms.EDProducer("GlobalVariablesTableProducer",
     variables = cms.PSet(
-        partonTopChannel = ExtVar( cms.InputTag("partonTop:channel"), "int", doc = "ttbar parton level channel")
+        PartonTopChannel = ExtVar( cms.InputTag("partonTop:channel"), "int", doc = "ttbar parton level channel")
     )
 )
 
-partonTopModesTable = cms.EDProducer("NativeArrayTableProduce",
-    name = cms.string("partonTopModes"),
+partonTopModesTable = cms.EDProducer("IntArrayTableProducer",
+    name = cms.string("PartonTopModes"),
     doc = cms.string("Parton level boson decay modes"),
     src = cms.InputTag("partonTop:modes"),
 )
