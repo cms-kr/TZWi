@@ -1,0 +1,3 @@
+{
+    "Flag":"Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_CSCTightHaloFilter && Flag_HcalStripHaloFilter && Flag_hcalLaserEventFilter && Flag_goodVertices && Flag_eeBadScFilter && Flag_muonBadTrackFilter"
+}
