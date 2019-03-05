@@ -4,7 +4,9 @@
 
 using namespace std;
 
-CombineHLTCppWorker::CombineHLTCppWorker(const std::string outName): outName_(outName) {
+CombineHLTCppWorker::CombineHLTCppWorker(const std::string formulaExpr, const std::string outName):
+  outName_(outName), formula_("", formulaExpr.c_str())
+{
 }
 
 void CombineHLTCppWorker::initOutput(TTree *outputTree){
@@ -31,13 +33,10 @@ void CombineHLTCppWorker::resetValues() {
 bool CombineHLTCppWorker::analyze() {
   resetValues();
 
-  for ( auto& in_HLTFlag : in_HLTFlags ) {
-    if ( **in_HLTFlag == true ) {
-      out_HLTFlag = true;
-      break;
-    }
+  for ( int i=0; i<formula_.GetNpar(); ++i ) {
+    formula_.SetParameter(i, static_cast<double>(**in_HLTFlags[i]));
   }
 
-  return true;
+  return formula_.Eval(0);
 }
 
