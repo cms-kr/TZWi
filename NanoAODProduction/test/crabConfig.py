@@ -7,7 +7,7 @@ config.General.transferOutputs = True
 
 config.section_("JobType")
 config.JobType.pluginName  = 'Analysis'
-config.JobType.psetName    = 'test_data_92X_NANO.py'
+config.JobType.psetName    = '2017_94XMiniAODv2_MC_TTbar_NANO.py'
 
 config.section_("Data")
 config.Data.publication  = False
@@ -28,15 +28,17 @@ config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 1
 
 import os
-dataset = os.environ['DATASET']
+#dataset = os.environ['DATASET']
+dataset = '/TTTo2L2Nu_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v2/MINIAODSIM'
 config.Data.inputDataset = dataset
 
-reqName = "v940-00"
-config.Data.outLFNDirBase = '/store/group/NanoAOD/%s' % reqName
+reqName = "20190304"
+config.Data.outLFNDirBase = '/store/user/yolee/nanottbb2017/%s' % reqName
 label = dataset.split('/')[1]+'_'+dataset.split('/')[2]
 
 config.Data.outputDatasetTag = label
-config.General.requestName = '%s_%s' % (reqName, label)
+#config.General.requestName = '%s_%s' % (reqName, label)
+config.General.requestName = 'TT_only_MC'
 #config.JobType.pyCfgParams = opts
 
 #config.Data.lumiMask = "./Cert_294927-306126_13TeV_PromptReco_Collisions17_JSON.txt"
