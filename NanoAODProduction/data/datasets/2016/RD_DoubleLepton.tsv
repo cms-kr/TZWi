@@ -1,0 +1,27 @@
+#Name	Title	DatasetName	Luminosity(/fb)
+DoubleEG_Run2016B	DoubleEG	/DoubleEG/Run2016B-03Feb2017_ver2-v2/MINIAOD	12.9
+DoubleEG_Run2016C	DoubleEG	/DoubleEG/Run2016C-03Feb2017-v1/MINIAOD	12.9
+DoubleEG_Run2016D	DoubleEG	/DoubleEG/Run2016D-03Feb2017-v1/MINIAOD	12.9
+DoubleEG_Run2016E	DoubleEG	/DoubleEG/Run2016E-03Feb2017-v1/MINIAOD	4.32
+DoubleEG_Run2016F	DoubleEG	/DoubleEG/Run2016F-03Feb2017-v1/MINIAOD	3.37
+DoubleEG_Run2016G	DoubleEG	/DoubleEG/Run2016G-03Feb2017-v1/MINIAOD	8.02
+DoubleEG_Run2016H_v2	DoubleEG	/DoubleEG/Run2016H-03Feb2017_ver2-v1/MINIAOD	9.20
+DoubleEG_Run2016H_v3	DoubleEG	/DoubleEG/Run2016H-03Feb2017_ver3-v1/MINIAOD	9.20
+
+DoubleMuon_Run2016B	DoubleMuon	/DoubleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD	12.9
+DoubleMuon_Run2016C	DoubleMuon	/DoubleMuon/Run2016C-03Feb2017-v1/MINIAOD	12.9
+DoubleMuon_Run2016D	DoubleMuon	/DoubleMuon/Run2016D-03Feb2017-v1/MINIAOD	12.9
+DoubleMuon_Run2016E	DoubleMuon	/DoubleMuon/Run2016E-03Feb2017-v1/MINIAOD	4.32
+DoubleMuon_Run2016F	DoubleMuon	/DoubleMuon/Run2016F-03Feb2017-v1/MINIAOD	3.37
+DoubleMuon_Run2016G	DoubleMuon	/DoubleMuon/Run2016G-03Feb2017-v1/MINIAOD	8.02
+DoubleMuon_Run2016H_v2	DoubleMuon	/DoubleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD	9.20
+DoubleMuon_Run2016H_v3	DoubleMuon	/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD	9.20
+
+MuonEG_Run2016B	MuonEG	/MuonEG/Run2016B-03Feb2017_ver2-v2/MINIAOD	12.9
+MuonEG_Run2016C	MuonEG	/MuonEG/Run2016C-03Feb2017-v1/MINIAOD	12.9
+MuonEG_Run2016D	MuonEG	/MuonEG/Run2016D-03Feb2017-v1/MINIAOD	12.9
+MuonEG_Run2016E	MuonEG	/MuonEG/Run2016E-03Feb2017-v1/MINIAOD	4.32
+MuonEG_Run2016F	MuonEG	/MuonEG/Run2016F-03Feb2017-v1/MINIAOD	3.37
+MuonEG_Run2016G	MuonEG	/MuonEG/Run2016G-03Feb2017-v1/MINIAOD	8.02
+MuonEG_Run2016H_v2	MuonEG	/MuonEG/Run2016H-03Feb2017_ver2-v1/MINIAOD	9.20
+MuonEG_Run2016H_v3	MuonEG	/MuonEG/Run2016H-03Feb2017_ver3-v1/MINIAOD	9.20
