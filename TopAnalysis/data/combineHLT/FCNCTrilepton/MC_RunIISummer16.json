@@ -1,7 +1,7 @@
 {
-    "MuonEG" : "HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v || HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ_v || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v",
-    "DoubleMuon" : "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v || HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v || HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v || HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",
-    "DoubleEG" : "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",
-    "SingleMuon" : "HLT_IsoMu24_v || HLT_IsoTkMu24_v",
-    "SingleElectron" : "HLT_Ele32_eta2p1_WPTight_Gsf_v"
+    "MuonEG" : "HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL || HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ",
+    "DoubleMuon" : "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ || HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ",
+    "DoubleEG" : "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ",
+    "SingleMuon" : "HLT_IsoMu24 || HLT_IsoTkMu24",
+    "SingleElectron" : "HLT_Ele32_eta2p1_WPTight_Gsf"
 }

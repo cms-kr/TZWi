@@ -1,9 +1,9 @@
 #Name	Title	DatasetName	Luminosity(/fb)
-DoubleEG_Run2017B-3	DoubleEG	/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD	4.77
-DoubleEG_Run2017C-3	DoubleEG	/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD	9.58
-DoubleEG_Run2017D-3	DoubleEG	/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD	4.22
-DoubleEG_Run2017E-3	DoubleEG	/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD	9.26
-DoubleEG_Run2017F-3	DoubleEG	/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD	13.46
+DoubleEG_Run2017B	DoubleEG	/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD	4.77
+DoubleEG_Run2017C	DoubleEG	/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD	9.58
+DoubleEG_Run2017D	DoubleEG	/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD	4.22
+DoubleEG_Run2017E	DoubleEG	/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD	9.26
+DoubleEG_Run2017F	DoubleEG	/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD	13.46
 
 DoubleMuon_Run2017B	DoubleMuon	/DoubleMuon/Run2017B-31Mar2018-v1/MINIAOD	4.77
 DoubleMuon_Run2017C	DoubleMuon	/DoubleMuon/Run2017C-31Mar2018-v1/MINIAOD	9.58
