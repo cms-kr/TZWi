@@ -120,24 +120,44 @@ void FCNCTriLeptonCppWorker::resetValues() {
   }
   out_CutStep = 0;
 }
-//veto & signal muons
+//signal muons
 bool FCNCTriLeptonCppWorker::isGoodMuon(const unsigned i) const {
   const double pt = in_Muons_p4[0]->At(i);
   const double eta = in_Muons_p4[1]->At(i);
   if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
-  //if ( in_Muons_isTight->At(i) == 0 ) return false;
-  if ( ! (in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0)) ) return false;
-  if ( in_Muons_relIso->At(i) > maxVetoMuonRelIso_ ) return false;
+  if ( ! ( in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 and in_Muons_isTracker->At(i) != 0) ) ) return false;
+  if ( in_Muons_relIso->At(i) > maxMuonRelIso_ ) return false; //maxMuonRelIso : Tight PF isolation value
 
   return true;
 }
-//veto & signal electrons
+//veto muons
+bool FCNCTriLeptonCppWorker::isVetoMuon(const unsigned i) const {
+  const double pt = in_Muons_p4[0]->At(i);
+  const double eta = in_Muons_p4[1]->At(i);
+  if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
+  if ( ! ( in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0) ) ) return false;
+  if ( in_Muons_relIso->At(i) > maxVetoMuonRelIso_ ) return false; //maxVetoMuonRelIso : Loose PF isolation value
+
+  return true;
+}
+//signal electrons
 bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
-  if ( in_Electrons_id->At(i) == 0 or in_Electrons_idTrg->At(i) == 0 ) return false;
+  //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:medium, 3:tight
+  if ( in_Electrons_id->At(i) != 3 ) return false;
   //if ( in_Electrons_relIso->At(i) < 0.15 ) return false; // Note: commented out since already applied in Cut based ID
+
+  return true;
+}
+//veto electrons
+bool FCNCTriLeptonCppWorker::isVetoElectron(const unsigned i) const {
+  const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
+  const double eta = in_Electrons_p4[1]->At(i);
+  if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
+  //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:medium, 3:tight
+  if ( in_Electrons_id->At(i) != 1 ) return false;
 
   return true;
 }
@@ -164,7 +184,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   out_MET_pt = **in_MET_pt;
   out_MET_phi = **in_MET_phi;
 
-  // Select the three leading muons, keep veto muons as well up to 3
+  // Select the three leading muons
   int muon1Idx = -1, muon2Idx = -1, muon3Idx = -1;
   int nGoodMuons = 0;
   for ( unsigned i=0, n=in_Muons_p4[0]->GetSize(); i<n; ++i ) {
@@ -172,11 +192,11 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( isGoodMuon(i) ) {
       ++nGoodMuons;
       if ( muon3Idx < 0 or pt > in_Muons_p4[0]->At(muon3Idx) ) muon3Idx = i;
-      if ( muon2Idx < 0 or pt > in_Muons_p4[0]->At(muon2Idx) ) std::swap(muon2Idx, muon3Idx);muon2Idx = i;
+      if ( muon2Idx < 0 or pt > in_Muons_p4[0]->At(muon2Idx) ) std::swap(muon2Idx, muon3Idx);
       if ( muon1Idx < 0 or pt > in_Muons_p4[0]->At(muon1Idx) ) std::swap(muon1Idx, muon2Idx);
     }
   }
-  // Select the three leading electrons, keep veto electrons as well up to 3
+  // Select the three leading electrons
   int electron1Idx = -1, electron2Idx = -1, electron3Idx = -1;
   int nGoodElectrons = 0;
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
@@ -191,12 +211,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
   if ( nGoodMuons+nGoodElectrons < 3 ) return false; // Require at least three leptons.
 
   // Select event by decay mode
-  auto actualMode = mode_;
-  if ( mode_ == MODE::Auto ) {
-    if      ( muon1Idx     == -1 or in_Muons_p4[0]->At(muon1Idx) < in_Electrons_p4[0]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx) ) actualMode = MODE::ElEl;
-    else if ( electron1Idx == -1 or in_Electrons_p4[0]->At(electron1Idx) *  in_Electrons_eCorr->At(electron1Idx) < in_Muons_p4[0]->At(muon2Idx) ) actualMode = MODE::MuMu;
-    else actualMode = MODE::MuEl;
-  }
 /*
   if ( actualMode == MODE::MuMu ) {
     if ( nGoodMuons < 2 ) return false;
@@ -265,8 +279,8 @@ bool FCNCTriLeptonCppWorker::analyze() {
   for ( unsigned i=0, n=in_Jets_CSVv2->GetSize(); i<n; ++i ) {
     if ( !isGoodJet(i) ) continue;
     TLorentzVector jetP4 = buildP4(in_Jets_p4, i);
-    if ( lepton1P4.DeltaR(jetP4) < 0.4 ) continue;
-    if ( lepton2P4.DeltaR(jetP4) < 0.4 ) continue;
+    if ( lepton1P4.DeltaR(jetP4) < 0.3 ) continue;
+    if ( lepton2P4.DeltaR(jetP4) < 0.3 ) continue;
     jetIdxsByPt.push_back(i);
     jetIdxsByBDiscr.push_back(i);
     if ( in_Jets_CSVv2->At(i) > minGoodBjetBDiscr_ ) ++out_nGoodBjets;

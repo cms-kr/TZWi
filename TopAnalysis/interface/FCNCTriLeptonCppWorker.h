@@ -47,7 +47,9 @@ private:
   const double maxVetoMuonRelIso_ = 0.25;
 
   bool isGoodMuon(const unsigned i) const;
+  bool isVetoMuon(const unsigned i) const;
   bool isGoodElectron(const unsigned i) const;
+  bool isVetoElectron(const unsigned i) const;
   bool isGoodJet(const unsigned i) const;
 
 private:
@@ -57,18 +59,31 @@ private:
   TTreeReaderValue<float> *in_MET_pt = nullptr, *in_MET_phi = nullptr;
   TRAF in_Muons_p4[4];
   TRAI in_Muons_charge = nullptr;
-  TRAF in_Muons_relIso = nullptr;
+  TRAF in_Muons_relIso = nullptr; //nanoAOD object : Muon_pfRelIso04_all
   TRAB in_Muons_isTight = nullptr;
   TRAB in_Muons_isLoose = nullptr; //veto muons
   TRAB in_Muons_isPFcand = nullptr;
   TRAB in_Muons_isGlobal = nullptr;
   TRAB in_Muons_isTracker = nullptr;//veto muons(isGlobal or isTracker)
+  TRAF in_Muons_dxy = nullptr;
+  TRAF in_Muons_dz = nullptr;
+  TRAI in_Muons_nStations = nullptr;
+  //number of pixel hit->what object shoul we use.?
+  TRAI in_Muons_nTrackerLayers = nullptr;
+
   TRAF in_Electrons_p4[4];
   TRAI in_Electrons_charge = nullptr;
-  TRAF in_Electrons_relIso = nullptr;
+  TRAF in_Electrons_relIso = nullptr; //nanoAOD object : Electron_pfRelIso03_*
   TRAI in_Electrons_id = nullptr, in_Electrons_idTrg = nullptr;
   TRAF in_Electrons_dEtaSC = nullptr;
   TRAF in_Electrons_eCorr = nullptr;
+
+  //Electron_vidNestedWPBitmapSum16 : VID compressed bitmap -> can we use this? (nanoAOD object name)
+  TRAF in_Electrons_sieie = nullptr; //sigma_ietaieta with full 5x5 region
+  TRAF in_Electrons_eInvMinusPInv = nullptr; //(1/E - 1/p)
+  TRA in_electrons_lostHits = nullptr; //UChar_t, number of missing inner hits
+  TRAB in_Electrons_convVeto = nullptr; //pass conversion veto
+
   TRAF in_Jets_p4[4];
   TRAI in_Jets_id = nullptr;
   TRAF in_Jets_CSVv2 = nullptr;
