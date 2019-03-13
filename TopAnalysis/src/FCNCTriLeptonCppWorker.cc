@@ -8,14 +8,13 @@ using namespace std;
 
 FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName, const std::string algoName)
 {
-  if      ( modeName == "Auto" ) mode_ = MODE::Auto;
-  else if ( modeName == "ElElMu" ) mode_ = MODE::ElElMu;
+  if ( modeName == "ElElMu" ) mode_ = MODE::ElElMu;
   else if ( modeNmae == "MuMuEl" ) mode_ = MODE::MuMuEl;
   else if ( modeName == "ElElEl" ) mode_ = MODE::ElElEl;
   else if ( modeName == "MuMuMu" ) mode_ = MODE::MuMuMu;
   else {
-    cerr << "Mode name \"" << modeName << "\" is not available. Fall back to \"Auto\"" << endl;
-    mode_ = MODE::Auto;
+    cerr << "Mode name \"" << modeName << "\" is not available. " << endl;
+    mode_ = MODE::Auto;//This should be changed kind of 'return false...'(do not run this worker)
   }
 
   cout << "AlgoName is dummy for now..." << algoName << endl;
@@ -49,6 +48,10 @@ void FCNCTriLeptonCppWorker::initOutput(TTree *outputTree){
 
   outputTree->Branch("MET_pt", &out_MET_pt, "MET_pt/F");
   outputTree->Branch("MET_phi", &out_MET_phi, "MET_phi/F");
+
+  outputTree->Branch("W_TrMass", &out_W_TrMass, "W_TrMass/F")
+
+  outputTree->Branch("nGoodMuon")
 
   outputTree->Branch("nGoodJets", &out_nGoodJets, "nGoodJets/s");
   for ( unsigned i=0; i<4; ++i ) {
@@ -147,7 +150,6 @@ bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:medium, 3:tight
   if ( in_Electrons_id->At(i) != 3 ) return false;
-  //if ( in_Electrons_relIso->At(i) < 0.15 ) return false; // Note: commented out since already applied in Cut based ID
 
   return true;
 }
@@ -204,50 +206,31 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( isGoodElectron(i) ) {
       ++nGoodElectrons;
       if ( electron3Idx < 0 or pt > in_Electrons_p4[0]->At(electron3Idx) * in_Electrons_eCorr->At(electron3Idx) ) electron3Idx = i;
-      if ( electron2Idx < 0 or pt > in_Electrons_p4[0]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx) ) std::swap(electron2Idx, electron3Idx); //electron2Idx = i;
+      if ( electron2Idx < 0 or pt > in_Electrons_p4[0]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx) ) std::swap(electron2Idx, electron3Idx);
       if ( electron1Idx < 0 or pt > in_Electrons_p4[0]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx) ) std::swap(electron1Idx, electron2Idx);
     }
   }
   if ( nGoodMuons+nGoodElectrons < 3 ) return false; // Require at least three leptons.
 
   // Select event by decay mode
-/*
-  if ( actualMode == MODE::MuMu ) {
-    if ( nGoodMuons < 2 ) return false;
-    for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
-      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
-    }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
-    out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
-  }
-  else if ( actualMode == MODE::ElEl ) {
-    if ( nGoodElectrons < 2 ) return false;
-    for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx);
-    }
-    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
-  }
-  else if ( actualMode == MODE::MuEl ) {
-    if ( nGoodMuons < 1 or nGoodElectrons < 1 ) return false;
-    for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
-    }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron1Idx);
-  }
-*/
-  else if ( actualMode == MODE::ElElMu ) {
+  //This logic might be have some problems...need to change this
+  if ( actualMode == MODE::ElElMu ) {
     if ( nGoodElectrons < 2 or nGoodMuons < 1 ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron);
+      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
+      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx);
+      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muon3Idx);
     }
+    
+    if ( in_Electrons_charge->At(electron1Idx == in_Electrons_charge->At(electron2Idx)) ) return false;
+    if ( !(out_Lepton3_p4[0] < out_Lepton1_p4[0] and out_Lepton3_p4[0] < out_Lepton2_p4[0]) ) return false;
+    
+    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
+    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
+    out_Lepton3_pdgId = -13*in_Muons_charge->At(muon3Idx);
   }
   else if ( actualMode == MODE::MuMuEl ) {
-
+    if ( nGoodElectrons < 1 or nGoodMuons < 2 ) return false;
   }
   else if ( actualMode == MODE::ElElEl ) {
   
@@ -258,9 +241,10 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   if ( out_Lepton1_p4[0] < minLepton1Pt_ ) return false;
 
-  TLorentzVector lepton1P4, lepton2P4;
+  TLorentzVector lepton1P4, lepton2P4, lepton3P4;
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
   lepton2P4.SetPtEtaPhiM(out_Lepton2_p4[0], out_Lepton2_p4[1], out_Lepton2_p4[2], out_Lepton2_p4[3]);
+  lepton3P4.SetPtEtaPhiM(out_Lepton3_p4[0], out_Lepton3_p4[1], out_Lepton3_p4[2], out_Lepton3_p4[3]);
   // Done for the leptons
 
   // Build Z candidate
@@ -271,6 +255,11 @@ bool FCNCTriLeptonCppWorker::analyze() {
   out_Z_p4[3] = zP4.M();
   out_Z_charge = out_Lepton1_pdgId+out_Lepton2_pdgId;
   out_Z_charge = out_Z_charge == 0 ? 0 : 2*out_Z_charge/abs(out_Z_charge);
+
+  // Transeverse mass of the W boson
+  //if lepton3 comes from W (that lepton have high pT)
+  //MET_px = MET_pt*cos(phi) & MET_py = MET_pt*sin(phi)
+  out_W_TrMass = std::sqrt(pow(lepton3P4.Pt()+out_MET_pt, 2) - pow(lepton3P4.Px()+out_MET_pt*cos(out_MET_phi), 2) - pow(lepton3P4.Py()+out_MET_pt*sin(out_MET_phi), 2))
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxsByPt, jetIdxsByBDiscr;
@@ -304,9 +293,11 @@ bool FCNCTriLeptonCppWorker::analyze() {
   out_CutStep = 0;
   // do-while trick, to reduce nested-if statements
   do {
-    if ( out_Z_charge != 0 or out_Lepton1_p4[0] < 25 or out_Lepton2_p4[0] < 20 ) break;
+    if ( !(out_nGoodJets >= 1 and out_nGoodJets <= 3) ) break;
     ++out_CutStep;
-
+    if ( !(out_W_TrMass < 300) ) break;
+    ++out_CutStep;
+/*
     // Z-veto and MET (no cut for e-mu channel)
     if ( actualMode == MODE::MuEl ) {
       out_CutStep += 2;
@@ -317,13 +308,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
       if ( out_MET_pt < 40 ) break;
       ++out_CutStep;
     }
-
-    if ( out_nGoodJets < 4 ) break;
-    ++out_CutStep;
-    if ( out_nGoodBjets < 1 ) break;
-    ++out_CutStep; 
-    if ( out_nGoodBjets < 2 ) break;
-    ++out_CutStep; 
+*/
   } while ( false );
 
   return true;

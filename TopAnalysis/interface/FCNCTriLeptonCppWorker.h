@@ -12,7 +12,7 @@
 class FCNCTriLeptonCppWorker {
 //190306 KST 15:49 : just copy frome TTbarDouble~.h, changed class name
 public:
-  enum class MODE {Auto=0, ElElMu=111113, MuMuEl=131311, ElElEl=111111, MuMuMu=131313} mode_ = MODE::Auto;
+  enum class MODE {ElElMu=111113, MuMuEl=131311, ElElEl=111111, MuMuMu=131313} mode_ = MODE::ElElMu;
 
   typedef TTreeReaderArray<float>* TRAF;
   typedef TTreeReaderArray<int>* TRAI;
@@ -65,11 +65,6 @@ private:
   TRAB in_Muons_isPFcand = nullptr;
   TRAB in_Muons_isGlobal = nullptr;
   TRAB in_Muons_isTracker = nullptr;//veto muons(isGlobal or isTracker)
-  TRAF in_Muons_dxy = nullptr;
-  TRAF in_Muons_dz = nullptr;
-  TRAI in_Muons_nStations = nullptr;
-  //number of pixel hit->what object shoul we use.?
-  TRAI in_Muons_nTrackerLayers = nullptr;
 
   TRAF in_Electrons_p4[4];
   TRAI in_Electrons_charge = nullptr;
@@ -77,12 +72,6 @@ private:
   TRAI in_Electrons_id = nullptr, in_Electrons_idTrg = nullptr;
   TRAF in_Electrons_dEtaSC = nullptr;
   TRAF in_Electrons_eCorr = nullptr;
-
-  //Electron_vidNestedWPBitmapSum16 : VID compressed bitmap -> can we use this? (nanoAOD object name)
-  TRAF in_Electrons_sieie = nullptr; //sigma_ietaieta with full 5x5 region
-  TRAF in_Electrons_eInvMinusPInv = nullptr; //(1/E - 1/p)
-  TRA in_electrons_lostHits = nullptr; //UChar_t, number of missing inner hits
-  TRAB in_Electrons_convVeto = nullptr; //pass conversion veto
 
   TRAF in_Jets_p4[4];
   TRAI in_Jets_id = nullptr;
@@ -98,6 +87,8 @@ private:
   int out_Z_charge;
 
   float out_MET_pt, out_MET_phi;
+
+  float out_W_TrMass;
 
   const static unsigned short maxNGoodJetsToKeep_ = 100;
   unsigned short out_nGoodJets, out_nGoodBjets;
