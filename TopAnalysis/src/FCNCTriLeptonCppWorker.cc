@@ -117,6 +117,7 @@ void FCNCTriLeptonCppWorker::resetValues() {
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = out_Lepton3_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
+  out_W_TrMass
   out_nGoodJets = out_nGoodBjets = 0;
   for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
@@ -215,31 +216,53 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Select event by decay mode
   //This logic might be have some problems...need to change this
   if ( actualMode == MODE::ElElMu ) {
-    if ( nGoodElectrons < 2 or nGoodMuons < 1 ) return false;
+    if ( nGoodElectrons < 2 and nGoodMuons < 1 ) return false;
+    if ( in_Electrons_charge->At(electron1Idx) == in_Electrons_charge->At(electron2Idx) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
       out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
       out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx);
-      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muon3Idx);
-    }
-    
-    if ( in_Electrons_charge->At(electron1Idx == in_Electrons_charge->At(electron2Idx)) ) return false;
-    if ( !(out_Lepton3_p4[0] < out_Lepton1_p4[0] and out_Lepton3_p4[0] < out_Lepton2_p4[0]) ) return false;
-    
+      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muon1Idx);
+    } 
     out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
     out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
-    out_Lepton3_pdgId = -13*in_Muons_charge->At(muon3Idx);
+    out_Lepton3_pdgId = -13*in_Muons_charge->At(muon1Idx);
   }
   else if ( actualMode == MODE::MuMuEl ) {
-    if ( nGoodElectrons < 1 or nGoodMuons < 2 ) return false;
+    if ( nGoodElectrons < 1 and nGoodMuons < 2 ) return false;
+    if ( in_Muons_charge->At(muon1Idx) == in_Muons_charge->At(muon2Idx) ) return false;
+    for ( unsigned i=0; i<4; ++i ) {
+      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
+      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
+      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
+    }
+    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
+    out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
+    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electron1Idx);
   }
   else if ( actualMode == MODE::ElElEl ) {
-  
+    if ( nGoodElectrons < 3 ) return false;
+    if ( in_Electrons_charge->At(electron1Idx) == in_Electrons_charge->At(electron2Idx) ) return false;
+    for ( unsigned i=0; i<4; ++i ) {
+      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(muon1Idx);
+      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(muon2Idx);
+      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(muon3Idx);
+    }
+    out_Lepton1_pdgId = -11*in_Electrons_charge->At(muon1Idx);
+    out_Lepton2_pdgId = -11*in_Electrons_charge->At(muon2Idx);
+    out_Lepton3_pdgId = -11*in_Electrons_charge->At(muon3Idx);
   }
   else if ( actualMode == MODE::MuMuMu ) {
-  
+    if ( nGoodMuons < 3 ) return false;
+    if ( in_Muons_charge->At(muon1Idx) == in_Muons_charge->At(muon2Idx) ) return false;
+    for ( unsigned i=0; i<4; ++i ) {
+      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
+      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
+      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muon3Idx);
+    }
+    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
+    out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
+    out_Lepton3_pdgId = -13*in_Muons_charge->At(muon3Idx);
   }
-
-  if ( out_Lepton1_p4[0] < minLepton1Pt_ ) return false;
 
   TLorentzVector lepton1P4, lepton2P4, lepton3P4;
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
