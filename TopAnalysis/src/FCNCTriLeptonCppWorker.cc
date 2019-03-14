@@ -177,6 +177,19 @@ TLorentzVector FCNCTriLeptonCppWorker::buildP4(const TRAF p4Arr[], unsigned i) c
   return p4;
 }
 
+double FCNCTriLeptonCppWorker::computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const
+{
+  //MET_px = MET_pt*cos(phi) & MET_py = MET_pt*sin(phi)
+  const double met_px = met_pt*cos(met_phi);
+  const double met_py = met_pt*sin(met_phi);
+
+  const double pt = lepP4.Pt() + met_pt;
+  const double px = lepP4.Px()+met_px;
+  const double py = lepP4.Py()+met_py;
+
+  return std::sqrt(std::max(0., pt*pt - px*px - py*py));
+}
+
 bool FCNCTriLeptonCppWorker::analyze() {
   resetValues();
 
@@ -271,8 +284,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Transeverse mass of the W boson
   //if lepton3 comes from W (that lepton have high pT)
-  //MET_px = MET_pt*cos(phi) & MET_py = MET_pt*sin(phi)
-  out_W_TrMass = std::sqrt(pow(lepton3P4.Pt()+out_MET_pt, 2) - pow(lepton3P4.Px()+out_MET_pt*cos(out_MET_phi), 2) - pow(lepton3P4.Py()+out_MET_pt*sin(out_MET_phi), 2));
+  out_W_TrMass = computeMT(lepton3P4, out_MET_pt, out_MET_phi);
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxsByPt, jetIdxsByBDiscr;
