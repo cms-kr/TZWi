@@ -11,9 +11,9 @@ ttbarHLT_MuMu_MC2016 = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIISum
 ttbarHLT_ElEl_MC2016 = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIISummer16.DoubleEG")
 ttbarHLT_MuEl_MC2016 = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIISummer16.MuonEG")
 
-ttbarHLT_MuMu_MC2017 = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIIFall17.DoubleMuon")
-ttbarHLT_ElEl_MC2017 = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIIFall17.DoubleEG")
-ttbarHLT_MuEl_MC2017 = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIIFall17.MuonEG")
+ttbarHLT_MuMu_MC = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIIFall17.DoubleMuon")
+ttbarHLT_ElEl_MC = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIIFall17.DoubleEG")
+ttbarHLT_MuEl_MC = lambda : CombineHLT(hltSet="ttbarDoubleLepton/MC_RunIIFall17.MuonEG")
 
 ttbarHLT_MuMu_Run2016BG = lambda : CombineHLT(hltSet="ttbarDoubleLepton/RD_Run2016BG.DoubleMuon")
 ttbarHLT_ElEl_Run2016BG = lambda : CombineHLT(hltSet="ttbarDoubleLepton/RD_Run2016BG.DoubleEG")
