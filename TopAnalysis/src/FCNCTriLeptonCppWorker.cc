@@ -243,13 +243,13 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodElectrons < 3 ) return false;
     if ( in_Electrons_charge->At(electron1Idx) == in_Electrons_charge->At(electron2Idx) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(muon1Idx);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(muon2Idx);
-      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(muon3Idx);
+      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
+      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx);
+      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electron3Idx);
     }
-    out_Lepton1_pdgId = -11*in_Electrons_charge->At(muon1Idx);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(muon2Idx);
-    out_Lepton3_pdgId = -11*in_Electrons_charge->At(muon3Idx);
+    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
+    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
+    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electron3Idx);
   }
   else if ( actualMode == MODE::MuMuMu ) {
     if ( nGoodMuons < 3 ) return false;
