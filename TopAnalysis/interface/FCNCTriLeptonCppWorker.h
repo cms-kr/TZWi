@@ -12,7 +12,7 @@
 class FCNCTriLeptonCppWorker {
 //190306 KST 15:49 : just copy frome TTbarDouble~.h, changed class name
 public:
-  enum class MODE {ElElMu=111113, MuMuEl=131311, ElElEl=111111, MuMuMu=131313} mode_ = MODE::ElElMu;
+  enum class MODE {None=0, ElElMu=111113, MuMuEl=131311, ElElEl=111111, MuMuMu=131313} mode_ = MODE::None;
 
   typedef TTreeReaderArray<float>* TRAF;
   typedef TTreeReaderArray<int>* TRAI;
@@ -22,7 +22,7 @@ public:
   ~FCNCTriLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                TRAF relIso, TRAB isTight, isLoose, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
+                TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                     TRAF relIso, TRAI id, TRAI idTrig, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
