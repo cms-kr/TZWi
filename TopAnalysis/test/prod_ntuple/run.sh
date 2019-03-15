@@ -17,6 +17,7 @@ JOBNUMBER=$4
 
 DATATYPE1=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f1`
 DATATYPE2=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2 | cut -d_ -f2`
+DATATYPE3=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2`
 [ _$DATATYPE2 == _ ] && DATATYPE2=$DATATYPE1
 [ _$DATATYPE1 == _RD -a $DATATYPE2 != Run2016H ] && DATATYPE2=Run2016BG
 [ _$DATATYPE1 == _MC ] && DATATYPE2=MC
@@ -39,7 +40,8 @@ if [ _$DATATYPE1 == "_MC" ]; then
     #ARGS="" Add other syst variations 
     $CMD $ARGS $OUTPATH/mc $FILENAMES
 
-    if [ _$DATATYPE2 == "_TT" ]; then
+    #if [ _$DATATYPE2 == "_TT" ]; then
+    if [ `echo _$DATATYPE3 | grep -q 'TT_'` ]; then
         [ ! -d $OUTPATH/mctop ] && mkdir -p $OUTPATH/mctop
         ARGS="-I TZWi.TopAnalysis.partonTop partonTop"
         $CMD $ARGS $OUTPATH/mctop $FILENAMES

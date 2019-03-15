@@ -28,7 +28,14 @@ class PartonTop(Module, object):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.worker.initOutput(wrappedOutputTree.tree())
+        self.out = wrappedOutputTree
+        self.out.branch("nParton")
+        self.out.branch("Parton_pt"    , "F", lenVar="nParton")
+        self.out.branch("Parton_eta"   , "F", lenVar="nParton")
+        self.out.branch("Parton_phi"   , "F", lenVar="nParton")
+        self.out.branch("Parton_mass"  , "F", lenVar="nParton")
+        self.out.branch("Parton_pdgId" , "S", lenVar="nParton")
+        self.out.branch("Parton_mother", "S", lenVar="nParton")
         self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -50,6 +57,11 @@ class PartonTop(Module, object):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         if event._tree._ttreereaderversion > self._ttreereaderversion:
             self.initReaders(event._tree)
-        return self.worker.genEvent()
+        self.worker.genEvent()
+        self.out.fillBranch("nParton", self.worker.get_n())
+        for varName in ["pt", "eta", "phi", "mass", "pdgId", "mother"]:
+            self.out.fillBranch("Parton_"+varName, getattr(self.worker, 'get_'+varName)())
+
+        return True
 
 partonTop = lambda : PartonTop()
