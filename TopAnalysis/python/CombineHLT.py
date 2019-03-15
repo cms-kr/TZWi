@@ -73,4 +73,8 @@ class CombineHLT(Module, object):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         if event._tree._ttreereaderversion > self._ttreereaderversion:
             self.initReaders(event._tree)
-        self.out.fillBranch(self.outName, self.worker.analyze())
+
+        res = self.worker.analyze()
+        self.out.fillBranch(self.outName, res)
+
+        return res
