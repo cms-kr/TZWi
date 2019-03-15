@@ -40,8 +40,7 @@ if [ _$DATATYPE1 == "_MC" ]; then
     #ARGS="" Add other syst variations 
     $CMD $ARGS $OUTPATH/mc $FILENAMES
 
-    #if [ _$DATATYPE2 == "_TT" ]; then
-    if [ `echo _$DATATYPE3 | grep -q 'TT_'` ]; then
+    if `echo _$DATATYPE3 | grep -q 'TT_'`; then
         [ ! -d $OUTPATH/mctop ] && mkdir -p $OUTPATH/mctop
         ARGS="-I TZWi.TopAnalysis.partonTop partonTop"
         $CMD $ARGS $OUTPATH/mctop $FILENAMES

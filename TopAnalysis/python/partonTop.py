@@ -17,9 +17,9 @@ class PartonTop(Module, object):
             if base:
                 ROOT.gROOT.ProcessLine(".L %s/src/PartonTopCppWorker.cc+O" % base)
             else:
-                base = "%s/src/NanoCAT/TopAnalysis"%os.getenv("CMSSW_BASE")
+                base = "%s/src/TZWi/TopAnalysis"%os.getenv("CMSSW_BASE")
                 ROOT.gSystem.Load("libPhysicsToolsNanoAODTools.so")
-                ROOT.gSystem.Load("libNanoCATTopAnalysis.so")
+                ROOT.gSystem.Load("libTZWiTopAnalysis.so")
                 ROOT.gROOT.ProcessLine(".L %s/interface/PartonTopCppWorker.h" % base)
         pass
     def beginJob(self):
@@ -29,13 +29,13 @@ class PartonTop(Module, object):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.out.branch("nParton")
+        self.out.branch("nParton", "i")
         self.out.branch("Parton_pt"    , "F", lenVar="nParton")
         self.out.branch("Parton_eta"   , "F", lenVar="nParton")
         self.out.branch("Parton_phi"   , "F", lenVar="nParton")
         self.out.branch("Parton_mass"  , "F", lenVar="nParton")
-        self.out.branch("Parton_pdgId" , "S", lenVar="nParton")
-        self.out.branch("Parton_mother", "S", lenVar="nParton")
+        self.out.branch("Parton_pdgId" , "I", lenVar="nParton")
+        self.out.branch("Parton_mother", "I", lenVar="nParton")
         self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
