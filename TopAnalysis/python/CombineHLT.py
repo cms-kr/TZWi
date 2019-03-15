@@ -56,8 +56,7 @@ class CombineHLT(Module, object):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.b_out = self.out.branch(self.outName, "O")
-        self.worker.initOutput(self.out.tree())
+        self.out.branch(self.outName, "O")
         self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -74,4 +73,8 @@ class CombineHLT(Module, object):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         if event._tree._ttreereaderversion > self._ttreereaderversion:
             self.initReaders(event._tree)
-        return self.worker.analyze()
+
+        res = self.worker.analyze()
+        self.out.fillBranch(self.outName, res)
+
+        return res
