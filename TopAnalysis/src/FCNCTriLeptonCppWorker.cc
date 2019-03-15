@@ -9,12 +9,12 @@ using namespace std;
 FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName, const std::string algoName)
 {
   if ( modeName == "ElElMu" ) mode_ = MODE::ElElMu;
-  else if ( modeNmae == "MuMuEl" ) mode_ = MODE::MuMuEl;
+  else if ( modeName == "MuMuEl" ) mode_ = MODE::MuMuEl;
   else if ( modeName == "ElElEl" ) mode_ = MODE::ElElEl;
   else if ( modeName == "MuMuMu" ) mode_ = MODE::MuMuMu;
   else {
     cerr << "Mode name \"" << modeName << "\" is not available. " << endl;
-    mode_ = MODE::Auto;//This should be changed kind of 'return false...'(do not run this worker)
+    mode_ = MODE::None;//This should be changed kind of 'return false...'(do not run this worker)
   }
 
   cout << "AlgoName is dummy for now..." << algoName << endl;
@@ -49,9 +49,7 @@ void FCNCTriLeptonCppWorker::initOutput(TTree *outputTree){
   outputTree->Branch("MET_pt", &out_MET_pt, "MET_pt/F");
   outputTree->Branch("MET_phi", &out_MET_phi, "MET_phi/F");
 
-  outputTree->Branch("W_TrMass", &out_W_TrMass, "W_TrMass/F")
-
-  outputTree->Branch("nGoodMuon")
+  outputTree->Branch("W_TrMass", &out_W_TrMass, "W_TrMass/F");
 
   outputTree->Branch("nGoodJets", &out_nGoodJets, "nGoodJets/s");
   for ( unsigned i=0; i<4; ++i ) {
@@ -82,7 +80,7 @@ void FCNCTriLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass
 }
 
 void FCNCTriLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                                          TRAF relIso, TRAB isTight, TRAB isLoose, TRAB isGlobal, TRAB isPFcand, TRAB isTracker) {
+                                      TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker) {
   in_Muons_p4[0] = pt;
   in_Muons_p4[1] = eta;
   in_Muons_p4[2] = phi;
@@ -90,7 +88,6 @@ void FCNCTriLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TR
   in_Muons_charge = charge;
   in_Muons_relIso = relIso;
   in_Muons_isTight = isTight;
-  in_Muons_isLoose = isLoose;
   in_Muons_isGlobal = isGlobal;
   in_Muons_isPFcand = isPFcand;
   in_Muons_isTracker = isTracker;
@@ -117,7 +114,7 @@ void FCNCTriLeptonCppWorker::resetValues() {
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = out_Lepton3_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
-  out_W_TrMass
+  out_W_TrMass = 0;
   out_nGoodJets = out_nGoodBjets = 0;
   for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
@@ -160,7 +157,7 @@ bool FCNCTriLeptonCppWorker::isVetoElectron(const unsigned i) const {
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:medium, 3:tight
-  if ( in_Electrons_id->At(i) != 1 ) return false;
+  if ( in_Electrons_id->At(i) != 1 and in_Electrons_id->At(i) != 2 ) return false;
 
   return true;
 }
@@ -180,6 +177,19 @@ TLorentzVector FCNCTriLeptonCppWorker::buildP4(const TRAF p4Arr[], unsigned i) c
   return p4;
 }
 
+double FCNCTriLeptonCppWorker::computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const
+{
+  //MET_px = MET_pt*cos(phi) & MET_py = MET_pt*sin(phi)
+  const double met_px = met_pt*cos(met_phi);
+  const double met_py = met_pt*sin(met_phi);
+
+  const double pt = lepP4.Pt() + met_pt;
+  const double px = lepP4.Px()+met_px;
+  const double py = lepP4.Py()+met_py;
+
+  return std::sqrt(std::max(0., pt*pt - px*px - py*py));
+}
+
 bool FCNCTriLeptonCppWorker::analyze() {
   resetValues();
 
@@ -187,81 +197,74 @@ bool FCNCTriLeptonCppWorker::analyze() {
   out_MET_pt = **in_MET_pt;
   out_MET_phi = **in_MET_phi;
 
-  // Select the three leading muons
-  int muon1Idx = -1, muon2Idx = -1, muon3Idx = -1;
-  int nGoodMuons = 0;
+  // Select leptons
+  std::vector<int> muonIdxs;
+  std::vector<int> electronIdxs;
   for ( unsigned i=0, n=in_Muons_p4[0]->GetSize(); i<n; ++i ) {
-    const double pt = in_Muons_p4[0]->At(i);
-    if ( isGoodMuon(i) ) {
-      ++nGoodMuons;
-      if ( muon3Idx < 0 or pt > in_Muons_p4[0]->At(muon3Idx) ) muon3Idx = i;
-      if ( muon2Idx < 0 or pt > in_Muons_p4[0]->At(muon2Idx) ) std::swap(muon2Idx, muon3Idx);
-      if ( muon1Idx < 0 or pt > in_Muons_p4[0]->At(muon1Idx) ) std::swap(muon1Idx, muon2Idx);
-    }
+    if ( isGoodMuon(i) ) muonIdxs.push_back(i);
   }
-  // Select the three leading electrons
-  int electron1Idx = -1, electron2Idx = -1, electron3Idx = -1;
-  int nGoodElectrons = 0;
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
-    const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
-    if ( isGoodElectron(i) ) {
-      ++nGoodElectrons;
-      if ( electron3Idx < 0 or pt > in_Electrons_p4[0]->At(electron3Idx) * in_Electrons_eCorr->At(electron3Idx) ) electron3Idx = i;
-      if ( electron2Idx < 0 or pt > in_Electrons_p4[0]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx) ) std::swap(electron2Idx, electron3Idx);
-      if ( electron1Idx < 0 or pt > in_Electrons_p4[0]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx) ) std::swap(electron1Idx, electron2Idx);
-    }
+    if ( isGoodElectron(i) ) electronIdxs.push_back(i);
   }
+  const int nGoodMuons = muonIdxs.size();
+  const int nGoodElectrons = electronIdxs.size();
   if ( nGoodMuons+nGoodElectrons < 3 ) return false; // Require at least three leptons.
 
+  std::sort(muonIdxs.begin(), muonIdxs.end(), [&](const int i, const int j){
+              return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
+  std::sort(electronIdxs.begin(), electronIdxs.end(), [&](const int i, const int j){
+              return in_Electrons_p4[0]->At(i)*in_Electrons_eCorr->At(i) >
+                     in_Electrons_p4[0]->At(j)*in_Electrons_eCorr->At(j);});
+
   // Select event by decay mode
-  //This logic might be have some problems...need to change this
+  auto actualMode = mode_;
   if ( actualMode == MODE::ElElMu ) {
     if ( nGoodElectrons < 2 and nGoodMuons < 1 ) return false;
-    if ( in_Electrons_charge->At(electron1Idx) == in_Electrons_charge->At(electron2Idx) ) return false;
+    if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx);
-      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muon1Idx);
+      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
+      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
+      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
     } 
-    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
-    out_Lepton3_pdgId = -13*in_Muons_charge->At(muon1Idx);
+    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
   }
   else if ( actualMode == MODE::MuMuEl ) {
     if ( nGoodElectrons < 1 and nGoodMuons < 2 ) return false;
-    if ( in_Muons_charge->At(muon1Idx) == in_Muons_charge->At(muon2Idx) ) return false;
+    if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
-      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
-      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
+      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
+      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
+      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
     }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
-    out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
-    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electron1Idx);
+    out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+    out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
+    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
   }
   else if ( actualMode == MODE::ElElEl ) {
     if ( nGoodElectrons < 3 ) return false;
-    if ( in_Electrons_charge->At(electron1Idx) == in_Electrons_charge->At(electron2Idx) ) return false;
+    if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx);
-      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electron3Idx);
+      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
+      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
+      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electronIdxs[2]);
     }
-    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
-    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electron3Idx);
+    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
   }
   else if ( actualMode == MODE::MuMuMu ) {
     if ( nGoodMuons < 3 ) return false;
-    if ( in_Muons_charge->At(muon1Idx) == in_Muons_charge->At(muon2Idx) ) return false;
+    if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
-      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
-      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muon3Idx);
+      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
+      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
+      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[2]);
     }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
-    out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
-    out_Lepton3_pdgId = -13*in_Muons_charge->At(muon3Idx);
+    out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+    out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
+    out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[2]);
   }
 
   TLorentzVector lepton1P4, lepton2P4, lepton3P4;
@@ -281,8 +284,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Transeverse mass of the W boson
   //if lepton3 comes from W (that lepton have high pT)
-  //MET_px = MET_pt*cos(phi) & MET_py = MET_pt*sin(phi)
-  out_W_TrMass = std::sqrt(pow(lepton3P4.Pt()+out_MET_pt, 2) - pow(lepton3P4.Px()+out_MET_pt*cos(out_MET_phi), 2) - pow(lepton3P4.Py()+out_MET_pt*sin(out_MET_phi), 2))
+  out_W_TrMass = computeMT(lepton3P4, out_MET_pt, out_MET_phi);
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxsByPt, jetIdxsByBDiscr;
