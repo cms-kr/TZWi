@@ -2,26 +2,6 @@
 #include <iostream>
 #include <cmath>
 
-PartonTopCppWorker::PartonTopCppWorker(){
-}
-
-PartonTopCppWorker::~PartonTopCppWorker(){
-}
-
-void PartonTopCppWorker::initOutput(TTree *outputTree){
-  if ( _doCppOutput ) return;
-  _doCppOutput = true;
-
-  outputTree->Branch("nPartons", &out_nPartons, "nPartons/s");
-  outputTree->Branch("Partons_pt"    , out_Partons_pt    , "Partons_pt[nPartons]/F"   );
-  outputTree->Branch("Partons_eta"   , out_Partons_eta   , "Partons_eta[nPartons]/F"  );
-  outputTree->Branch("Partons_phi"   , out_Partons_phi   , "Partons_phi[nPartons]/F"  );
-  outputTree->Branch("Partons_mass"  , out_Partons_mass  , "Partons_mass[nPartons]/F"  );
-  outputTree->Branch("Partons_pdgId" , out_Partons_pdgId , "Partons_pdgId[nPartons]/I" );
-  outputTree->Branch("Partons_mother", out_Partons_mother, "Partons_mother[nPartons]/S");
-
-}
-
 void PartonTopCppWorker::setGenParticles(TTreeReaderValue<unsigned> *nGenPart,
                                          TTreeReaderArray<float> *GenPart_pt, TTreeReaderArray<float> *GenPart_eta, TTreeReaderArray<float> *GenPart_phi, TTreeReaderArray<float> *GenPart_mass,
                                          TTreeReaderArray<int> *GenPart_pdgId, TTreeReaderArray<int> *GenPart_status,
@@ -55,17 +35,19 @@ int PartonTopCppWorker::findFirst(const int i) const {
 }
 
 void PartonTopCppWorker::resetValues() {
-  out_nPartons = 0;
-  for ( unsigned i=0; i<maxNPartons_; ++i ) {
-    out_Partons_pt[i] = out_Partons_eta[i] = out_Partons_phi[i] = out_Partons_mass[i] = 0;
-    out_Partons_pdgId[i] = out_Partons_mother[i] = 0;
-  }
+  out_pts.clear();
+  out_etas.clear();
+  out_phis.clear();
+  out_masses.clear();
+  out_pdgIds.clear();
+  out_mothers.clear();
 }
 
 bool PartonTopCppWorker::genEvent(){
   using namespace std;
 
   resetValues();
+  int nPartons = 0;
   const unsigned int nGenPart = **in_nGenPart;
 
   // Find top quarks
@@ -89,14 +71,14 @@ bool PartonTopCppWorker::genEvent(){
   // Fill top quarks first
   std::map<unsigned, int> indexMap;
   for ( unsigned i : tQuarks ) {
-    out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
-    out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
-    out_Partons_phi[out_nPartons] = in_GenPart_phi->At(i);
-    out_Partons_mass[out_nPartons] = in_GenPart_mass->At(i);
-    out_Partons_pdgId[out_nPartons] = in_GenPart_pdgId->At(i);
-    out_Partons_mother[out_nPartons] = -1;
-    indexMap[i] = out_nPartons;
-    ++out_nPartons;
+    out_pts.push_back(in_GenPart_pt->At(i));
+    out_etas.push_back(in_GenPart_eta->At(i));
+    out_phis.push_back(in_GenPart_phi->At(i));
+    out_masses.push_back(in_GenPart_mass->At(i));
+    out_pdgIds.push_back(in_GenPart_pdgId->At(i));
+    out_mothers.push_back(-1);
+    indexMap[i] = nPartons;
+    ++nPartons;
   }
 
   // Continue to bosons. This might not be slow, but OK with just one or two top quarks in the event
@@ -107,14 +89,14 @@ bool PartonTopCppWorker::genEvent(){
       motherIdx = (match == indexMap.end()) ? -1 : match->second;
     }
 
-    out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
-    out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
-    out_Partons_phi[out_nPartons] = in_GenPart_phi->At(i);
-    out_Partons_mass[out_nPartons] = in_GenPart_mass->At(i);
-    out_Partons_pdgId[out_nPartons] = in_GenPart_pdgId->At(i);
-    out_Partons_mother[out_nPartons] = motherIdx;
-    indexMap[i] = out_nPartons;
-    ++out_nPartons;
+    out_pts.push_back(in_GenPart_pt->At(i));
+    out_etas.push_back(in_GenPart_eta->At(i));
+    out_phis.push_back(in_GenPart_phi->At(i));
+    out_masses.push_back(in_GenPart_mass->At(i));
+    out_pdgIds.push_back(in_GenPart_pdgId->At(i));
+    out_mothers.push_back(motherIdx);
+    indexMap[i] = nPartons;
+    ++nPartons;
   }
 
   for ( unsigned i : quarks ) {
@@ -124,14 +106,14 @@ bool PartonTopCppWorker::genEvent(){
       motherIdx = (match == indexMap.end()) ? -1 : match->second;
     }
 
-    out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
-    out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
-    out_Partons_phi[out_nPartons] = in_GenPart_phi->At(i);
-    out_Partons_mass[out_nPartons] = in_GenPart_mass->At(i);
-    out_Partons_pdgId[out_nPartons] = in_GenPart_pdgId->At(i);
-    out_Partons_mother[out_nPartons] = motherIdx;
-    indexMap[i] = out_nPartons;
-    ++out_nPartons;
+    out_pts.push_back(in_GenPart_pt->At(i));
+    out_etas.push_back(in_GenPart_eta->At(i));
+    out_phis.push_back(in_GenPart_phi->At(i));
+    out_masses.push_back(in_GenPart_mass->At(i));
+    out_pdgIds.push_back(in_GenPart_pdgId->At(i));
+    out_mothers.push_back(motherIdx);
+    indexMap[i] = nPartons;
+    ++nPartons;
   }
 
   auto isFromBosons = [&](const unsigned i) {
@@ -147,14 +129,14 @@ bool PartonTopCppWorker::genEvent(){
       motherIdx = (match == indexMap.end()) ? -1 : match->second;
     }
 
-    out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
-    out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
-    out_Partons_phi[out_nPartons] = in_GenPart_phi->At(i);
-    out_Partons_mass[out_nPartons] = in_GenPart_mass->At(i);
-    out_Partons_pdgId[out_nPartons] = in_GenPart_pdgId->At(i);
-    out_Partons_mother[out_nPartons] = motherIdx;
-    indexMap[i] = out_nPartons;
-    ++out_nPartons;
+    out_pts.push_back(in_GenPart_pt->At(i));
+    out_etas.push_back(in_GenPart_eta->At(i));
+    out_phis.push_back(in_GenPart_phi->At(i));
+    out_masses.push_back(in_GenPart_mass->At(i));
+    out_pdgIds.push_back(in_GenPart_pdgId->At(i));
+    out_mothers.push_back(motherIdx);
+    indexMap[i] = nPartons;
+    ++nPartons;
   }
 
   for ( unsigned i : leptons ) {
@@ -165,14 +147,14 @@ bool PartonTopCppWorker::genEvent(){
       motherIdx = (match == indexMap.end()) ? -1 : match->second;
     }
 
-    out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
-    out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
-    out_Partons_phi[out_nPartons] = in_GenPart_phi->At(i);
-    out_Partons_mass[out_nPartons] = in_GenPart_mass->At(i);
-    out_Partons_pdgId[out_nPartons] = in_GenPart_pdgId->At(i);
-    out_Partons_mother[out_nPartons] = motherIdx;
-    indexMap[i] = out_nPartons;
-    ++out_nPartons;
+    out_pts.push_back(in_GenPart_pt->At(i));
+    out_etas.push_back(in_GenPart_eta->At(i));
+    out_phis.push_back(in_GenPart_phi->At(i));
+    out_masses.push_back(in_GenPart_mass->At(i));
+    out_pdgIds.push_back(in_GenPart_pdgId->At(i));
+    out_mothers.push_back(motherIdx);
+    indexMap[i] = nPartons;
+    ++nPartons;
   }
 
   for ( unsigned i : neutrinos ) {
@@ -183,14 +165,14 @@ bool PartonTopCppWorker::genEvent(){
       motherIdx = (match == indexMap.end()) ? -1 : match->second;
     }
 
-    out_Partons_pt[out_nPartons] = in_GenPart_pt->At(i);
-    out_Partons_eta[out_nPartons] = in_GenPart_eta->At(i);
-    out_Partons_phi[out_nPartons] = in_GenPart_phi->At(i);
-    out_Partons_mass[out_nPartons] = in_GenPart_mass->At(i);
-    out_Partons_pdgId[out_nPartons] = in_GenPart_pdgId->At(i);
-    out_Partons_mother[out_nPartons] = motherIdx;
-    indexMap[i] = out_nPartons;
-    ++out_nPartons;
+    out_pts.push_back(in_GenPart_pt->At(i));
+    out_etas.push_back(in_GenPart_eta->At(i));
+    out_phis.push_back(in_GenPart_phi->At(i));
+    out_masses.push_back(in_GenPart_mass->At(i));
+    out_pdgIds.push_back(in_GenPart_pdgId->At(i));
+    out_mothers.push_back(motherIdx);
+    indexMap[i] = nPartons;
+    ++nPartons;
   }
 
   return true;
