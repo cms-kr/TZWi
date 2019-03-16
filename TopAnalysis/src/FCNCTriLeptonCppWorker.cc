@@ -197,15 +197,21 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Select leptons
   std::vector<int> muonIdxs;
   std::vector<int> electronIdxs;
+  unsigned nVetoMuons = 0, nVetoElectrons = 0;
   for ( unsigned i=0, n=in_Muons_p4[0]->GetSize(); i<n; ++i ) {
     if ( isGoodMuon(i) ) muonIdxs.push_back(i);
+    if ( isVetoMuon(i) ) ++nVetoMuons;
   }
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
     if ( isGoodElectron(i) ) electronIdxs.push_back(i);
+    if ( isVetoElectron(i) ) ++nVetoElectrons;
   }
   const int nGoodMuons = muonIdxs.size();
   const int nGoodElectrons = electronIdxs.size();
+  nVetoMuons -= nGoodMuons;
+  nVetoElectrons -= nGoodElectrons;
   if ( nGoodMuons+nGoodElectrons < 3 ) return false; // Require at least three leptons.
+  if ( nVetoMuons + nVetoElectrons > 0 ) return false; // and there should no additional leptons
 
   std::sort(muonIdxs.begin(), muonIdxs.end(), [&](const int i, const int j){
               return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
