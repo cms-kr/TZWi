@@ -19,17 +19,12 @@ public:
   ~CombineHLTCppWorker() = default;
 
   void addHLT(TRB flag);
-  void initOutput(TTree *outputTree);
-
-  void resetValues();
   bool analyze();
 
 private:
   std::vector<TRB> in_HLTFlags;
 
 private:
-  bool _doCppOutput = false;
-  bool out_HLTFlag;
   const std::string outName_;
   TFormula formula_;
 

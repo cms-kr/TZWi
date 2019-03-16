@@ -10,6 +10,10 @@ We'd like to cover:
 
 **See also**
 - https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookNanoAOD
+- NanoAOD dataformat descriptions
+  - 2016 samples: https://cms-nanoaod-integration.web.cern.ch/integration/master-102X/mc80X_doc.html
+  - 2017 samples: https://cms-nanoaod-integration.web.cern.ch/integration/master-102X/mc94Xv2_doc.html
+  - 2018 samples: https://cms-nanoaod-integration.web.cern.ch/integration/master-102X/mc102X_doc.html
 
 ## Installation
 ```
