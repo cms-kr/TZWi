@@ -6,7 +6,7 @@
 //
 using namespace std;
 
-FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName, const std::string algoName)
+FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName)
 {
   if ( modeName == "ElElMu" ) mode_ = MODE::ElElMu;
   else if ( modeName == "MuMuEl" ) mode_ = MODE::MuMuEl;
@@ -16,8 +16,6 @@ FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName, const
     cerr << "Mode name \"" << modeName << "\" is not available. " << endl;
     mode_ = MODE::None;//This should be changed kind of 'return false...'(do not run this worker)
   }
-
-  cout << "AlgoName is dummy for now..." << algoName << endl;
 }
 
 void FCNCTriLeptonCppWorker::initOutput(TTree *outputTree){

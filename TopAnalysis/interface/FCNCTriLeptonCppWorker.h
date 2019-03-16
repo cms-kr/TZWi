@@ -18,7 +18,7 @@ public:
   typedef TTreeReaderArray<int>* TRAI;
   typedef TTreeReaderArray<bool>* TRAB;
 
-  FCNCTriLeptonCppWorker(const std::string modeName, const std::string algoName);
+  FCNCTriLeptonCppWorker(const std::string modeName);
   ~FCNCTriLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
