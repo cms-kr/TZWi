@@ -127,6 +127,7 @@ bool FCNCTriLeptonCppWorker::isGoodMuon(const unsigned i) const {
   const double eta = in_Muons_p4[1]->At(i);
   if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
   if ( ! ( in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 and in_Muons_isTracker->At(i) != 0) ) ) return false;
+  if ( in_Muons_isTight == 0 ) return false;
   if ( in_Muons_relIso->At(i) > maxMuonRelIso_ ) return false; //maxMuonRelIso : Tight PF isolation value
 
   return true;
@@ -184,8 +185,8 @@ double FCNCTriLeptonCppWorker::computeMT(const TLorentzVector& lepP4, const doub
   const double met_py = met_pt*sin(met_phi);
 
   const double pt = lepP4.Pt() + met_pt;
-  const double px = lepP4.Px()+met_px;
-  const double py = lepP4.Py()+met_py;
+  const double px = lepP4.Px() + met_px;
+  const double py = lepP4.Py() + met_py;
 
   return std::sqrt(std::max(0., pt*pt - px*px - py*py));
 }
