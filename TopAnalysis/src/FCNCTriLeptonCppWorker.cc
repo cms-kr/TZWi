@@ -66,7 +66,7 @@ typedef FCNCTriLeptonCppWorker::TRAI TRAI;
 typedef FCNCTriLeptonCppWorker::TRAB TRAB;
 
 void FCNCTriLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                                              TRAF relIso, TRAI id, TRAI idTrg, TRAF dEtaSC, TRAF eCorr) {
+                                              TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr) {
   in_Electrons_p4[0] = pt;
   in_Electrons_p4[1] = eta;
   in_Electrons_p4[2] = phi;
@@ -74,7 +74,6 @@ void FCNCTriLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass
   in_Electrons_charge = charge;
   in_Electrons_relIso = relIso;
   in_Electrons_id = id;
-  in_Electrons_idTrg = idTrg;
   in_Electrons_dEtaSC = dEtaSC;
   in_Electrons_eCorr = eCorr;
 }
@@ -126,7 +125,6 @@ bool FCNCTriLeptonCppWorker::isGoodMuon(const unsigned i) const {
   const double pt = in_Muons_p4[0]->At(i);
   const double eta = in_Muons_p4[1]->At(i);
   if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
-  if ( ! ( in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 and in_Muons_isTracker->At(i) != 0) ) ) return false;
   if ( in_Muons_isTight == 0 ) return false;
   if ( in_Muons_relIso->At(i) > maxMuonRelIso_ ) return false; //maxMuonRelIso : Tight PF isolation value
 
@@ -158,7 +156,7 @@ bool FCNCTriLeptonCppWorker::isVetoElectron(const unsigned i) const {
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:medium, 3:tight
-  if ( in_Electrons_id->At(i) != 1 and in_Electrons_id->At(i) != 2 ) return false;
+  if ( in_Electrons_id->At(i) == 0 ) return false;
 
   return true;
 }
@@ -226,7 +224,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
       out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
       out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
       out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
-    } 
+    }
     out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
     out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
     out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
@@ -288,29 +286,26 @@ bool FCNCTriLeptonCppWorker::analyze() {
   out_W_TrMass = computeMT(lepton3P4, out_MET_pt, out_MET_phi);
 
   // Continue to the Jets
-  std::vector<unsigned short> jetIdxsByPt, jetIdxsByBDiscr;
-  jetIdxsByPt.reserve(in_Jets_CSVv2->GetSize());
-  jetIdxsByBDiscr.reserve(in_Jets_CSVv2->GetSize());
+  std::vector<unsigned short> jetIdxs;
+  jetIdxs.reserve(in_Jets_CSVv2->GetSize());
   for ( unsigned i=0, n=in_Jets_CSVv2->GetSize(); i<n; ++i ) {
     if ( !isGoodJet(i) ) continue;
     TLorentzVector jetP4 = buildP4(in_Jets_p4, i);
     if ( lepton1P4.DeltaR(jetP4) < 0.3 ) continue;
     if ( lepton2P4.DeltaR(jetP4) < 0.3 ) continue;
-    jetIdxsByPt.push_back(i);
-    jetIdxsByBDiscr.push_back(i);
+    if ( lepton3P4.DeltaR(jetP4) < 0.3 ) continue;
+    jetIdxs.push_back(i);
     if ( in_Jets_CSVv2->At(i) > minGoodBjetBDiscr_ ) ++out_nGoodBjets;
   }
-  out_nGoodJets = jetIdxsByPt.size();
+  out_nGoodJets = jetIdxs.size();
   if ( out_nGoodJets < int(minEventNGoodJets_) ) return false;
   if ( out_nGoodBjets < int(minEventNGoodBjets_) ) return false;
 
-  // Sort jets by CSVv2iminator
-  std::sort(jetIdxsByPt.begin(), jetIdxsByPt.end(),
+  // Sort jets by pt
+  std::sort(jetIdxs.begin(), jetIdxs.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jets_p4[0]->At(i) > in_Jets_p4[0]->At(j); });
-  std::sort(jetIdxsByBDiscr.begin(), jetIdxsByBDiscr.end(),
-            [&](const unsigned short i, const unsigned short j){ return in_Jets_CSVv2->At(i) > in_Jets_CSVv2->At(j); });
   for ( unsigned k=0, n=std::min(maxNGoodJetsToKeep_, out_nGoodJets); k<n; ++k ) {
-    const unsigned kk = jetIdxsByBDiscr.at(k);
+    const unsigned kk = jetIdxs.at(k);
     for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(kk);
     out_Jets_CSVv2[k] = in_Jets_CSVv2->At(kk);
   }

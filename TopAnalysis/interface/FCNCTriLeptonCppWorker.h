@@ -24,7 +24,7 @@ public:
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                 TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                    TRAF relIso, TRAI id, TRAI idTrig, TRAF dEtaSC, TRAF eCorr);
+                    TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
                TRAI id, TRAF CSVv2);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
@@ -70,7 +70,7 @@ private:
   TRAF in_Electrons_p4[4];
   TRAI in_Electrons_charge = nullptr;
   TRAF in_Electrons_relIso = nullptr; //nanoAOD object : Electron_pfRelIso03_*
-  TRAI in_Electrons_id = nullptr, in_Electrons_idTrg = nullptr;
+  TRAI in_Electrons_id = nullptr;
   TRAF in_Electrons_dEtaSC = nullptr;
   TRAF in_Electrons_eCorr = nullptr;
 
