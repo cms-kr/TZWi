@@ -16,15 +16,6 @@ TTbarDoubleLeptonCppWorker::TTbarDoubleLeptonCppWorker(const std::string modeNam
   }
 }
 
-void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
-  if ( _doCppOutput ) return;
-
-  //if (_doCppOutput) throw cms::Exception("LogicError","doCppOutput cannot be called twice");
-  _doCppOutput = true;
-
-  outputTree->Branch("CutStep", &out_CutStep, "CutStep/s");
-}
-
 typedef TTbarDoubleLeptonCppWorker::TRAF TRAF;
 typedef TTbarDoubleLeptonCppWorker::TRAI TRAI;
 typedef TTbarDoubleLeptonCppWorker::TRAB TRAB;
@@ -78,8 +69,8 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
   out_Lepton1_pdgId = out_Lepton2_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
   out_nGoodJets = out_nBjets = 0;
-  for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i].clear();
-  out_Jets_CSVv2.clear();
+  for ( unsigned i=0; i<4; ++i ) out_GoodJets_p4[i].clear();
+  out_GoodJets_CSVv2.clear();
   out_CutStep = 0;
 }
 
@@ -225,8 +216,8 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
             [&](const unsigned short i, const unsigned short j){ return in_Jets_CSVv2->At(i) > in_Jets_CSVv2->At(j); });
   for ( unsigned k=0, n=std::min(maxNGoodJetsToKeep_, out_nGoodJets); k<n; ++k ) {
     const unsigned kk = jetIdxsByBDiscr.at(k);
-    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i].push_back(in_Jets_p4[i]->At(kk));
-    out_Jets_CSVv2.push_back(in_Jets_CSVv2->At(kk));
+    for ( unsigned i=0; i<4; ++i ) out_GoodJets_p4[i].push_back(in_Jets_p4[i]->At(kk));
+    out_GoodJets_CSVv2.push_back(in_Jets_CSVv2->At(kk));
   }
 
   // Get CutStep

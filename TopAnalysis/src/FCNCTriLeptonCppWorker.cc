@@ -18,47 +18,6 @@ FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName)
   }
 }
 
-void FCNCTriLeptonCppWorker::initOutput(TTree *outputTree){
-  if ( _doCppOutput ) return;
-
-  //if (_doCppOutput) throw cms::Exception("LogicError","doCppOutput cannot be called twice");
-  _doCppOutput = true;
-
-  const std::array<std::string, 4> varNames = {{"pt", "eta", "phi", "mass"}};
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Lepton1_%s", varNames[i].c_str()), &out_Lepton1_p4[i], Form("Lepton1_%s/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Lepton1_pdgId", &out_Lepton1_pdgId, "Lepton1_pdgId/I");
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Lepton2_%s", varNames[i].c_str()), &out_Lepton2_p4[i], Form("Lepton2_%s/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Lepton2_pdgId", &out_Lepton2_pdgId, "Lepton2_pdgId/I");
-
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Lepton3_%s", varNames[i].c_str()), &out_Lepton3_p4[i], Form("Lepton3_%s/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Lepton3_pdgId", &out_Lepton3_pdgId, "Lepton3_pdgId/I");
-
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Z_%s", varNames[i].c_str()), &out_Z_p4[i], Form("Z_%s/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Z_charge", &out_Z_charge, "Z_charge/S");
-
-  outputTree->Branch("MET_pt", &out_MET_pt, "MET_pt/F");
-  outputTree->Branch("MET_phi", &out_MET_phi, "MET_phi/F");
-
-  outputTree->Branch("W_TrMass", &out_W_TrMass, "W_TrMass/F");
-
-  outputTree->Branch("nGoodJets", &out_nGoodJets, "nGoodJets/s");
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Jets_%s", varNames[i].c_str()), out_Jets_p4[i], Form("Jets_%s[nGoodJets]/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nGoodJets]/F");
-  outputTree->Branch("nGoodBjets", &out_nGoodBjets, "nGoodBjets/s");
-
-  outputTree->Branch("CutStep", &out_CutStep, "CutStep/s");
-}
-
 typedef FCNCTriLeptonCppWorker::TRAF TRAF;
 typedef FCNCTriLeptonCppWorker::TRAI TRAI;
 typedef FCNCTriLeptonCppWorker::TRAB TRAB;
@@ -108,14 +67,17 @@ void FCNCTriLeptonCppWorker::setMET(TTreeReaderValue<float>* pt, TTreeReaderValu
 void FCNCTriLeptonCppWorker::resetValues() {
   for ( unsigned i=0; i<4; ++i ) {
     out_Lepton1_p4[i] = out_Lepton2_p4[i] = out_Lepton3_p4[i] = 0;
+    out_Z_p4[i] = 0;
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = out_Lepton3_pdgId = 0;
+  out_Z_charge = 0;
   out_MET_pt = out_MET_phi = 0;
-  out_W_TrMass = 0;
-  out_nGoodJets = out_nGoodBjets = 0;
-  for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
-    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
-  }
+  out_W_MT = 0;
+
+  out_nGoodJets = out_nBjets = 0;
+  for ( int i=0; i<4; ++i ) out_GoodJets_p4[i].clear();
+  out_GoodJets_CSVv2.clear();
+
   out_CutStep = 0;
 }
 //signal muons
@@ -287,7 +249,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Transeverse mass of the W boson
   //if lepton3 comes from W (that lepton have high pT)
-  out_W_TrMass = computeMT(lepton3P4, out_MET_pt, out_MET_phi);
+  out_W_MT = computeMT(lepton3P4, out_MET_pt, out_MET_phi);
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxs;
@@ -299,19 +261,19 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( lepton2P4.DeltaR(jetP4) < 0.3 ) continue;
     if ( lepton3P4.DeltaR(jetP4) < 0.3 ) continue;
     jetIdxs.push_back(i);
-    if ( in_Jets_CSVv2->At(i) > minGoodBjetBDiscr_ ) ++out_nGoodBjets;
+    if ( in_Jets_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjets;
   }
   out_nGoodJets = jetIdxs.size();
   if ( out_nGoodJets < int(minEventNGoodJets_) ) return false;
-  if ( out_nGoodBjets < int(minEventNGoodBjets_) ) return false;
+  if ( out_nBjets < int(minEventNBjets_) ) return false;
 
   // Sort jets by pt
   std::sort(jetIdxs.begin(), jetIdxs.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jets_p4[0]->At(i) > in_Jets_p4[0]->At(j); });
   for ( unsigned k=0, n=std::min(maxNGoodJetsToKeep_, out_nGoodJets); k<n; ++k ) {
     const unsigned kk = jetIdxs.at(k);
-    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(kk);
-    out_Jets_CSVv2[k] = in_Jets_CSVv2->At(kk);
+    for ( int i=0; i<4; ++i ) out_GoodJets_p4[i].push_back(in_Jets_p4[i]->At(kk));
+    out_GoodJets_CSVv2.push_back(in_Jets_CSVv2->At(kk));
   }
 
   // Get CutStep
@@ -320,7 +282,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   do {
     if ( !(out_nGoodJets >= 1 and out_nGoodJets <= 3) ) break;
     ++out_CutStep;
-    if ( !(out_W_TrMass < 300) ) break;
+    if ( !(out_W_MT < 300) ) break;
     ++out_CutStep;
 /*
     // Z-veto and MET (no cut for e-mu channel)

@@ -27,7 +27,23 @@ class FCNCTriLepton(Module, object):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.worker.initOutput(wrappedOutputTree.tree())
+        self.out = wrappedOutputTree
+        self.worker.initOutput(self.out.tree())
+        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z"]:
+            for varName in ["pt", "eta", "phi", "mass"]:
+                self.out.branch("%s_%s" % (objName, varName), "F")
+        self.out.branch("MET_pt", "F")
+        self.out.branch("MET_phi", "F")
+        self.out.branch("Lepton1_pdgId", "I")
+        self.out.branch("Lepton2_pdgId", "I")
+        self.out.branch("Lepton3_pdgId", "I")
+        self.out.branch("Z_charge", "I")
+        self.out.branch("nGoodJets", "i")
+        for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
+            self.out.branch("GoodJets_%s" % varName, "F", lenVar="nGoodJets")
+        self.out.branch("nBjets", "i")
+        self.out.branch("W_MT", "F")
+
         self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -71,6 +87,20 @@ class FCNCTriLepton(Module, object):
         if event._tree._ttreereaderversion > self._ttreereaderversion:
             self.initReaders(event._tree)
         self.worker.analyze()
+
+        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "GoodJets"]:
+            for varName in ["pt", "eta", "phi", "mass"]:
+                self.out.fillBranch("%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
+        self.out.fillBranch("MET_pt", self.worker.get_MET_pt())
+        self.out.fillBranch("MET_phi", self.worker.get_MET_phi())
+        self.out.fillBranch("Lepton1_pdgId", self.worker.get_Lepton1_pdgId())
+        self.out.fillBranch("Lepton2_pdgId", self.worker.get_Lepton2_pdgId())
+        self.out.fillBranch("Lepton3_pdgId", self.worker.get_Lepton3_pdgId())
+        self.out.fillBranch("Z_charge", self.worker.get_Z_charge())
+        self.out.fillBranch("W_MT", self.worker.get_W_MT())
+        self.out.fillBranch("GoodJets_CSVv2", self.worker.get_GoodJets_CSVv2())
+        self.out.fillBranch("nGoodJets", self.worker.get_nGoodJets())
+        self.out.fillBranch("nBjets", self.worker.get_nBjets())
 
         return True
 

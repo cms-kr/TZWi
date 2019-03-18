@@ -28,8 +28,6 @@ public:
                TRAI id, TRAF CSVv2);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
 
-  void initOutput(TTree *outputTree);
-
   void resetValues();
   bool analyze();
 
@@ -55,11 +53,11 @@ public:
   float get_MET_phi() const { return out_MET_phi; }
 
   unsigned get_nGoodJets() const { return out_nGoodJets; }
-  std::vector<float> get_GoodJets_pt()   const { return out_Jets_p4[0]; }
-  std::vector<float> get_GoodJets_eta()  const { return out_Jets_p4[1]; }
-  std::vector<float> get_GoodJets_phi()  const { return out_Jets_p4[2]; }
-  std::vector<float> get_GoodJets_mass() const { return out_Jets_p4[3]; }
-  std::vector<float> get_GoodJets_CSVv2() const { return out_Jets_CSVv2; }
+  std::vector<float> get_GoodJets_pt()   const { return out_GoodJets_p4[0]; }
+  std::vector<float> get_GoodJets_eta()  const { return out_GoodJets_p4[1]; }
+  std::vector<float> get_GoodJets_phi()  const { return out_GoodJets_p4[2]; }
+  std::vector<float> get_GoodJets_mass() const { return out_GoodJets_p4[3]; }
+  std::vector<float> get_GoodJets_CSVv2() const { return out_GoodJets_CSVv2; }
 
   unsigned get_nBjets() const { return out_nBjets; }
 
@@ -108,8 +106,8 @@ private:
 
   const static unsigned short maxNGoodJetsToKeep_ = 100;
   unsigned short out_nGoodJets, out_nBjets;
-  std::vector<float> out_Jets_p4[4];
-  std::vector<float> out_Jets_CSVv2;
+  std::vector<float> out_GoodJets_p4[4];
+  std::vector<float> out_GoodJets_CSVv2;
 
   unsigned short out_CutStep;
 
