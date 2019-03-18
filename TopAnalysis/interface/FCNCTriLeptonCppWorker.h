@@ -29,20 +29,52 @@ public:
                TRAI id, TRAF CSVv2);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
 
-  void initOutput(TTree *outputTree);
-
   void resetValues();
   bool analyze();
 
-private:
-  //const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
-  //const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
+  float get_Lepton1_pt()   const { return out_Lepton1_p4[0]; }
+  float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
+  float get_Lepton1_phi()  const { return out_Lepton1_p4[2]; }
+  float get_Lepton1_mass() const { return out_Lepton1_p4[3]; }
+  int get_Lepton1_pdgId() const { return out_Lepton1_pdgId; }
 
+  float get_Lepton2_pt()   const { return out_Lepton2_p4[0]; }
+  float get_Lepton2_eta()  const { return out_Lepton2_p4[1]; }
+  float get_Lepton2_phi()  const { return out_Lepton2_p4[2]; }
+  float get_Lepton2_mass() const { return out_Lepton2_p4[3]; }
+  int get_Lepton2_pdgId() const { return out_Lepton2_pdgId; }
+
+  float get_Lepton3_pt()   const { return out_Lepton3_p4[0]; }
+  float get_Lepton3_eta()  const { return out_Lepton3_p4[1]; }
+  float get_Lepton3_phi()  const { return out_Lepton3_p4[2]; }
+  float get_Lepton3_mass() const { return out_Lepton3_p4[3]; }
+  int get_Lepton3_pdgId() const { return out_Lepton3_pdgId; }
+
+  float get_Z_pt()   const { return out_Z_p4[0]; }
+  float get_Z_eta()  const { return out_Z_p4[1]; }
+  float get_Z_phi()  const { return out_Z_p4[2]; }
+  float get_Z_mass() const { return out_Z_p4[3]; }
+  int get_Z_charge() const { return out_Z_charge; }
+
+  float get_MET_pt()  const { return out_MET_pt; }
+  float get_MET_phi() const { return out_MET_phi; }
+
+  float get_W_MT() const { return out_W_MT; }
+
+  unsigned get_nGoodJets()   const { return out_nGoodJets; }
+  std::vector<float> get_GoodJets_pt()   const { return out_GoodJets_p4[0]; }
+  std::vector<float> get_GoodJets_eta()  const { return out_GoodJets_p4[1]; }
+  std::vector<float> get_GoodJets_phi()  const { return out_GoodJets_p4[2]; }
+  std::vector<float> get_GoodJets_mass() const { return out_GoodJets_p4[3]; }
+  std::vector<float> get_GoodJets_CSVv2() const { return out_GoodJets_CSVv2; }
+  unsigned get_nBjets()   const { return out_nBjets; }
+
+private:
   const double minMuonPt_ = 30, maxMuonEta_ = 2.5; //Signal & veto reco. cuts are same
   const double minElectronPt_ = 35, maxElectronEta_ = 2.1; //Signal & veto reco. cuts are same
   const double minJetPt_ = 30, maxJetEta_ = 2.4;
-  const double minGoodBjetBDiscr_ = 0.5426; // FIXME: give updated number (here, use Loose Working Point)
-  const unsigned short minEventNGoodJets_ = 0, minEventNGoodBjets_ = 0;
+  const double minBjetBDiscr_ = 0.5426; // FIXME: give updated number (here, use Loose Working Point)
+  const unsigned short minEventNGoodJets_ = 0, minEventNBjets_ = 0;
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 
@@ -89,12 +121,12 @@ private:
 
   float out_MET_pt, out_MET_phi;
 
-  float out_W_TrMass;
+  float out_W_MT;
 
   const static unsigned short maxNGoodJetsToKeep_ = 100;
-  unsigned short out_nGoodJets, out_nGoodBjets;
-  float out_Jets_p4[4][maxNGoodJetsToKeep_];
-  float out_Jets_CSVv2[maxNGoodJetsToKeep_];
+  unsigned short out_nGoodJets, out_nBjets;
+  std::vector<float> out_GoodJets_p4[4];
+  std::vector<float> out_GoodJets_CSVv2;
 
   unsigned short out_CutStep;
 
