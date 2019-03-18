@@ -24,31 +24,6 @@ void TTbarDoubleLeptonCppWorker::initOutput(TTree *outputTree){
   //if (_doCppOutput) throw cms::Exception("LogicError","doCppOutput cannot be called twice");
   _doCppOutput = true;
 
-  const std::array<std::string, 4> varNames = {{"pt", "eta", "phi", "mass"}};
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Lepton1_%s", varNames[i].c_str()), &out_Lepton1_p4[i], Form("Lepton1_%s/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Lepton1_pdgId", &out_Lepton1_pdgId, "Lepton1_pdgId/I");
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Lepton2_%s", varNames[i].c_str()), &out_Lepton2_p4[i], Form("Lepton2_%s/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Lepton2_pdgId", &out_Lepton2_pdgId, "Lepton2_pdgId/I");
-
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Z_%s", varNames[i].c_str()), &out_Z_p4[i], Form("Z_%s/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Z_charge", &out_Z_charge, "Z_charge/S");
-
-  outputTree->Branch("MET_pt", &out_MET_pt, "MET_pt/F");
-  outputTree->Branch("MET_phi", &out_MET_phi, "MET_phi/F");
-
-  outputTree->Branch("nGoodJets", &out_nGoodJets, "nGoodJets/s");
-  for ( unsigned i=0; i<4; ++i ) {
-    outputTree->Branch(Form("Jets_%s", varNames[i].c_str()), out_Jets_p4[i], Form("Jets_%s[nGoodJets]/F", varNames[i].c_str()));
-  }
-  outputTree->Branch("Jets_CSVv2", out_Jets_CSVv2, "Jets_CSVv2[nGoodJets]/F");
-  outputTree->Branch("nGoodBjets", &out_nGoodBjets, "nGoodBjets/s");
-
   outputTree->Branch("CutStep", &out_CutStep, "CutStep/s");
 }
 
@@ -104,10 +79,9 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
-  out_nGoodJets = out_nGoodBjets = 0;
-  for ( unsigned k=0; k<maxNGoodJetsToKeep_; ++k ) {
-    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = 0;
-  }
+  out_nGoodJets = out_nBjets = 0;
+  for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i].clear();
+  out_Jets_CSVv2.clear();
   out_CutStep = 0;
 }
 
@@ -251,11 +225,11 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     if ( lepton2P4.DeltaR(jetP4) < 0.4 ) continue;
     jetIdxsByPt.push_back(i);
     jetIdxsByBDiscr.push_back(i);
-    if ( in_Jets_CSVv2->At(i) > minGoodBjetBDiscr_ ) ++out_nGoodBjets;
+    if ( in_Jets_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjets;
   }
   out_nGoodJets = jetIdxsByPt.size();
   if ( out_nGoodJets < int(minEventNGoodJets_) ) return false;
-  if ( out_nGoodBjets < int(minEventNGoodBjets_) ) return false;
+  if ( out_nBjets < int(minEventNBjets_) ) return false;
 
   // Sort jets by CSVv2iminator
   std::sort(jetIdxsByPt.begin(), jetIdxsByPt.end(),
@@ -264,8 +238,8 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
             [&](const unsigned short i, const unsigned short j){ return in_Jets_CSVv2->At(i) > in_Jets_CSVv2->At(j); });
   for ( unsigned k=0, n=std::min(maxNGoodJetsToKeep_, out_nGoodJets); k<n; ++k ) {
     const unsigned kk = jetIdxsByBDiscr.at(k);
-    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i][k] = in_Jets_p4[i]->At(kk);
-    out_Jets_CSVv2[k] = in_Jets_CSVv2->At(kk);
+    for ( unsigned i=0; i<4; ++i ) out_Jets_p4[i].push_back(in_Jets_p4[i]->At(kk));
+    out_Jets_CSVv2.push_back(in_Jets_CSVv2->At(kk));
   }
 
   // Get CutStep
@@ -288,9 +262,9 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
 
     if ( out_nGoodJets < 4 ) break;
     ++out_CutStep;
-    if ( out_nGoodBjets < 1 ) break;
+    if ( out_nBjets < 1 ) break;
     ++out_CutStep; 
-    if ( out_nGoodBjets < 2 ) break;
+    if ( out_nBjets < 2 ) break;
     ++out_CutStep; 
   } while ( false );
 
