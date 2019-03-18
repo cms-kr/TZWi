@@ -17,13 +17,13 @@ public:
   typedef TTreeReaderArray<int>* TRAI;
   typedef TTreeReaderArray<bool>* TRAB;
 
-  TTbarDoubleLeptonCppWorker(const std::string modeName, const std::string algoName);
+  TTbarDoubleLeptonCppWorker(const std::string modeName);
   ~TTbarDoubleLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                 TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                    TRAF relIso, TRAI id, TRAI idTrig, TRAF dEtaSC);
+                    TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
                TRAI id, TRAF CSVv2);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
@@ -89,9 +89,9 @@ private:
   TRAF in_Electrons_p4[4];
   TRAI in_Electrons_charge = nullptr;
   TRAF in_Electrons_relIso = nullptr;
-  TRAI in_Electrons_id = nullptr, in_Electrons_idTrg = nullptr;
+  TRAI in_Electrons_id = nullptr;
   TRAF in_Electrons_dEtaSC = nullptr;
-  //TRAF in_Electrons_eCorr = nullptr;
+  TRAF in_Electrons_eCorr = nullptr;
   TRAF in_Jets_p4[4];
   TRAI in_Jets_id = nullptr;
   TRAF in_Jets_CSVv2 = nullptr;
