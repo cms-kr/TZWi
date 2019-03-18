@@ -33,6 +33,36 @@ public:
   void resetValues();
   bool analyze();
 
+  float get_Lepton1_pt()   const { return out_Lepton1_p4[0]; }
+  float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
+  float get_Lepton1_phi()  const { return out_Lepton1_p4[2]; }
+  float get_Lepton1_mass() const { return out_Lepton1_p4[3]; }
+  int get_Lepton1_pdgId() const { return out_Lepton1_pdgId; }
+
+  float get_Lepton2_pt()   const { return out_Lepton2_p4[0]; }
+  float get_Lepton2_eta()  const { return out_Lepton2_p4[1]; }
+  float get_Lepton2_phi()  const { return out_Lepton2_p4[2]; }
+  float get_Lepton2_mass() const { return out_Lepton2_p4[3]; }
+  int get_Lepton2_pdgId() const { return out_Lepton2_pdgId; }
+
+  float get_Z_pt()   const { return out_Z_p4[0]; }
+  float get_Z_eta()  const { return out_Z_p4[1]; }
+  float get_Z_phi()  const { return out_Z_p4[2]; }
+  float get_Z_mass() const { return out_Z_p4[3]; }
+  int get_Z_charge() const { return out_Z_charge; }
+
+  float get_MET_pt() const { return out_MET_pt; }
+  float get_MET_phi() const { return out_MET_phi; }
+
+  unsigned get_nGoodJets() const { return out_nGoodJets; }
+  std::vector<float> get_GoodJets_pt()   const { return out_Jets_p4[0]; }
+  std::vector<float> get_GoodJets_eta()  const { return out_Jets_p4[1]; }
+  std::vector<float> get_GoodJets_phi()  const { return out_Jets_p4[2]; }
+  std::vector<float> get_GoodJets_mass() const { return out_Jets_p4[3]; }
+  std::vector<float> get_GoodJets_CSVv2() const { return out_Jets_CSVv2; }
+
+  unsigned get_nBjets() const { return out_nBjets; }
+
 private:
   const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
   const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
@@ -47,36 +77,6 @@ private:
 
 private:
   TLorentzVector buildP4(const TRAF p4Arr[], unsigned i) const;
-  float get_Lepton1_pt()   const { return out_Lepton1_p4[0]; }
-  float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
-  float get_Lepton1_phi()  const { return out_Lepton1_p4[2]; }
-  float get_Lepton1_mass() const { return out_Lepton1_p4[3]; }
-  float get_Lepton1_pdgId() const { return out_Lepton1_pdgId; }
-
-  float get_Lepton2_pt()   const { return out_Lepton2_p4[0]; }
-  float get_Lepton2_eta()  const { return out_Lepton2_p4[1]; }
-  float get_Lepton2_phi()  const { return out_Lepton2_p4[2]; }
-  float get_Lepton2_mass() const { return out_Lepton2_p4[3]; }
-  float get_Lepton2_pdgId() const { return out_Lepton2_pdgId; }
-
-  float get_Z_pt()   const { return out_Z_p4[0]; }
-  float get_Z_eta()  const { return out_Z_p4[1]; }
-  float get_Z_phi()  const { return out_Z_p4[2]; }
-  float get_Z_mass() const { return out_Z_p4[3]; }
-  float get_Z_charge() const { return out_Z_charge; }
-
-  float get_MET_pt() const { return out_MET_pt; }
-  float get_MET_phi() const { return out_MET_phi; }
-
-  unsigned get_nGoodJets() const { return out_nGoodJets; }
-  std::vector<float> get_GoodJets_pt()   const { return out_Jets_p4[0]; }
-  std::vector<float> get_GoodJets_eta()  const { return out_Jets_p4[1]; }
-  std::vector<float> get_GoodJets_phi()  const { return out_Jets_p4[2]; }
-  std::vector<float> get_GoodJets_mass() const { return out_Jets_p4[3]; }
-  std::vector<float> get_GoodJets_CSVv2() const { return out_Jets_CSVv2; }
-
-  unsigned get_nBjets() const { return out_nBjets; }
-
 private:
   TTreeReaderValue<float> *in_MET_pt = nullptr, *in_MET_phi = nullptr;
   TRAF in_Muons_p4[4];

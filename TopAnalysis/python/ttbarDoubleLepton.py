@@ -29,16 +29,17 @@ class TTbarDoubleLepton(Module, object):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        for objName in ["Lepton1", "Lepton2", "Z", "GoodJets"]:
+        for objName in ["Lepton1", "Lepton2", "Z"]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 self.out.branch("%s_%s" % (objName, varName), "F")
         self.out.branch("MET_pt", "F")
         self.out.branch("MET_phi", "F")
         self.out.branch("Lepton1_pdgId", "I")
-        self.out.branch("Lepton1_pdgId", "I")
+        self.out.branch("Lepton2_pdgId", "I")
         self.out.branch("Z_charge", "I")
-        self.out.branch("GoodJets_CSVv2", "I")
         self.out.branch("nGoodJets", "i")
+        for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
+            self.out.branch("GoodJets_%s" % varName, "F", lenVar="nGoodJets")
         self.out.branch("nBjets", "i")
 
         self.initReaders(inputTree)
@@ -87,14 +88,14 @@ class TTbarDoubleLepton(Module, object):
 
         for objName in ["Lepton1", "Lepton2", "Z", "GoodJets"]:
             for varName in ["pt", "eta", "phi", "mass"]:
-                self.out.fillBranch("%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName)))
+                self.out.fillBranch("%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
         self.out.fillBranch("MET_pt", self.worker.get_MET_pt())
         self.out.fillBranch("MET_phi", self.worker.get_MET_phi())
         self.out.fillBranch("Lepton1_pdgId", self.worker.get_Lepton1_pdgId())
         self.out.fillBranch("Lepton2_pdgId", self.worker.get_Lepton2_pdgId())
         self.out.fillBranch("Z_charge", self.worker.get_Z_charge())
-        self.out.fillBranch("GoodJets_CSVv2", self.worker.get_Lepton2_pdgId())
-        self.out.fillBranch("nGoodJets", self.worker.get_Lepton2_pdgId())
+        self.out.fillBranch("GoodJets_CSVv2", self.worker.get_GoodJets_CSVv2())
+        self.out.fillBranch("nGoodJets", self.worker.get_nGoodJets())
         self.out.fillBranch("nBjets", self.worker.get_nBjets())
 
         return True
