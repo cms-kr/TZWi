@@ -31,19 +31,16 @@ ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton fcnc$CHANNEL"
 
 OUTPATH=ntuple
 CMD="nano_postproc.py --friend"
-[ ! -d $OUTPATH ] && mkdir -p $OUTPATH
-$CMD $ARGS $OUTPATH/reco $FILENAMES
+[ ! -d $OUTPATH/reco ] && mkdir -p $OUTPATH/reco
 if [ _$DATATYPE1 == "_MC" ]; then
-    [ ! -d $OUTPATH/mc ] && mkdir -p $OUTPATH/mc
-    ARGS=""
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight"
-    $CMD $ARGS $OUTPATH/mc $FILENAMES
+fi
+$CMD $ARGS $OUTPATH/reco $FILENAMES
 
-    if `echo _$DATATYPE3 | grep -q 'TT_'`; then
-        [ ! -d $OUTPATH/mctop ] && mkdir -p $OUTPATH/mctop
-        ARGS="-I TZWi.TopAnalysis.partonTop partonTop"
-        $CMD $ARGS $OUTPATH/mctop $FILENAMES
-    fi
+if `echo _$DATATYPE3 | grep -q 'TT_'`; then
+    [ ! -d $OUTPATH/mctop ] && mkdir -p $OUTPATH/mctop
+    ARGS="-I TZWi.TopAnalysis.partonTop partonTop"
+    $CMD $ARGS $OUTPATH/mctop $FILENAMES
 fi
 
