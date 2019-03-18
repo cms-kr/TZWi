@@ -26,10 +26,6 @@ DATATYPE3=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2`
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
 
 ARGS=""
-#ARGS="$ARGS -I PhysicsTools.NanoAODTools.python.postprocessing.modules.common.lepSFProducer"
-#ARGS="$ARGS -I PhysicsTools.NanoAODTools.python.postprocessing.modules.common.puWeightProducer"
-ARGS="$ARGS -I PhysicsTools.NanoAODTools lepSFProducer"
-ARGS="$ARGS -I PhysicsTools.NanoAODTools puWeightProducer"
 ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLepton ttbar$CHANNEL"
 ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT ttbarHLT_${CHANNEL}_${DATATYPE2}"
 ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT flags_${DATATYPE1}"
@@ -41,8 +37,8 @@ $CMD $ARGS $OUTPATH/reco $FILENAMES
 if [ _$DATATYPE1 == "_MC" ]; then
     [ ! -d $OUTPATH/mc ] && mkdir -p $OUTPATH/mc
     ARGS=""
-    #ARGS="" Add PUweights
-    #ARGS="" Add other syst variations 
+    ARGS="$ARGS -I PhysicsTools.NanoAODTools.python.postprocessing.modules.common.lepSFProducer lepSF"
+    ARGS="$ARGS -I PhysicsTools.NanoAODTools.python.postprocessing.modules.common.puWeightProducer puWeight"
     $CMD $ARGS $OUTPATH/mc $FILENAMES
 
     if `echo _$DATATYPE3 | grep -q 'TT_'`; then
