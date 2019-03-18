@@ -33,20 +33,6 @@ public:
   void resetValues();
   bool analyze();
 
-private:
-  const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
-  const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
-  const double minJetPt_ = 30, maxJetEta_ = 2.5;
-  const double minBjetBDiscr_ = 0.8484; // FIXME: give updated number
-  const unsigned short minEventNGoodJets_ = 0, minEventNBjets_ = 0;
-  const double maxMuonRelIso_ = 0.15;
-
-  bool isGoodMuon(const unsigned i) const;
-  bool isGoodElectron(const unsigned i) const;
-  bool isGoodJet(const unsigned i) const;
-
-private:
-  TLorentzVector buildP4(const TRAF p4Arr[], unsigned i) const;
   float get_Lepton1_pt()   const { return out_Lepton1_p4[0]; }
   float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
   float get_Lepton1_phi()  const { return out_Lepton1_p4[2]; }
@@ -77,6 +63,20 @@ private:
 
   unsigned get_nBjets() const { return out_nBjets; }
 
+private:
+  const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
+  const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
+  const double minJetPt_ = 30, maxJetEta_ = 2.5;
+  const double minBjetBDiscr_ = 0.8484; // FIXME: give updated number
+  const unsigned short minEventNGoodJets_ = 0, minEventNBjets_ = 0;
+  const double maxMuonRelIso_ = 0.15;
+
+  bool isGoodMuon(const unsigned i) const;
+  bool isGoodElectron(const unsigned i) const;
+  bool isGoodJet(const unsigned i) const;
+
+private:
+  TLorentzVector buildP4(const TRAF p4Arr[], unsigned i) const;
 private:
   TTreeReaderValue<float> *in_MET_pt = nullptr, *in_MET_phi = nullptr;
   TRAF in_Muons_p4[4];
