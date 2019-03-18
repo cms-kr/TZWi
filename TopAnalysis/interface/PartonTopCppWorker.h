@@ -11,10 +11,10 @@
 
 class PartonTopCppWorker {
 public:
-  PartonTopCppWorker();
-  ~PartonTopCppWorker();
+  PartonTopCppWorker() = default;
+  ~PartonTopCppWorker() = default;
 
-  void initOutput(TTree *outputTree);
+  //void initOutput(TTree *outputTree);
 
   void resetValues();
   bool genEvent();
@@ -23,6 +23,13 @@ public:
                        TTreeReaderArray<float> *GenPart_pt, TTreeReaderArray<float> *GenPart_eta, TTreeReaderArray<float> *GenPart_phi, TTreeReaderArray<float> *GenPart_mass,
                        TTreeReaderArray<int> *GenPart_pdgId, TTreeReaderArray<int> *GenPart_status,
                        TTreeReaderArray<int> *GenPart_genPartIdxMother);
+  unsigned get_n() const { return out_pts.size(); }
+  std::vector<float> get_pt() const { return out_pts; }
+  std::vector<float> get_eta() const { return out_etas; }
+  std::vector<float> get_phi() const { return out_phis; }
+  std::vector<float> get_mass() const { return out_masses; }
+  std::vector<int> get_pdgId() const { return out_pdgIds; }
+  std::vector<short> get_mother() const { return out_mothers; }
 
 private:
   bool hasSpecificAncestor(const unsigned i, const unsigned ancId) const;
@@ -41,6 +48,13 @@ private:
 private:
   bool _doCppOutput = false;
 
+  std::vector<float> out_pts;
+  std::vector<float> out_etas;
+  std::vector<float> out_phis;
+  std::vector<float> out_masses;
+  std::vector<int> out_pdgIds;
+  std::vector<short> out_mothers;
+/*
   const unsigned static short maxNPartons_ = 100;
   unsigned short out_nPartons;
   float out_Partons_pt[maxNPartons_];
@@ -49,6 +63,7 @@ private:
   float out_Partons_mass[maxNPartons_];
   int out_Partons_pdgId[maxNPartons_];
   short out_Partons_mother[maxNPartons_];
+*/
 
 };
 
