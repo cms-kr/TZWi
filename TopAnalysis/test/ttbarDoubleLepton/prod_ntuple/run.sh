@@ -37,8 +37,8 @@ $CMD $ARGS $OUTPATH/reco $FILENAMES
 if [ _$DATATYPE1 == "_MC" ]; then
     [ ! -d $OUTPATH/mc ] && mkdir -p $OUTPATH/mc
     ARGS=""
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.python.postprocessing.modules.common.lepSFProducer lepSF"
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.python.postprocessing.modules.common.puWeightProducer puWeight"
+    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
+    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight"
     $CMD $ARGS $OUTPATH/mc $FILENAMES
 
     if `echo _$DATATYPE3 | grep -q 'TT_'`; then

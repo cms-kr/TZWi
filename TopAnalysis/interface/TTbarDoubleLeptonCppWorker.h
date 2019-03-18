@@ -37,19 +37,19 @@ public:
   float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
   float get_Lepton1_phi()  const { return out_Lepton1_p4[2]; }
   float get_Lepton1_mass() const { return out_Lepton1_p4[3]; }
-  float get_Lepton1_pdgId() const { return out_Lepton1_pdgId; }
+  int get_Lepton1_pdgId() const { return out_Lepton1_pdgId; }
 
   float get_Lepton2_pt()   const { return out_Lepton2_p4[0]; }
   float get_Lepton2_eta()  const { return out_Lepton2_p4[1]; }
   float get_Lepton2_phi()  const { return out_Lepton2_p4[2]; }
   float get_Lepton2_mass() const { return out_Lepton2_p4[3]; }
-  float get_Lepton2_pdgId() const { return out_Lepton2_pdgId; }
+  int get_Lepton2_pdgId() const { return out_Lepton2_pdgId; }
 
   float get_Z_pt()   const { return out_Z_p4[0]; }
   float get_Z_eta()  const { return out_Z_p4[1]; }
   float get_Z_phi()  const { return out_Z_p4[2]; }
   float get_Z_mass() const { return out_Z_p4[3]; }
-  float get_Z_charge() const { return out_Z_charge; }
+  int get_Z_charge() const { return out_Z_charge; }
 
   float get_MET_pt() const { return out_MET_pt; }
   float get_MET_phi() const { return out_MET_phi; }
