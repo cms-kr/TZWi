@@ -9,7 +9,6 @@ class TTbarDoubleLepton(Module, object):
     def __init__(self, *args, **kwargs):
         #super(TTbarDoubleLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
-        self.algo = kwargs.get("algo")
 
         if "/TTbarDoubleLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ TTbarDoubleLepton worker module"
@@ -23,7 +22,7 @@ class TTbarDoubleLepton(Module, object):
                 ROOT.gROOT.ProcessLine(".L %s/interface/TTbarDoubleLeptonCppWorker.h" % base)
         pass
     def beginJob(self):
-        self.worker = ROOT.TTbarDoubleLeptonCppWorker(self.mode, self.algo)
+        self.worker = ROOT.TTbarDoubleLeptonCppWorker(self.mode)
         pass
     def endJob(self):
         pass
@@ -54,7 +53,7 @@ class TTbarDoubleLepton(Module, object):
         objName = "Electron"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso03_all", "cutBased", "cutBased_Fall17_V1", "deltaEtaSC",]:
+                        "pfRelIso03_all", "cutBased", "deltaEtaSC", "eCorr"]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Muon"
@@ -71,8 +70,8 @@ class TTbarDoubleLepton(Module, object):
 
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
         self.worker.setElectrons(self.b_Electron_pt, self.b_Electron_eta, self.b_Electron_phi, self.b_Electron_mass, self.b_Electron_charge,
-                                 self.b_Electron_pfRelIso03_all, self.b_Electron_cutBased, self.b_Electron_cutBased_Fall17_V1,
-                                 self.b_Electron_deltaEtaSC)
+                                 self.b_Electron_pfRelIso03_all, self.b_Electron_cutBased,
+                                 self.b_Electron_deltaEtaSC, self.b_Electron_eCorr)
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
                              self.b_Muon_pfRelIso04_all,self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
         self.worker.setJets(self.b_Jet_pt, self.b_Jet_eta, self.b_Jet_phi, self.b_Jet_mass,
@@ -100,7 +99,7 @@ class TTbarDoubleLepton(Module, object):
 
         return True
 
-ttbarDoubleLepton = lambda : TTbarDoubleLepton(mode="Auto", algo="Auto")
-ttbarMuMu = lambda : TTbarDoubleLepton(mode="MuMu", algo="Auto")
-ttbarElEl = lambda : TTbarDoubleLepton(mode="ElEl", algo="Auto")
-ttbarMuEl = lambda : TTbarDoubleLepton(mode="MuEl", algo="Auto")
+ttbarDoubleLepton = lambda : TTbarDoubleLepton(mode="Auto")
+ttbarMuMu = lambda : TTbarDoubleLepton(mode="MuMu")
+ttbarElEl = lambda : TTbarDoubleLepton(mode="ElEl")
+ttbarMuEl = lambda : TTbarDoubleLepton(mode="MuEl")
