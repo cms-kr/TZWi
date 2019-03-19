@@ -99,7 +99,7 @@ class TTbarDoubleLepton(Module, object):
 
         return True
 
-ttbarDoubleLepton = lambda : TTbarDoubleLepton(mode="Auto")
-ttbarMuMu = lambda : TTbarDoubleLepton(mode="MuMu")
-ttbarElEl = lambda : TTbarDoubleLepton(mode="ElEl")
-ttbarMuEl = lambda : TTbarDoubleLepton(mode="MuEl")
+ttbar_DoubleLepton = lambda : TTbarDoubleLepton(mode="Auto")
+ttbar_MuMu = lambda : TTbarDoubleLepton(mode="MuMu")
+ttbar_ElEl = lambda : TTbarDoubleLepton(mode="ElEl")
+ttbar_MuEl = lambda : TTbarDoubleLepton(mode="MuEl")

@@ -25,7 +25,7 @@ DATATYPE3=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2`
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
 
 ARGS=""
-ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton fcnc$CHANNEL"
+ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton fcnc_$CHANNEL"
 #ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT ttbarHLT_${CHANNEL}_${DATATYPE2}"
 #ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT flags_${DATATYPE1}"
 
@@ -37,11 +37,4 @@ if [ _$DATATYPE1 == "_MC" ]; then
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight"
 fi
 $CMD $ARGS $OUTPATH $FILENAMES
-
-if `echo _$DATATYPE3 | grep -q 'TT_'`; then
-    OUTPATH=ntuple/mctop
-    [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
-    ARGS="-I TZWi.TopAnalysis.partonTop partonTop"
-    $CMD $ARGS $OUTPATH $FILENAMES
-fi
 

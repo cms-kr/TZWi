@@ -104,7 +104,7 @@ class FCNCTriLepton(Module, object):
 
         return True
 
-fcncMuMuMu = lambda : FCNCTriLepton(mode="MuMuMu")
-fcncElElEl = lambda : FCNCTriLepton(mode="ElElEl")
-fcncMuMuEl = lambda : FCNCTriLepton(mode="MuMuEl")
-fcncElElMu = lambda : FCNCTriLepton(mode="ElElMu")
+fcnc_MuMuMu = lambda : FCNCTriLepton(mode="MuMuMu")
+fcnc_ElElEl = lambda : FCNCTriLepton(mode="ElElEl")
+fcnc_MuMuEl = lambda : FCNCTriLepton(mode="MuMuEl")
+fcnc_ElElMu = lambda : FCNCTriLepton(mode="ElElMu")
