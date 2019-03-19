@@ -5,7 +5,7 @@
 
 OPTS_COMMON="-s NANO --no_exec"
 OPTS_MC="--mc --eventcontent NANOAODSIM --datatier NANOAODSIM"
-OPTS_RC="--data --eventcontent NANOAOD --datatier NANOAOD"
+OPTS_RD="--data --eventcontent NANOAOD --datatier NANOAOD"
 CUSTOMBASE="TZWi/NanoAODProduction/customise_cff"
 
 CUSTOMISE_TOP="${CUSTOMBASE}.customise_dropNanoAODTables,${CUSTOMBASE}.customise_particleTop"
@@ -15,7 +15,7 @@ CUSTOMISE_TOP="${CUSTOMISE_TOP},${CUSTOMBASE}.customise_partonTop"
 ERA="Run2_2016,run2_miniAOD_80XLegacy"
 #ERA="Run2_2016,run2_nanoAOD_94X2016"
 GT_MC="94X_mcRun2_asymptotic_v3" ## For 02Feb2017
-GT_RD="80X_dataRun2_2016SeptRepro_v7" ## reMiniAod 02Feb2017 campaign
+GT_RD="94X_dataRun2_v10" ## reMiniAod 02Feb2017 campaign
 
 cmsDriver.py 2016_80XLegacy_RD $OPTS_COMMON $OPTS_RD --era $ERA --conditions $GT_RD
 cmsDriver.py 2016_80XLegacy_MC $OPTS_COMMON $OPTS_MC --era $ERA --conditions $GT_MC
