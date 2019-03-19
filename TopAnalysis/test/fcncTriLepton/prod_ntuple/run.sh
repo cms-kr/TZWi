@@ -28,6 +28,7 @@ ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton fcnc_$CHANNEL"
 #ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT ttbarHLT_${CHANNEL}_${DATATYPE2}"
 #ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT flags_${DATATYPE1}"
+ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton cutFlow_$CHANNEL"
 
 OUTPATH=ntuple/reco
 CMD="nano_postproc.py --friend"

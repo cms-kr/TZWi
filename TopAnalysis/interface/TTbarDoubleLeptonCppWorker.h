@@ -109,8 +109,6 @@ private:
   std::vector<float> out_GoodJets_p4[4];
   std::vector<float> out_GoodJets_CSVv2;
 
-  unsigned short out_CutStep;
-
 };
 
 #endif

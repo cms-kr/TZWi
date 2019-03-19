@@ -71,7 +71,6 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
   out_nGoodJets = out_nBjets = 0;
   for ( unsigned i=0; i<4; ++i ) out_GoodJets_p4[i].clear();
   out_GoodJets_CSVv2.clear();
-  out_CutStep = 0;
 }
 
 bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
@@ -219,32 +218,6 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     for ( unsigned i=0; i<4; ++i ) out_GoodJets_p4[i].push_back(in_Jets_p4[i]->At(kk));
     out_GoodJets_CSVv2.push_back(in_Jets_CSVv2->At(kk));
   }
-
-  // Get CutStep
-  out_CutStep = 0;
-  // do-while trick, to reduce nested-if statements
-  do {
-    if ( out_Z_charge != 0 or out_Lepton1_p4[0] < 25 or out_Lepton2_p4[0] < 20 ) break;
-    ++out_CutStep;
-
-    // Z-veto and MET (no cut for e-mu channel)
-    if ( actualMode == MODE::MuEl ) {
-      out_CutStep += 2;
-    }
-    else {
-      if ( out_Z_p4[0] > 75 or out_Z_p4[0] < 105 ) break;
-      ++out_CutStep;
-      if ( out_MET_pt < 40 ) break;
-      ++out_CutStep;
-    }
-
-    if ( out_nGoodJets < 4 ) break;
-    ++out_CutStep;
-    if ( out_nBjets < 1 ) break;
-    ++out_CutStep; 
-    if ( out_nBjets < 2 ) break;
-    ++out_CutStep; 
-  } while ( false );
 
   return true;
 }
