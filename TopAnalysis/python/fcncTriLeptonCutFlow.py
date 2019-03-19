@@ -50,5 +50,5 @@ class TTbarDoubleLeptonCutFlow(Module, object):
 
 cutFlow_MuMuMu = lambda: TTbarDoubleLeptonCutFlow(mode="MuMuMu")
 cutFlow_ElElEl = lambda: TTbarDoubleLeptonCutFlow(mode="ElElEl")
-cutFlow_MuElEl = lambda: TTbarDoubleLeptonCutFlow(mode="MuElEl")
-cutFlow_ElMuMu = lambda: TTbarDoubleLeptonCutFlow(mode="ElMuMu")
+cutFlow_ElElMu = lambda: TTbarDoubleLeptonCutFlow(mode="ElElMu")
+cutFlow_MuMuEl = lambda: TTbarDoubleLeptonCutFlow(mode="MuMuEl")
