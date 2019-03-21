@@ -14,17 +14,24 @@
 class CombineHLTCppWorker {
 public:
   typedef TTreeReaderValue<bool>* TRB;
+  typedef TTreeReaderValue<unsigned char>* TRUC;
+  typedef TTreeReaderValue<unsigned int>* TRUI;
 
   CombineHLTCppWorker(const std::string formulaExpr, const std::string outName="HLT");
   ~CombineHLTCppWorker() = default;
 
+  void reset();
   void addHLT(TRB flag);
+  void addHLT(TRUC flag);
+  void addHLT(TRUI flag);
   bool analyze();
 
 private:
-  std::vector<TRB> in_HLTFlags;
+  std::map<int, TRB> in_HLTFlags;
+  std::map<int, TRUC> in_HLTFlagsUC;
+  std::map<int, TRUI> in_HLTFlagsUI;
 
-private:
+  int nHLT_;
   const std::string outName_;
   TFormula formula_;
 

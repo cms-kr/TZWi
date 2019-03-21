@@ -1,0 +1,17 @@
+RunIIFall17.MuonEG: "
+    HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL || HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+"
+RunIIFall17.DoubleMuon: "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8"
+RunIIFall17.DoubleEG: "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"
+
+Run2017B.MuonEG: "
+    HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL || HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+"
+Run2017B.DoubleMuon: "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ"
+Run2017B.DoubleEG: "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"
+
+RD_Run2017CF.MuonEG: "
+    HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL || HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+"
+RD_Run2017CF.DoubleMuon: "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8"
+RD_Run2017CF.DoubleEG: "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"
