@@ -5,9 +5,9 @@ import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
-class TTbarDoubleLeptonCutFlow(Module, object):
+class FCNCTriLeptonCutFlow(Module, object):
     def __init__(self, *args, **kwargs):
-        #super(TTbarDoubleLepton, self).__init__(*args, **kwargs)
+        #super(FCNCTriLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
         pass
     def beginJob(self):
@@ -48,7 +48,7 @@ class TTbarDoubleLeptonCutFlow(Module, object):
 
         return True
 
-cutFlow_MuMuMu = lambda: TTbarDoubleLeptonCutFlow(mode="MuMuMu")
-cutFlow_ElElEl = lambda: TTbarDoubleLeptonCutFlow(mode="ElElEl")
-cutFlow_ElElMu = lambda: TTbarDoubleLeptonCutFlow(mode="ElElMu")
-cutFlow_MuMuEl = lambda: TTbarDoubleLeptonCutFlow(mode="MuMuEl")
+cutFlow_MuMuMu = lambda: FCNCTriLeptonCutFlow(mode="MuMuMu")
+cutFlow_ElElEl = lambda: FCNCTriLeptonCutFlow(mode="ElElEl")
+cutFlow_ElElMu = lambda: FCNCTriLeptonCutFlow(mode="ElElMu")
+cutFlow_MuMuEl = lambda: FCNCTriLeptonCutFlow(mode="MuMuEl")
