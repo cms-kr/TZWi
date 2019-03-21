@@ -28,14 +28,15 @@ ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton fcnc_$CHANNEL"
 #ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT ttbarHLT_${CHANNEL}_${DATATYPE2}"
 #ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT flags_${DATATYPE1}"
-ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton cutFlow_$CHANNEL"
+ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonCutFlow cutFlow_$CHANNEL"
 
 OUTPATH=ntuple/reco
 CMD="nano_postproc.py --friend"
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
-if [ _$DATATYPE1 == "_MC" ]; then
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight"
-fi
+#if [ _$DATATYPE1 == "_MC" ]; then
+#    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
+#    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight"
+#fi
+echo $CMD $ARGS $OUTPATH $FILENAMES
 $CMD $ARGS $OUTPATH $FILENAMES
 

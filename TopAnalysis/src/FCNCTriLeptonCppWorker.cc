@@ -275,28 +275,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
     out_GoodJets_CSVv2.push_back(in_Jets_CSVv2->At(kk));
   }
 
-  // Get CutStep
-  out_CutStep = 0;
-  // do-while trick, to reduce nested-if statements
-  do {
-    if ( !(out_nGoodJets >= 1 and out_nGoodJets <= 3) ) break;
-    ++out_CutStep;
-    if ( !(out_W_MT < 300) ) break;
-    ++out_CutStep;
-/*
-    // Z-veto and MET (no cut for e-mu channel)
-    if ( actualMode == MODE::MuEl ) {
-      out_CutStep += 2;
-    }
-    else {
-      if ( out_Z_p4[0] > 75 or out_Z_p4[0] < 105 ) break;
-      ++out_CutStep;
-      if ( out_MET_pt < 40 ) break;
-      ++out_CutStep;
-    }
-*/
-  } while ( false );
-
   return true;
 }
 
