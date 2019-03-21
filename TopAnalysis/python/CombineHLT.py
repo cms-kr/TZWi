@@ -5,10 +5,10 @@ import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
-import json
-
 class CombineHLT(Module, object):
     def __init__(self, *args, **kwargs):
+        import yaml
+
         #super(CombineHLT, self).__init__(*args, **kwargs)
         self.outName = kwargs.get("outName") if "outName" in kwargs else "HLT"
 
@@ -23,11 +23,12 @@ class CombineHLT(Module, object):
                 ROOT.gSystem.Load("libTZWiTopAnalysis.so")
                 ROOT.gROOT.ProcessLine(".L %s/interface/CombineHLTCppWorker.h" % base)
 
-        fName, setName = kwargs.get("hltSet").split('.')
+        fName = kwargs.get("fileName")
+        setName = kwargs.get("hltSet")
         base = "%s/src/TZWi/TopAnalysis"%os.getenv("CMSSW_BASE")
-        d = json.loads(open(base+"/data/combineHLT/"+fName+".json").read())
+        d = yaml.load(open(base+"/data/combineHLT/"+fName))
 
-        formula = d[setName]
+        formula = d[setName].replace('\n', '')
         oprs = ["(", ")", "||", "&&"]
         for opr in oprs: formula = formula.replace(opr, " %s " % opr)
         formula = formula.strip()
@@ -62,6 +63,7 @@ class CombineHLT(Module, object):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def initReaders(self,tree):
+        self.worker.reset();
         for i, name in enumerate(self.names):
             setattr(self, "b_"+name, tree.valueReader(name))
             self.worker.addHLT(getattr(self, "b_"+name))
@@ -77,4 +79,4 @@ class CombineHLT(Module, object):
         res = self.worker.analyze()
         self.out.fillBranch(self.outName, res)
 
-        return res
+        return True
