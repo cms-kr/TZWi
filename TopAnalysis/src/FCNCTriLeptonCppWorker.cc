@@ -78,7 +78,6 @@ void FCNCTriLeptonCppWorker::resetValues() {
   for ( int i=0; i<4; ++i ) out_GoodJets_p4[i].clear();
   out_GoodJets_CSVv2.clear();
 
-  out_CutStep = 0;
 }
 //signal muons
 bool FCNCTriLeptonCppWorker::isGoodMuon(const unsigned i) const {
