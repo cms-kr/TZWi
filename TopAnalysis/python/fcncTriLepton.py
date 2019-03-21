@@ -28,7 +28,6 @@ class FCNCTriLepton(Module, object):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.worker.initOutput(self.out.tree())
         for objName in ["Lepton1", "Lepton2", "Lepton3", "Z"]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 self.out.branch("%s_%s" % (objName, varName), "F")
