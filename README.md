@@ -1,6 +1,6 @@
 # TZWi
 Yet another CMS NanoAOD tools focusing on specific analyses.
-Management area: https://app.asana.com/0/1115311953973868/list
+  * Management area: https://app.asana.com/0/1115311953973868/list
 
 We'd like to cover:
 
