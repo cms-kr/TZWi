@@ -183,7 +183,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Select event by decay mode
   auto actualMode = mode_;
   if ( actualMode == MODE::ElElMu ) {
-    if ( nGoodElectrons < 2 and nGoodMuons < 1 ) return false;
+    if ( nGoodElectrons < 2 or nGoodMuons < 1 ) return false;
     if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
       out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
@@ -195,7 +195,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
     out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
   }
   else if ( actualMode == MODE::MuMuEl ) {
-    if ( nGoodElectrons < 1 and nGoodMuons < 2 ) return false;
+    if ( nGoodElectrons < 1 or nGoodMuons < 2 ) return false;
     if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
     for ( unsigned i=0; i<4; ++i ) {
       out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
@@ -204,7 +204,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
     }
     out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
     out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
-    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
   }
   else if ( actualMode == MODE::ElElEl ) {
     if ( nGoodElectrons < 3 ) return false;
