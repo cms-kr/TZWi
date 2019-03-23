@@ -15,6 +15,8 @@ FILELIST=$2
 MAXFILES=$3
 JOBNUMBER=$4
 
+[ $CHANNEL == 'ElMu' ] && CHANNEL='MuEl'
+
 DATATYPE0=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f1`
 DATASET=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2`
 DATATYPE=$DATATYPE0
