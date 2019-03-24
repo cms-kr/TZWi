@@ -7,37 +7,44 @@ luminosity: #luminosity of each periods (/fb)
 
 dataset: #primary datasets. replace with /xrootd/... when samples are available at kisti
     SingleElectron:
-      - /SingleElectron/Run2017B-Nano14Dec2018-v1/NANOAOD
-      - /SingleElectron/Run2017C-Nano14Dec2018-v1/NANOAOD
-      - /SingleElectron/Run2017D-Nano14Dec2018-v1/NANOAOD
-      - /SingleElectron/Run2017E-Nano14Dec2018-v1/NANOAOD
-      - /SingleElectron/Run2017F-Nano14Dec2018-v1/NANOAOD
+        /SingleElectron/Run2017B-Nano14Dec2018-v1/NANOAOD:
+        /SingleElectron/Run2017C-Nano14Dec2018-v1/NANOAOD:
+        /SingleElectron/Run2017D-Nano14Dec2018-v1/NANOAOD:
+        /SingleElectron/Run2017E-Nano14Dec2018-v1/NANOAOD:
+        /SingleElectron/Run2017F-Nano14Dec2018-v1/NANOAOD:
 
     SingleMuon:
-      - /SingleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD
-      - /SingleMuon/Run2017C-Nano14Dec2018-v1/NANOAOD
-      - /SingleMuon/Run2017D-Nano14Dec2018-v1/NANOAOD
-      - /SingleMuon/Run2017E-Nano14Dec2018-v1/NANOAOD
-      - /SingleMuon/Run2017F-Nano14Dec2018-v1/NANOAOD
+        /SingleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD:
+          - /xrootd/store/data/Run2017B/SingleMuon/NANOAOD/Nano14Dec2018-v1/10000
+          - /xrootd/store/data/Run2017B/SingleMuon/NANOAOD/Nano14Dec2018-v1/90000
+        /SingleMuon/Run2017C-Nano14Dec2018-v1/NANOAOD:
+          - /xrootd/store/data/Run2017C/SingleMuon/NANOAOD/Nano14Dec2018-v1/10000
+        /SingleMuon/Run2017D-Nano14Dec2018-v1/NANOAOD:
+          - /xrootd/store/data/Run2017D/SingleMuon/NANOAOD/Nano14Dec2018-v1/80000
+        /SingleMuon/Run2017E-Nano14Dec2018-v1/NANOAOD:
+          - /xrootd/store/data/Run2017E/SingleMuon/NANOAOD/Nano14Dec2018-v1/10000
+        /SingleMuon/Run2017F-Nano14Dec2018-v1/NANOAOD:
+          - /xrootd/store/data/Run2017F/SingleMuon/NANOAOD/Nano14Dec2018-v1/20000
+          - /xrootd/store/data/Run2017F/SingleMuon/NANOAOD/Nano14Dec2018-v1/280000
 
     DoubleEG:
-      - /DoubleEG/Run2017B-Nano14Dec2018-v1/NANOAOD
-      - /DoubleEG/Run2017C-Nano14Dec2018-v1/NANOAOD
-      - /DoubleEG/Run2017D-Nano14Dec2018-v1/NANOAOD
-      - /DoubleEG/Run2017E-Nano14Dec2018-v1/NANOAOD
-      - /DoubleEG/Run2017F-Nano14Dec2018-v1/NANOAOD
+        /DoubleEG/Run2017B-Nano14Dec2018-v1/NANOAOD:
+        /DoubleEG/Run2017C-Nano14Dec2018-v1/NANOAOD:
+        /DoubleEG/Run2017D-Nano14Dec2018-v1/NANOAOD:
+        /DoubleEG/Run2017E-Nano14Dec2018-v1/NANOAOD:
+        /DoubleEG/Run2017F-Nano14Dec2018-v1/NANOAOD:
 
     DoubleMuon:
-      - /DoubleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD
-      - /DoubleMuon/Run2017C-Nano14Dec2018-v1/NANOAOD
-      - /DoubleMuon/Run2017D-Nano14Dec2018-v1/NANOAOD
-      - /DoubleMuon/Run2017E-Nano14Dec2018-v1/NANOAOD
-      - /DoubleMuon/Run2017F-Nano14Dec2018-v1/NANOAOD
+        /DoubleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD:
+        /DoubleMuon/Run2017C-Nano14Dec2018-v1/NANOAOD:
+        /DoubleMuon/Run2017D-Nano14Dec2018-v1/NANOAOD:
+        /DoubleMuon/Run2017E-Nano14Dec2018-v1/NANOAOD:
+        /DoubleMuon/Run2017F-Nano14Dec2018-v1/NANOAOD:
 
     MuonEG:
-      - /MuonEG/Run2017B-Nano14Dec2018-v1/NANOAOD
-      - /MuonEG/Run2017C-Nano14Dec2018-v1/NANOAOD
-      - /MuonEG/Run2017D-Nano14Dec2018-v1/NANOAOD
-      - /MuonEG/Run2017E-Nano14Dec2018-v1/NANOAOD
-      - /MuonEG/Run2017F-Nano14Dec2018-v1/NANOAOD
+        /MuonEG/Run2017B-Nano14Dec2018-v1/NANOAOD:
+        /MuonEG/Run2017C-Nano14Dec2018-v1/NANOAOD:
+        /MuonEG/Run2017D-Nano14Dec2018-v1/NANOAOD:
+        /MuonEG/Run2017E-Nano14Dec2018-v1/NANOAOD:
+        /MuonEG/Run2017F-Nano14Dec2018-v1/NANOAOD:
 
