@@ -40,7 +40,7 @@ class TTbarDoubleLeptonCutFlow(Module, object):
             if self.in_Z_charge.GetValueLong64() != 0 or \
                self.in_Lepton1_pt.GetValue() < 25 or self.in_Lepton2_pt.GetValue() < 25: break
             cutStep += 1
-            if self.doZVetoCut and (75 < self.in_Z_mass.GetValue() < 105): break
+            if self.doZVetoCut and ((75 < self.in_Z_mass.GetValue()) and (self.in_Z_mass.GetValue() < 105)): break
             cutStep += 1
             if self.doMETCut and self.in_MET_pt.GetValue() < 40: break
             cutStep += 1
