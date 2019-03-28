@@ -22,8 +22,9 @@ DATATYPE0=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f1`
 DATASET=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2`
 DATATYPE=$DATATYPE0
 if [ ${DATATYPE::3} == "Run" ]; then
-  DATATYPE=${DATATYPE::7} ## This gives Run2018A -> Run2018
- [ ${DATATYPE::9} == "Run2016BE" ] || [ ${DATATYPE::9} == "Run2016FG" ] || DATATYPE=Run2016H
+  #DATATYPE=${DATATYPE::7} ## This gives Run2018A -> Run2018
+  [ $DATATYPE == "Run2016B" -o $DATATYPE == "Run2016C" -o $DATATYPE == "Run2016D" -o $DATATYPE == "Run2016E" ] && DATATYPE=Run2016BE
+  [ $DATATYPE == "Run2016F" -o $DATATYPE == "Run2016G" ] && DATATYPE=Run2016FG
 fi
 
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
