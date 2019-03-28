@@ -24,7 +24,7 @@ DATATYPE=$DATATYPE0
 if [ ${DATATYPE::3} == "Run" ]; then
   DATATYPE=${DATATYPE::7} ## This gives Run2018A -> Run2018
 
-  [ ${DATATYPE::8} == "Run2016BE" ] || DATATYPE=Run2016FG # || DATATYPE=Run2016H
+  [ ${DATATYPE::8} == "Run2016BE" ] || [ ${DATATYPE::8} == "Run2016FG" ] || DATATYPE=Run2016H
 fi
 
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
