@@ -29,7 +29,7 @@ class CombineHLT(Module, object):
         d = yaml.load(open(base+"/data/combineHLT/"+fName))
 
         formula = d[setName].replace('\n', '')
-        oprs = ["(", ")", "||", "&&"]
+        oprs = ["(", ")", "||", "&&", "!"]
         for opr in oprs: formula = formula.replace(opr, " %s " % opr)
         formula = formula.strip()
 
