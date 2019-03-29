@@ -37,10 +37,11 @@ class FCNCTriLepton(Module, object):
         self.out.branch("Lepton2_pdgId", "I")
         self.out.branch("Lepton3_pdgId", "I")
         self.out.branch("Z_charge", "I")
-        self.out.branch("nGoodJets", "i")
+        self.out.branch("nGoodJet", "i")
+        self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
         for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
-            self.out.branch("GoodJets_%s" % varName, "F", lenVar="nGoodJets")
-        self.out.branch("nBjets", "i")
+            self.out.branch("GoodJet_%s" % varName, "F", lenVar="nGoodJet")
+        self.out.branch("nBjet", "i")
         self.out.branch("W_MT", "F")
 
         self.initReaders(inputTree)
@@ -87,7 +88,7 @@ class FCNCTriLepton(Module, object):
             self.initReaders(event._tree)
         self.worker.analyze()
 
-        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "GoodJets"]:
+        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "GoodJet"]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
         self.out.fillBranch("MET_pt", self.worker.get_MET_pt())
@@ -97,9 +98,10 @@ class FCNCTriLepton(Module, object):
         self.out.fillBranch("Lepton3_pdgId", self.worker.get_Lepton3_pdgId())
         self.out.fillBranch("Z_charge", self.worker.get_Z_charge())
         self.out.fillBranch("W_MT", self.worker.get_W_MT())
-        self.out.fillBranch("GoodJets_CSVv2", self.worker.get_GoodJets_CSVv2())
-        self.out.fillBranch("nGoodJets", self.worker.get_nGoodJets())
-        self.out.fillBranch("nBjets", self.worker.get_nBjets())
+        self.out.fillBranch("nGoodJet", self.worker.get_nGoodJet())
+        self.out.fillBranch("GoodJet_CSVv2", self.worker.get_GoodJet_CSVv2())
+        self.out.fillBranch("GoodJet_index", self.worker.get_GoodJet_index())
+        self.out.fillBranch("nBjet", self.worker.get_nBjet())
 
         return True
 
