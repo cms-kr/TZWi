@@ -34,7 +34,7 @@ ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT flags_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonCutFlow cutFlow_${CHANNEL}"
 
-OUTPATH=ntuple/reco
+OUTPATH=ntuple/reco/$DATATYPE0/$DATASET/$CHANNEL
 CMD="nano_postproc.py --friend"
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 if [ ${DATATYPE::2} == "MC" ]; then
