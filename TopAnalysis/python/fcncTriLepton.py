@@ -37,7 +37,9 @@ class FCNCTriLepton(Module, object):
         self.out.branch("Lepton2_pdgId", "I")
         self.out.branch("Lepton3_pdgId", "I")
         self.out.branch("Z_charge", "I")
-        self.out.branch("nGoodJet", "i")
+        self.out.branch("nVetoLepton", "i")
+        self.out.branch("GoodLeptonCode", "I")
+        #self.out.branch("nGoodJet", "i")
         self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
         for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
             self.out.branch("GoodJet_%s" % varName, "F", lenVar="nGoodJet")
@@ -90,18 +92,17 @@ class FCNCTriLepton(Module, object):
 
         for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "GoodJet"]:
             for varName in ["pt", "eta", "phi", "mass"]:
-                self.out.fillBranch("%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
-        self.out.fillBranch("MET_pt", self.worker.get_MET_pt())
-        self.out.fillBranch("MET_phi", self.worker.get_MET_phi())
-        self.out.fillBranch("Lepton1_pdgId", self.worker.get_Lepton1_pdgId())
-        self.out.fillBranch("Lepton2_pdgId", self.worker.get_Lepton2_pdgId())
-        self.out.fillBranch("Lepton3_pdgId", self.worker.get_Lepton3_pdgId())
-        self.out.fillBranch("Z_charge", self.worker.get_Z_charge())
-        self.out.fillBranch("W_MT", self.worker.get_W_MT())
-        self.out.fillBranch("nGoodJet", self.worker.get_nGoodJet())
-        self.out.fillBranch("GoodJet_CSVv2", self.worker.get_GoodJet_CSVv2())
-        self.out.fillBranch("GoodJet_index", self.worker.get_GoodJet_index())
-        self.out.fillBranch("nBjet", self.worker.get_nBjet())
+                setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
+                self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
+        for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "Lepton2_pdgId", "Lepton3_pdgId",
+                        "nVetoLepton", "GoodLeptonCode", "Z_charge", "W_MT",
+                        #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
+                        "GoodJet_index", "GoodJet_CSVv2", 
+                        "nBjet",]:
+            setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())
+            self.out.fillBranch(varName, getattr(event._tree, "b_out_%s" % varName))
+        ## Special care for nGoodJet
+        setattr(event._tree, "b_out_nGoodJet", self.worker.get_nGoodJet())
 
         return True
 

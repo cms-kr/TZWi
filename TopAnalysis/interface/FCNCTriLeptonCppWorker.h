@@ -61,12 +61,15 @@ public:
 
   float get_W_MT() const { return out_W_MT; }
 
+  unsigned get_nVetoLepton() const { return out_nVetoLepton; }
+  short get_GoodLeptonCode() const { return out_GoodLeptonCode; }
   unsigned get_nGoodJet()   const { return out_nGoodJet; }
   std::vector<float> get_GoodJet_pt()   const { return out_GoodJet_p4[0]; }
   std::vector<float> get_GoodJet_eta()  const { return out_GoodJet_p4[1]; }
   std::vector<float> get_GoodJet_phi()  const { return out_GoodJet_p4[2]; }
   std::vector<float> get_GoodJet_mass() const { return out_GoodJet_p4[3]; }
   std::vector<float> get_GoodJet_CSVv2() const { return out_GoodJet_CSVv2; }
+  std::vector<unsigned short> get_GoodJet_index() const { return out_GoodJet_index; }
   unsigned get_nBjet()   const { return out_nBjet; }
 
 private:
@@ -124,9 +127,12 @@ private:
   float out_W_MT;
 
   const static unsigned short maxNGoodJetToKeep_ = 100;
+  short out_GoodLeptonCode;
+  unsigned short out_nVetoLepton;
   unsigned short out_nGoodJet, out_nBjet;
   std::vector<float> out_GoodJet_p4[4];
   std::vector<float> out_GoodJet_CSVv2;
+  std::vector<unsigned short> out_GoodJet_index;
 
 };
 

@@ -70,13 +70,14 @@ void FCNCTriLeptonCppWorker::resetValues() {
     out_Z_p4[i] = 0;
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = out_Lepton3_pdgId = 0;
+  out_GoodLeptonCode = out_nVetoLepton = 0;
   out_Z_charge = 0;
   out_MET_pt = out_MET_phi = 0;
   out_W_MT = 0;
-
   out_nGoodJet = out_nBjet = 0;
   for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
   out_GoodJet_CSVv2.clear();
+  out_GoodJet_index.clear();
 
 }
 //signal muons
@@ -167,68 +168,92 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( isGoodElectron(i) ) electronIdxs.push_back(i);
     if ( isVetoElectron(i) ) ++nVetoElectrons;
   }
-  const int nGoodMuons = muonIdxs.size();
-  const int nGoodElectrons = electronIdxs.size();
-  nVetoMuons -= nGoodMuons;
-  nVetoElectrons -= nGoodElectrons;
-  if ( nGoodMuons+nGoodElectrons < 3 ) return false; // Require at least three leptons.
-  if ( nVetoMuons + nVetoElectrons > 0 ) return false; // and there should no additional leptons
-
   std::sort(muonIdxs.begin(), muonIdxs.end(), [&](const int i, const int j){
               return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
   std::sort(electronIdxs.begin(), electronIdxs.end(), [&](const int i, const int j){
               return in_Electrons_p4[0]->At(i)*in_Electrons_eCorr->At(i) >
                      in_Electrons_p4[0]->At(j)*in_Electrons_eCorr->At(j);});
 
+  const int nGoodMuons = muonIdxs.size();
+  const int nGoodElectrons = electronIdxs.size();
+  nVetoMuons -= nGoodMuons;
+  nVetoElectrons -= nGoodElectrons;
+  //if ( nGoodMuons+nGoodElectrons < 3 ) return false; // Require at least three leptons.
+  //if ( nVetoMuons + nVetoElectrons > 0 ) return false; // and there should no additional leptons
+  out_GoodLeptonCode = 111; // GoodLepton "code". 
+  // 111: all matched with the desired channel/mode
+  // -111: all matched with the desired channel/mode but wrong sign
+  // 101: missing one lepton
+  // 001: missing two same flavour leptons for eemu/mumue
+  // 100: missing two leptons for eee/mumumu, two different flav leptons for eemu/mumue
+  // 000: no leptons found in this event
+  out_nVetoLepton = nVetoMuons + nVetoElectrons;
+
   // Select event by decay mode
   auto actualMode = mode_;
   if ( actualMode == MODE::ElElMu ) {
-    if ( nGoodElectrons < 2 or nGoodMuons < 1 ) return false;
-    if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
+    if ( nGoodElectrons < 2 ) out_GoodLeptonCode -=  10;
+    if ( nGoodElectrons < 1 ) out_GoodLeptonCode -= 100;
+    if ( nGoodMuons     < 1 ) out_GoodLeptonCode -=   1;
+    //if ( nGoodElectrons < 2 or nGoodMuons < 1 ) return false;
+    //if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
+    if ( nGoodElectrons >= 2 and in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
-      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
+      if ( nGoodElectrons >= 1 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
+      if ( nGoodElectrons >= 2 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
+      if ( nGoodMuons     >= 1 ) out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
     }
-    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
-    out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+    if ( nGoodElectrons >= 1 ) out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    if ( nGoodElectrons >= 2 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    if ( nGoodMuons     >= 1 ) out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
   }
   else if ( actualMode == MODE::MuMuEl ) {
-    if ( nGoodElectrons < 1 or nGoodMuons < 2 ) return false;
-    if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
+    if ( nGoodMuons     < 2 ) out_GoodLeptonCode -=  10;
+    if ( nGoodMuons     < 1 ) out_GoodLeptonCode -= 100;
+    if ( nGoodElectrons < 1 ) out_GoodLeptonCode -=   1;
+    //if ( nGoodElectrons < 1 or nGoodMuons < 2 ) return false;
+    //if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
+    if ( nGoodMuons >= 2 and in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
-      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
-      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
+      if ( nGoodMuons     >= 1 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
+      if ( nGoodMuons     >= 2 ) out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
+      if ( nGoodElectrons >= 1 ) out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
     }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
-    out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
-    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    if ( nGoodMuons     >= 1 ) out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+    if ( nGoodMuons     >= 2 ) out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
+    if ( nGoodElectrons >= 1 ) out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
   }
   else if ( actualMode == MODE::ElElEl ) {
-    if ( nGoodElectrons < 3 ) return false;
-    if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
+    if ( nGoodElectrons < 3 ) out_GoodLeptonCode -=   1;
+    if ( nGoodElectrons < 2 ) out_GoodLeptonCode -=  10;
+    if ( nGoodElectrons < 1 ) out_GoodLeptonCode -= 100;
+    //if ( nGoodElectrons < 3 ) return false;
+    //if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
+    if ( nGoodElectrons >= 2 and in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
-      out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electronIdxs[2]);
+      if ( nGoodElectrons >= 1 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
+      if ( nGoodElectrons >= 2 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
+      if ( nGoodElectrons >= 3 ) out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electronIdxs[2]);
     }
-    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
-    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
+    if ( nGoodElectrons >= 1 ) out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    if ( nGoodElectrons >= 2 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    if ( nGoodElectrons >= 3 ) out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
   }
   else if ( actualMode == MODE::MuMuMu ) {
-    if ( nGoodMuons < 3 ) return false;
-    if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
+    if ( nGoodMuons < 3 ) out_GoodLeptonCode -=   1;
+    if ( nGoodMuons < 2 ) out_GoodLeptonCode -=  10;
+    if ( nGoodMuons < 1 ) out_GoodLeptonCode -= 100;
+    //if ( nGoodMuons < 3 ) return false;
+    //if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
+    if ( nGoodMuons >= 2 and in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
-      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
-      out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[2]);
+      if ( nGoodMuons >= 1 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
+      if ( nGoodMuons >= 2 ) out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
+      if ( nGoodMuons >= 3 ) out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[2]);
     }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
-    out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
-    out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[2]);
+    if ( nGoodMuons >= 1 ) out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+    if ( nGoodMuons >= 2 ) out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
+    if ( nGoodMuons >= 3 ) out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[2]);
   }
 
   TLorentzVector lepton1P4, lepton2P4, lepton3P4;
@@ -256,16 +281,13 @@ bool FCNCTriLeptonCppWorker::analyze() {
   for ( unsigned i=0, n=in_Jet_CSVv2->GetSize(); i<n; ++i ) {
     if ( !isGoodJet(i) ) continue;
     TLorentzVector jetP4 = buildP4(in_Jet_p4, i);
-    if ( lepton1P4.DeltaR(jetP4) < 0.3 ) continue;
-    if ( lepton2P4.DeltaR(jetP4) < 0.3 ) continue;
-    if ( lepton3P4.DeltaR(jetP4) < 0.3 ) continue;
+    if ( lepton1P4.Pt() > 0 and lepton1P4.DeltaR(jetP4) < 0.3 ) continue;
+    if ( lepton2P4.Pt() > 0 and lepton2P4.DeltaR(jetP4) < 0.3 ) continue;
+    if ( lepton3P4.Pt() > 0 and lepton3P4.DeltaR(jetP4) < 0.3 ) continue;
     jetIdxs.push_back(i);
     if ( in_Jet_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjet;
   }
   out_nGoodJet = jetIdxs.size();
-  if ( out_nGoodJet < int(minEventNGoodJet_) ) return false;
-  if ( out_nBjet < int(minEventNBjet_) ) return false;
-
   // Sort jets by pt
   std::sort(jetIdxs.begin(), jetIdxs.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jet_p4[0]->At(i) > in_Jet_p4[0]->At(j); });
@@ -273,7 +295,11 @@ bool FCNCTriLeptonCppWorker::analyze() {
     const unsigned kk = jetIdxs.at(k);
     for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].push_back(in_Jet_p4[i]->At(kk));
     out_GoodJet_CSVv2.push_back(in_Jet_CSVv2->At(kk));
+    out_GoodJet_index.push_back(kk);
   }
+
+  //if ( out_nGoodJet < int(minEventNGoodJet_) ) return false;
+  //if ( out_nBjet < int(minEventNBjet_) ) return false;
 
   return true;
 }
