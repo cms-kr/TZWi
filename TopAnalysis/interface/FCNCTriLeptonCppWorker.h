@@ -77,7 +77,6 @@ private:
   const double minElectronPt_ = 35, maxElectronEta_ = 2.1; //Signal & veto reco. cuts are same
   const double minJetPt_ = 30, maxJetEta_ = 2.4;
   const double minBjetBDiscr_ = 0.5426; // FIXME: give updated number (here, use Loose Working Point)
-  const unsigned short minEventNGoodJet_ = 0, minEventNBjet_ = 0;
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 
@@ -126,7 +125,6 @@ private:
 
   float out_W_MT;
 
-  const static unsigned short maxNGoodJetToKeep_ = 100;
   short out_GoodLeptonCode;
   unsigned short out_nVetoLepton;
   unsigned short out_nGoodJet, out_nBjet;

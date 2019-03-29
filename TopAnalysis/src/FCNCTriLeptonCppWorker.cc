@@ -178,8 +178,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
   const int nGoodElectrons = electronIdxs.size();
   nVetoMuons -= nGoodMuons;
   nVetoElectrons -= nGoodElectrons;
-  //if ( nGoodMuons+nGoodElectrons < 3 ) return false; // Require at least three leptons.
-  //if ( nVetoMuons + nVetoElectrons > 0 ) return false; // and there should no additional leptons
   out_GoodLeptonCode = 111; // GoodLepton "code". 
   // 111: all matched with the desired channel/mode
   // -111: all matched with the desired channel/mode but wrong sign
@@ -195,9 +193,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodElectrons < 2 ) out_GoodLeptonCode -=  10;
     if ( nGoodElectrons < 1 ) out_GoodLeptonCode -= 100;
     if ( nGoodMuons     < 1 ) out_GoodLeptonCode -=   1;
-    //if ( nGoodElectrons < 2 or nGoodMuons < 1 ) return false;
-    //if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
-    if ( nGoodElectrons >= 2 and in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
       if ( nGoodElectrons >= 1 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
       if ( nGoodElectrons >= 2 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
@@ -211,9 +206,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodMuons     < 2 ) out_GoodLeptonCode -=  10;
     if ( nGoodMuons     < 1 ) out_GoodLeptonCode -= 100;
     if ( nGoodElectrons < 1 ) out_GoodLeptonCode -=   1;
-    //if ( nGoodElectrons < 1 or nGoodMuons < 2 ) return false;
-    //if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
-    if ( nGoodMuons >= 2 and in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
       if ( nGoodMuons     >= 1 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
       if ( nGoodMuons     >= 2 ) out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
@@ -227,9 +219,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodElectrons < 3 ) out_GoodLeptonCode -=   1;
     if ( nGoodElectrons < 2 ) out_GoodLeptonCode -=  10;
     if ( nGoodElectrons < 1 ) out_GoodLeptonCode -= 100;
-    //if ( nGoodElectrons < 3 ) return false;
-    //if ( in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) return false;
-    if ( nGoodElectrons >= 2 and in_Electrons_charge->At(electronIdxs[0]) == in_Electrons_charge->At(electronIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
       if ( nGoodElectrons >= 1 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
       if ( nGoodElectrons >= 2 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
@@ -243,9 +232,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodMuons < 3 ) out_GoodLeptonCode -=   1;
     if ( nGoodMuons < 2 ) out_GoodLeptonCode -=  10;
     if ( nGoodMuons < 1 ) out_GoodLeptonCode -= 100;
-    //if ( nGoodMuons < 3 ) return false;
-    //if ( in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) return false;
-    if ( nGoodMuons >= 2 and in_Muons_charge->At(muonIdxs[0]) == in_Muons_charge->At(muonIdxs[1]) ) out_GoodLeptonCode *= -1;
     for ( unsigned i=0; i<4; ++i ) {
       if ( nGoodMuons >= 1 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
       if ( nGoodMuons >= 2 ) out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
@@ -263,13 +249,15 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Done for the leptons
 
   // Build Z candidate
-  const auto zP4 = lepton1P4+lepton2P4;
-  out_Z_p4[0] = zP4.Pt();
-  out_Z_p4[1] = zP4.Eta();
-  out_Z_p4[2] = zP4.Phi();
-  out_Z_p4[3] = zP4.M();
-  out_Z_charge = out_Lepton1_pdgId+out_Lepton2_pdgId;
-  out_Z_charge = out_Z_charge == 0 ? 0 : 2*out_Z_charge/abs(out_Z_charge);
+  if ( std::abs(out_GoodLeptonCode) > 110 ) {
+    const auto zP4 = lepton1P4+lepton2P4;
+    out_Z_p4[0] = zP4.Pt();
+    out_Z_p4[1] = zP4.Eta();
+    out_Z_p4[2] = zP4.Phi();
+    out_Z_p4[3] = zP4.M();
+    out_Z_charge = out_Lepton1_pdgId+out_Lepton2_pdgId;
+    out_Z_charge = out_Z_charge == 0 ? 0 : 2*out_Z_charge/abs(out_Z_charge);
+  }
 
   // Transeverse mass of the W boson
   //if lepton3 comes from W (that lepton have high pT)
@@ -291,15 +279,12 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Sort jets by pt
   std::sort(jetIdxs.begin(), jetIdxs.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jet_p4[0]->At(i) > in_Jet_p4[0]->At(j); });
-  for ( unsigned k=0, n=std::min(maxNGoodJetToKeep_, out_nGoodJet); k<n; ++k ) {
+  for ( unsigned k=0, n=out_nGoodJet; k<n; ++k ) {
     const unsigned kk = jetIdxs.at(k);
     for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].push_back(in_Jet_p4[i]->At(kk));
     out_GoodJet_CSVv2.push_back(in_Jet_CSVv2->At(kk));
     out_GoodJet_index.push_back(kk);
   }
-
-  //if ( out_nGoodJet < int(minEventNGoodJet_) ) return false;
-  //if ( out_nBjet < int(minEventNBjet_) ) return false;
 
   return true;
 }
