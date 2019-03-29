@@ -55,7 +55,7 @@ class FCNCTriLepton(Module, object):
         objName = "Electron"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso03_all", "cutBased", "deltaEtaSC", "eCorr",]:
+                        "pfRelIso03_all", "cutBased_Sum16", "deltaEtaSC", "eCorr",]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Muon"
@@ -72,7 +72,7 @@ class FCNCTriLepton(Module, object):
 
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
         self.worker.setElectrons(self.b_Electron_pt, self.b_Electron_eta, self.b_Electron_phi, self.b_Electron_mass, self.b_Electron_charge,
-                                 self.b_Electron_pfRelIso03_all, self.b_Electron_cutBased,
+                                 self.b_Electron_pfRelIso03_all, self.b_Electron_cutBased_Sum16,
                                  self.b_Electron_deltaEtaSC, self.b_Electron_eCorr)
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
                              self.b_Muon_pfRelIso04_all,self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)

@@ -37,7 +37,8 @@ done
 ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonHLT flags_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
 
-OUTPATH=ntuple/reco
+#OUTPATH=ntuple/reco
+OUTPATH=ntuple/reco/$DATATYPE0/$DATASET/$CHANNEL
 CMD="nano_postproc.py --friend"
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 #if [ ${DATATYPE::2} == "MC" ]; then
