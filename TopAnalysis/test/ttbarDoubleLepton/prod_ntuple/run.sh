@@ -40,7 +40,9 @@ CMD="nano_postproc.py --friend"
 if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puAutoWeight"
+
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF2017"
+    ARGS="$ARGS -I TZWi.TopAnalysis.btagWeightProducer btagWeight"
 fi
 echo $CMD $ARGS $OUTPATH $FILENAMES
 $CMD $ARGS $OUTPATH $FILENAMES
