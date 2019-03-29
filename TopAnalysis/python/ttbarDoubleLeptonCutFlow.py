@@ -20,36 +20,25 @@ class TTbarDoubleLeptonCutFlow(Module, object):
         self.out = wrappedOutputTree
         self.out.branch("CutStep", "i")
 
-        self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
-    def initReaders(self,tree):
-        for name in ["Z_charge", "Z_mass", "Lepton1_pt", "Lepton2_pt", "MET_pt",
-                     "nGoodJets", "nBjets"]:
-            setattr(self, 'in_%s' % name, self.out._tree.GetBranch(name).GetLeaf(name))
-
-        self._ttreereaderversion = tree._ttreereaderversion
-        pass
     def analyze(self, event):
-        if event._tree._ttreereaderversion > self._ttreereaderversion:
-            self.initReaders(event._tree)
-
         cutStep = 0
         while True:
-            if self.in_Z_charge.GetValueLong64() != 0 or \
-               self.in_Lepton1_pt.GetValue() < 25 or self.in_Lepton2_pt.GetValue() < 25: break
+            if event._tree.b_out_Z_charge != 0 or \
+               event._tree.b_out_Lepton1_pt < 25 or event._tree.b_out_Lepton2_pt < 25: break
             cutStep += 1
-            if self.doZVetoCut and ((75 < self.in_Z_mass.GetValue()) and (self.in_Z_mass.GetValue() < 105)): break
+            if self.doZVetoCut and ((75 < event._tree.b_out_Z_mass) and (event._tree.b_out_Z_mass < 105)): break
             cutStep += 1
-            if self.doMETCut and self.in_MET_pt.GetValue() < 40: break
+            if self.doMETCut and event._tree.b_out_MET_pt < 40: break
             cutStep += 1
-            if self.in_nGoodJets.GetValueLong64() < 4: break
+            if event._tree.b_out_nGoodJet < 4: break
             cutStep += 1
-            nBjets = self.in_nBjets.GetValueLong64()
-            if nBjets < 1: break
+            nBjet = event._tree.b_out_nBjet
+            if nBjet < 1: break
             cutStep += 1
-            if nBjets < 2: break
+            if nBjet < 2: break
             cutStep += 1
 
             break

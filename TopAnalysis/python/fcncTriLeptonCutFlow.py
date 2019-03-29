@@ -18,29 +18,25 @@ class FCNCTriLeptonCutFlow(Module, object):
         self.out = wrappedOutputTree
         self.out.branch("CutStep", "i")
 
-        self.initReaders(inputTree)
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
-    def initReaders(self,tree):
-        for name in ["W_MT", "nGoodJets", "nBjets"]:
-            setattr(self, 'in_%s' % name, self.out._tree.GetBranch(name).GetLeaf(name))
-
-        self._ttreereaderversion = tree._ttreereaderversion
-        pass
     def analyze(self, event):
-        if event._tree._ttreereaderversion > self._ttreereaderversion:
-            self.initReaders(event._tree)
-
         cutStep = 0
         while True:
-            if not (1 <= self.in_nGoodJets.GetValueLong64() <= 3): break
+            if abs(event._tree.b_out_GoodLeptonCode) != 111: break
             cutStep += 1
-            if self.in_W_MT > 300: break
-            nBjets = self.in_nBjets.GetValueLong64()
-            if nBjets < 1: break
+            if event._tree.b_out_GoodLeptonCode < 0: break
             cutStep += 1
-            if nBjets < 2: break
+            if event._tree.b_out_nVetoLepton > 0: break
+            cutStep += 1
+            if not (1 <= event._tree.b_out_nGoodJet <= 3): break
+            cutStep += 1
+            if event._tree.b_out_W_MT > 300: break
+            nBjet = event._tree.b_out_nBjet
+            if nBjet < 1: break
+            cutStep += 1
+            if nBjet < 2: break
             cutStep += 1
 
             break

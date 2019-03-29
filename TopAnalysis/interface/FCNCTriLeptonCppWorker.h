@@ -61,20 +61,22 @@ public:
 
   float get_W_MT() const { return out_W_MT; }
 
-  unsigned get_nGoodJets()   const { return out_nGoodJets; }
-  std::vector<float> get_GoodJets_pt()   const { return out_GoodJets_p4[0]; }
-  std::vector<float> get_GoodJets_eta()  const { return out_GoodJets_p4[1]; }
-  std::vector<float> get_GoodJets_phi()  const { return out_GoodJets_p4[2]; }
-  std::vector<float> get_GoodJets_mass() const { return out_GoodJets_p4[3]; }
-  std::vector<float> get_GoodJets_CSVv2() const { return out_GoodJets_CSVv2; }
-  unsigned get_nBjets()   const { return out_nBjets; }
+  unsigned get_nVetoLepton() const { return out_nVetoLepton; }
+  short get_GoodLeptonCode() const { return out_GoodLeptonCode; }
+  unsigned get_nGoodJet()   const { return out_nGoodJet; }
+  std::vector<float> get_GoodJet_pt()   const { return out_GoodJet_p4[0]; }
+  std::vector<float> get_GoodJet_eta()  const { return out_GoodJet_p4[1]; }
+  std::vector<float> get_GoodJet_phi()  const { return out_GoodJet_p4[2]; }
+  std::vector<float> get_GoodJet_mass() const { return out_GoodJet_p4[3]; }
+  std::vector<float> get_GoodJet_CSVv2() const { return out_GoodJet_CSVv2; }
+  std::vector<unsigned short> get_GoodJet_index() const { return out_GoodJet_index; }
+  unsigned get_nBjet()   const { return out_nBjet; }
 
 private:
   const double minMuonPt_ = 30, maxMuonEta_ = 2.5; //Signal & veto reco. cuts are same
   const double minElectronPt_ = 35, maxElectronEta_ = 2.1; //Signal & veto reco. cuts are same
   const double minJetPt_ = 30, maxJetEta_ = 2.4;
   const double minBjetBDiscr_ = 0.5426; // FIXME: give updated number (here, use Loose Working Point)
-  const unsigned short minEventNGoodJets_ = 0, minEventNBjets_ = 0;
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 
@@ -106,9 +108,9 @@ private:
   TRAF in_Electrons_dEtaSC = nullptr;
   TRAF in_Electrons_eCorr = nullptr;
 
-  TRAF in_Jets_p4[4];
-  TRAI in_Jets_id = nullptr;
-  TRAF in_Jets_CSVv2 = nullptr;
+  TRAF in_Jet_p4[4];
+  TRAI in_Jet_id = nullptr;
+  TRAF in_Jet_CSVv2 = nullptr;
 
 private:
   bool _doCppOutput = false;
@@ -123,10 +125,12 @@ private:
 
   float out_W_MT;
 
-  const static unsigned short maxNGoodJetsToKeep_ = 100;
-  unsigned short out_nGoodJets, out_nBjets;
-  std::vector<float> out_GoodJets_p4[4];
-  std::vector<float> out_GoodJets_CSVv2;
+  short out_GoodLeptonCode;
+  unsigned short out_nVetoLepton;
+  unsigned short out_nGoodJet, out_nBjet;
+  std::vector<float> out_GoodJet_p4[4];
+  std::vector<float> out_GoodJet_CSVv2;
+  std::vector<unsigned short> out_GoodJet_index;
 
 };
 

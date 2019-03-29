@@ -52,21 +52,21 @@ public:
   float get_MET_pt() const { return out_MET_pt; }
   float get_MET_phi() const { return out_MET_phi; }
 
-  unsigned get_nGoodJets() const { return out_nGoodJets; }
-  std::vector<float> get_GoodJets_pt()   const { return out_GoodJets_p4[0]; }
-  std::vector<float> get_GoodJets_eta()  const { return out_GoodJets_p4[1]; }
-  std::vector<float> get_GoodJets_phi()  const { return out_GoodJets_p4[2]; }
-  std::vector<float> get_GoodJets_mass() const { return out_GoodJets_p4[3]; }
-  std::vector<float> get_GoodJets_CSVv2() const { return out_GoodJets_CSVv2; }
+  unsigned get_nGoodJet() const { return out_nGoodJet; }
+  std::vector<float> get_GoodJet_pt()   const { return out_GoodJet_p4[0]; }
+  std::vector<float> get_GoodJet_eta()  const { return out_GoodJet_p4[1]; }
+  std::vector<float> get_GoodJet_phi()  const { return out_GoodJet_p4[2]; }
+  std::vector<float> get_GoodJet_mass() const { return out_GoodJet_p4[3]; }
+  std::vector<float> get_GoodJet_CSVv2() const { return out_GoodJet_CSVv2; }
+  std::vector<unsigned> get_GoodJet_index() const { return out_GoodJet_index; }
 
-  unsigned get_nBjets() const { return out_nBjets; }
+  unsigned get_nBjet() const { return out_nBjet; }
 
 private:
   const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
   const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
   const double minJetPt_ = 30, maxJetEta_ = 2.5;
   const double minBjetBDiscr_ = 0.8484; // FIXME: give updated number
-  const unsigned short minEventNGoodJets_ = 0, minEventNBjets_ = 0;
   const double maxMuonRelIso_ = 0.15;
 
   bool isGoodMuon(const unsigned i) const;
@@ -90,9 +90,9 @@ private:
   TRAI in_Electrons_id = nullptr;
   TRAF in_Electrons_dEtaSC = nullptr;
   TRAF in_Electrons_eCorr = nullptr;
-  TRAF in_Jets_p4[4];
-  TRAI in_Jets_id = nullptr;
-  TRAF in_Jets_CSVv2 = nullptr;
+  TRAF in_Jet_p4[4];
+  TRAI in_Jet_id = nullptr;
+  TRAF in_Jet_CSVv2 = nullptr;
 
 private:
   bool _doCppOutput = false;
@@ -104,10 +104,10 @@ private:
 
   float out_MET_pt, out_MET_phi;
 
-  const static unsigned short maxNGoodJetsToKeep_ = 100;
-  unsigned short out_nGoodJets, out_nBjets;
-  std::vector<float> out_GoodJets_p4[4];
-  std::vector<float> out_GoodJets_CSVv2;
+  unsigned short out_nGoodJet, out_nBjet;
+  std::vector<float> out_GoodJet_p4[4];
+  std::vector<float> out_GoodJet_CSVv2;
+  std::vector<unsigned> out_GoodJet_index;
 
 };
 

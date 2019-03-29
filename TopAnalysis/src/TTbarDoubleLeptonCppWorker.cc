@@ -49,12 +49,12 @@ void TTbarDoubleLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass
 
 void TTbarDoubleLeptonCppWorker::setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
                                          TRAI id, TRAF CSVv2) {
-  in_Jets_p4[0] = pt;
-  in_Jets_p4[1] = eta;
-  in_Jets_p4[2] = phi;
-  in_Jets_p4[3] = mass;
-  in_Jets_CSVv2 = CSVv2;
-  in_Jets_id = id;
+  in_Jet_p4[0] = pt;
+  in_Jet_p4[1] = eta;
+  in_Jet_p4[2] = phi;
+  in_Jet_p4[3] = mass;
+  in_Jet_CSVv2 = CSVv2;
+  in_Jet_id = id;
 }
 
 void TTbarDoubleLeptonCppWorker::setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi) {
@@ -65,12 +65,14 @@ void TTbarDoubleLeptonCppWorker::setMET(TTreeReaderValue<float>* pt, TTreeReader
 void TTbarDoubleLeptonCppWorker::resetValues() {
   for ( unsigned i=0; i<4; ++i ) {
     out_Lepton1_p4[i] = out_Lepton2_p4[i] = 0;
+    out_Z_p4[i] = 0;
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
-  out_nGoodJets = out_nBjets = 0;
-  for ( unsigned i=0; i<4; ++i ) out_GoodJets_p4[i].clear();
-  out_GoodJets_CSVv2.clear();
+  out_nGoodJet = out_nBjet = 0;
+  for ( unsigned i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
+  out_GoodJet_CSVv2.clear();
+  out_GoodJet_index.clear();
 }
 
 bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
@@ -95,10 +97,10 @@ bool TTbarDoubleLeptonCppWorker::isGoodElectron(const unsigned i) const {
 }
 
 bool TTbarDoubleLeptonCppWorker::isGoodJet(const unsigned i) const {
-  const double pt = in_Jets_p4[0]->At(i);
-  const double eta = in_Jets_p4[1]->At(i);
+  const double pt = in_Jet_p4[0]->At(i);
+  const double eta = in_Jet_p4[1]->At(i);
   if ( pt < minJetPt_ or std::abs(eta) > maxJetEta_ ) return false;
-  if ( in_Jets_id->At(i) == 0 ) return false;
+  if ( in_Jet_id->At(i) == 0 ) return false;
 
   return true;
 }
@@ -138,7 +140,6 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
       if ( electron1Idx < 0 or pt > in_Electrons_p4[0]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx) ) std::swap(electron1Idx, electron2Idx);
     }
   }
-  if ( nGoodMuons+nGoodElectrons < 2 ) return false; // Require at least two electrons.
 
   // Select event by decay mode
   auto actualMode = mode_;
@@ -149,33 +150,29 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   }
 
   if ( actualMode == MODE::MuMu ) {
-    if ( nGoodMuons < 2 ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
-      out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
+      if ( muon1Idx >= 0 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
+      if ( muon2Idx >= 0 ) out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
     }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
-    out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
+    if ( muon1Idx >= 0 ) out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
+    if ( muon2Idx >= 0 ) out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
   }
   else if ( actualMode == MODE::ElEl ) {
-    if ( nGoodElectrons < 2 ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx);
+      if ( electron1Idx >= 0 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
+      if ( electron2Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx);
     }
-    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
+    if ( electron1Idx >= 0 ) out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
+    if ( electron2Idx >= 0 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
   }
   else if ( actualMode == MODE::MuEl ) {
-    if ( nGoodMuons < 1 or nGoodElectrons < 1 ) return false;
     for ( unsigned i=0; i<4; ++i ) {
-      out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
-      out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
+      if ( muon1Idx     >= 0 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
+      if ( electron1Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
     }
-    out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
-    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron1Idx);
+    if ( muon1Idx     >= 0 ) out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
+    if ( electron1Idx >= 0 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron1Idx);
   }
-  if ( out_Lepton1_p4[0] < minLepton1Pt_ ) return false;
 
   TLorentzVector lepton1P4, lepton2P4;
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
@@ -193,30 +190,29 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxsByPt, jetIdxsByBDiscr;
-  jetIdxsByPt.reserve(in_Jets_CSVv2->GetSize());
-  jetIdxsByBDiscr.reserve(in_Jets_CSVv2->GetSize());
-  for ( unsigned i=0, n=in_Jets_CSVv2->GetSize(); i<n; ++i ) {
+  jetIdxsByPt.reserve(in_Jet_CSVv2->GetSize());
+  jetIdxsByBDiscr.reserve(in_Jet_CSVv2->GetSize());
+  for ( unsigned i=0, n=in_Jet_CSVv2->GetSize(); i<n; ++i ) {
     if ( !isGoodJet(i) ) continue;
-    TLorentzVector jetP4 = buildP4(in_Jets_p4, i);
+    TLorentzVector jetP4 = buildP4(in_Jet_p4, i);
     if ( lepton1P4.DeltaR(jetP4) < 0.4 ) continue;
     if ( lepton2P4.DeltaR(jetP4) < 0.4 ) continue;
     jetIdxsByPt.push_back(i);
     jetIdxsByBDiscr.push_back(i);
-    if ( in_Jets_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjets;
+    if ( in_Jet_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjet;
   }
-  out_nGoodJets = jetIdxsByPt.size();
-  if ( out_nGoodJets < int(minEventNGoodJets_) ) return false;
-  if ( out_nBjets < int(minEventNBjets_) ) return false;
+  out_nGoodJet = jetIdxsByPt.size();
 
   // Sort jets by CSVv2iminator
   std::sort(jetIdxsByPt.begin(), jetIdxsByPt.end(),
-            [&](const unsigned short i, const unsigned short j){ return in_Jets_p4[0]->At(i) > in_Jets_p4[0]->At(j); });
+            [&](const unsigned short i, const unsigned short j){ return in_Jet_p4[0]->At(i) > in_Jet_p4[0]->At(j); });
   std::sort(jetIdxsByBDiscr.begin(), jetIdxsByBDiscr.end(),
-            [&](const unsigned short i, const unsigned short j){ return in_Jets_CSVv2->At(i) > in_Jets_CSVv2->At(j); });
-  for ( unsigned k=0, n=std::min(maxNGoodJetsToKeep_, out_nGoodJets); k<n; ++k ) {
+            [&](const unsigned short i, const unsigned short j){ return in_Jet_CSVv2->At(i) > in_Jet_CSVv2->At(j); });
+  for ( unsigned k=0, n=out_nGoodJet; k<n; ++k ) {
     const unsigned kk = jetIdxsByBDiscr.at(k);
-    for ( unsigned i=0; i<4; ++i ) out_GoodJets_p4[i].push_back(in_Jets_p4[i]->At(kk));
-    out_GoodJets_CSVv2.push_back(in_Jets_CSVv2->At(kk));
+    for ( unsigned i=0; i<4; ++i ) out_GoodJet_p4[i].push_back(in_Jet_p4[i]->At(kk));
+    out_GoodJet_CSVv2.push_back(in_Jet_CSVv2->At(kk));
+    out_GoodJet_index.push_back(kk);
   }
 
   return true;

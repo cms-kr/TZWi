@@ -36,10 +36,11 @@ class TTbarDoubleLepton(Module, object):
         self.out.branch("Lepton1_pdgId", "I")
         self.out.branch("Lepton2_pdgId", "I")
         self.out.branch("Z_charge", "I")
-        self.out.branch("nGoodJets", "i")
+        #self.out.branch("nGoodJet", "i")
+        self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
         for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
-            self.out.branch("GoodJets_%s" % varName, "F", lenVar="nGoodJets")
-        self.out.branch("nBjets", "i")
+            self.out.branch("GoodJet_%s" % varName, "F", lenVar="nGoodJet")
+        self.out.branch("nBjet", "i")
 
         self.initReaders(inputTree)
         pass
@@ -85,17 +86,17 @@ class TTbarDoubleLepton(Module, object):
             self.initReaders(event._tree)
         self.worker.analyze()
 
-        for objName in ["Lepton1", "Lepton2", "Z", "GoodJets"]:
+        for objName in ["Lepton1", "Lepton2", "Z", "GoodJet"]:
             for varName in ["pt", "eta", "phi", "mass"]:
-                self.out.fillBranch("%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
-        self.out.fillBranch("MET_pt", self.worker.get_MET_pt())
-        self.out.fillBranch("MET_phi", self.worker.get_MET_phi())
-        self.out.fillBranch("Lepton1_pdgId", self.worker.get_Lepton1_pdgId())
-        self.out.fillBranch("Lepton2_pdgId", self.worker.get_Lepton2_pdgId())
-        self.out.fillBranch("Z_charge", self.worker.get_Z_charge())
-        self.out.fillBranch("GoodJets_CSVv2", self.worker.get_GoodJets_CSVv2())
-        self.out.fillBranch("nGoodJets", self.worker.get_nGoodJets())
-        self.out.fillBranch("nBjets", self.worker.get_nBjets())
+                setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
+                self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
+        for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "Lepton2_pdgId", "Z_charge",
+                        #"nGoodJet", ## We skip for this nGoodJet, which have to be done by the framework
+                        "GoodJet_CSVv2", "GoodJet_index", "nBjet"]:
+            setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())
+            self.out.fillBranch(varName, getattr(event._tree, "b_out_%s" % varName))
+        ## Special care for nGoodJet, because we still want to use this variable from the next postproc.
+        setattr(event._tree, "b_out_nGoodJet", self.worker.get_nGoodJet())
 
         return True
 
