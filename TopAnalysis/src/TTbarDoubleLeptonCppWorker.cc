@@ -140,7 +140,6 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
       if ( electron1Idx < 0 or pt > in_Electrons_p4[0]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx) ) std::swap(electron1Idx, electron2Idx);
     }
   }
-  //if ( nGoodMuons+nGoodElectrons < 2 ) return false; // Require at least two electrons.
 
   // Select event by decay mode
   auto actualMode = mode_;
@@ -151,7 +150,6 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   }
 
   if ( actualMode == MODE::MuMu ) {
-    //if ( nGoodMuons < 2 ) return false;
     for ( unsigned i=0; i<4; ++i ) {
       if ( muon1Idx >= 0 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
       if ( muon2Idx >= 0 ) out_Lepton2_p4[i] = in_Muons_p4[i]->At(muon2Idx);
@@ -160,7 +158,6 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     if ( muon2Idx >= 0 ) out_Lepton2_pdgId = -13*in_Muons_charge->At(muon2Idx);
   }
   else if ( actualMode == MODE::ElEl ) {
-    //if ( nGoodElectrons < 2 ) return false;
     for ( unsigned i=0; i<4; ++i ) {
       if ( electron1Idx >= 0 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
       if ( electron2Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx);
@@ -169,7 +166,6 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     if ( electron2Idx >= 0 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
   }
   else if ( actualMode == MODE::MuEl ) {
-    //if ( nGoodMuons < 1 or nGoodElectrons < 1 ) return false;
     for ( unsigned i=0; i<4; ++i ) {
       if ( muon1Idx     >= 0 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
       if ( electron1Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
@@ -177,7 +173,6 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     if ( muon1Idx     >= 0 ) out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
     if ( electron1Idx >= 0 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron1Idx);
   }
-  //if ( out_Lepton1_p4[0] < minLepton1Pt_ ) return false;
 
   TLorentzVector lepton1P4, lepton2P4;
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
@@ -207,15 +202,13 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
     if ( in_Jet_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjet;
   }
   out_nGoodJet = jetIdxsByPt.size();
-  //if ( out_nGoodJet < int(minEventNGoodJet_) ) return false;
-  //if ( out_nBjet < int(minEventNBjet_) ) return false;
 
   // Sort jets by CSVv2iminator
   std::sort(jetIdxsByPt.begin(), jetIdxsByPt.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jet_p4[0]->At(i) > in_Jet_p4[0]->At(j); });
   std::sort(jetIdxsByBDiscr.begin(), jetIdxsByBDiscr.end(),
             [&](const unsigned short i, const unsigned short j){ return in_Jet_CSVv2->At(i) > in_Jet_CSVv2->At(j); });
-  for ( unsigned k=0, n=std::min(maxNGoodJetToKeep_, out_nGoodJet); k<n; ++k ) {
+  for ( unsigned k=0, n=out_nGoodJet; k<n; ++k ) {
     const unsigned kk = jetIdxsByBDiscr.at(k);
     for ( unsigned i=0; i<4; ++i ) out_GoodJet_p4[i].push_back(in_Jet_p4[i]->At(kk));
     out_GoodJet_CSVv2.push_back(in_Jet_CSVv2->At(kk));

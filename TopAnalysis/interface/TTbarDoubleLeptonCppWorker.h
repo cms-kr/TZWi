@@ -67,7 +67,6 @@ private:
   const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
   const double minJetPt_ = 30, maxJetEta_ = 2.5;
   const double minBjetBDiscr_ = 0.8484; // FIXME: give updated number
-  const unsigned short minEventNGoodJet_ = 0, minEventNBjet_ = 0;
   const double maxMuonRelIso_ = 0.15;
 
   bool isGoodMuon(const unsigned i) const;
@@ -105,7 +104,6 @@ private:
 
   float out_MET_pt, out_MET_phi;
 
-  const static unsigned short maxNGoodJetToKeep_ = 100;
   unsigned short out_nGoodJet, out_nBjet;
   std::vector<float> out_GoodJet_p4[4];
   std::vector<float> out_GoodJet_CSVv2;
