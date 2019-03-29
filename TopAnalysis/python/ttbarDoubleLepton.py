@@ -36,7 +36,7 @@ class TTbarDoubleLepton(Module, object):
         self.out.branch("Lepton1_pdgId", "I")
         self.out.branch("Lepton2_pdgId", "I")
         self.out.branch("Z_charge", "I")
-        self.out.branch("nGoodJet", "i")
+        #self.out.branch("nGoodJet", "i")
         self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
         for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
             self.out.branch("GoodJet_%s" % varName, "F", lenVar="nGoodJet")
@@ -91,9 +91,12 @@ class TTbarDoubleLepton(Module, object):
                 setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
         for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "Lepton2_pdgId", "Z_charge",
-                        "nGoodJet", "GoodJet_CSVv2", "GoodJet_index", "nBjet"]:
+                        #"nGoodJet", ## We skip for this nGoodJet, which have to be done by the framework
+                        "GoodJet_CSVv2", "GoodJet_index", "nBjet"]:
             setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())
             self.out.fillBranch(varName, getattr(event._tree, "b_out_%s" % varName))
+        ## Special care for nGoodJet, because we still want to use this variable from the next postproc.
+        setattr(event._tree, "b_out_nGoodJet", self.worker.get_nGoodJet())
 
         return True
 
