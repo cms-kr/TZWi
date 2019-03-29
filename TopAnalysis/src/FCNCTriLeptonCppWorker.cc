@@ -84,7 +84,7 @@ bool FCNCTriLeptonCppWorker::isGoodMuon(const unsigned i) const {
   const double pt = in_Muons_p4[0]->At(i);
   const double eta = in_Muons_p4[1]->At(i);
   if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
-  if ( in_Muons_isTight == 0 ) return false;
+  if ( in_Muons_isTight->At(i) == 0 ) return false;
   if ( in_Muons_relIso->At(i) > maxMuonRelIso_ ) return false; //maxMuonRelIso : Tight PF isolation value
 
   return true;
