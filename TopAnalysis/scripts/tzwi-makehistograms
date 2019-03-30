@@ -35,6 +35,7 @@ print "Processing", ofName
 
 oFile = TFile(ofName, 'recreate')
 
+hWeights = {}
 for istep, step in enumerate(steps):
     weights = weights0[:]
     if 'weights' in step:
@@ -53,7 +54,7 @@ for istep, step in enumerate(steps):
     hWeight = TH1D("hWeight", "weight;weight;Events", 100, -2, 2)
     chain.Draw("%s>>hWeight" % weight, cut, "goff")
     hWeight.Write()
-    del hWeight
+    hWeights[step['name']] = hWeight
 
     ## Fill histograms in this step
     if 'hists' not in step: continue
@@ -95,5 +96,24 @@ for istep, step in enumerate(steps):
 
         h.Write()
         del h
+
+oFile.cd()
+hCutFlow = TH1D("hCutFlow", "Cut flow;;Events", len(steps), 1, len(steps)+1)
+hCutFlowNW = TH1D("hCutFlowNW", "Cut flow No Weight;;Events (unweighted)", len(steps), 1, len(steps)+1)
+for istep, step in enumerate(steps):
+    stepName = step['name']
+
+    hCutFlow.GetXaxis().SetBinLabel(istep+1, stepName)
+    hCutFlowNW.GetXaxis().SetBinLabel(istep+1, stepName)
+
+    nEventNW = hWeights[stepName].GetEntries()
+    avgW = hWeights[stepName].GetMean()
+    hCutFlowNW.SetBinContent(istep+1, nEventNW)
+    #hCutFlowNW.SetBinError(istep+1, sqrt(nEventNW))
+    hCutFlow.SetBinContent(istep+1, nEventNW*avgW)
+    #rmsW = hWeights[step['name']].GetRMS()
+    #hCutFlow.SetBinError(istep+1, sqrt(rms*avgW*nEventNW))
+hCutFlow.Write()
+hCutFlowNW.Write()
 
 oFile.Close()
