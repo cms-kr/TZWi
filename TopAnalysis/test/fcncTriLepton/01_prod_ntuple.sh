@@ -2,9 +2,9 @@
 
 if [ $# != 4 ]; then
     echo $#
-    echo "Usage: ./run.sh MuElEl MC2016.WW.txt 10 5 ## process WW sample assuming muee channel, split by 10 files and run 5th section"
-    echo "Usage: ./run.sh ElElEl MC2017.TT_powheg.txt 1 0 ## process TTbar sample assuming eee channel, one file per each section and run 0th one."
-    echo "Usage: ./run.sh MuMuMu Run2016B.DoubleMuon.txt 1 0"
+    echo "Usage: $0 MuElEl MC2016.WW.txt 10 5 ## process WW sample assuming muee channel, split by 10 files and run 5th section"
+    echo "Usage: $0 ElElEl MC2017.TT_powheg.txt 1 0 ## process TTbar sample assuming eee channel, one file per each section and run 0th one."
+    echo "Usage: $0 MuMuMu Run2016B.DoubleMuon.txt 1 0"
     exit 1
 fi
 
