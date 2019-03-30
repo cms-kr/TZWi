@@ -36,6 +36,7 @@ steps:
               "nJet", "nBjet",
               "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
               "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
+              "Jet3_CSV__Jet4_CSV",
               "MET_pt", "MET_phi",]
     - name: "S5"
       cuts: ["CutStep >= 5"]
@@ -44,6 +45,7 @@ steps:
               "nJet", "nBjet",
               "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
               "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
+              "Jet3_CSV__Jet4_CSV",
               "MET_pt", "MET_phi",]
     - name: "S6"
       cuts: ["CutStep >= 6"]
@@ -52,6 +54,7 @@ steps:
               "nJet", "nBjet",
               "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
               "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
+              "Jet3_CSV__Jet4_CSV",
               "MET_pt", "MET_phi",]
 
 hists:
