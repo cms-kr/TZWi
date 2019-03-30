@@ -32,20 +32,21 @@ if 'NPROOF' in os.environ:
     chain.SetProof(True)
 
 oFile = TFile(ofName, 'recreate')
-oFile.cd()
-hCutFlow_noWeight = TH1D("hCutFlow_noWeight", "Cut Flow (noWeight);Step;Events (unweighted)", len(steps), 0, len(steps))
-hCutFlow = TH1D("hCutFlow", "Cut Flow;Step;Events", len(steps), 0, len(steps))
+
+hWCutFlow = TH1D("hWCutFlow", "Cut Flow;Step;Events", len(steps), 0, len(steps))
+hNCutFlow = TH1D("hNCutFlow", "Cut Flow (noWeight);Step;Events (unweighted)", len(steps), 0, len(steps))
 
 print "Processing", ofName
 
+objs = []
 for istep, step in enumerate(steps):
 
-    hCutFlow_noWeight.GetXaxis().SetBinLabel(istep+1, step['name'])
-    hCutFlow.GetXaxis().SetBinLabel(istep+1, step['name'])
+    hNCutFlow.GetXaxis().SetBinLabel(istep+1, step['name'])
+    hWCutFlow.GetXaxis().SetBinLabel(istep+1, step['name'])
 
     weights = weights0[:]
     if 'weights' in step:
-        weights = list(set(weights)+set(step['weight']))
+        weights = list(set(weights)|set(step['weight']))
     if 'weightsToDrop' in step:
         weights = list(set(weights)-set(step['weightToDrop']))
     weight = '*'.join(["(%s)" % x for x in weights])
@@ -54,54 +55,54 @@ for istep, step in enumerate(steps):
     cut = '&&'.join(['(%s)' % x for x in cuts])
 
     oFile.cd()
-    chain.Draw("%d>>+hCutFlow_noWeight" % (istep), "(1)*(%s)" % (cut), "goff")
-    chain.Draw("%d>>+hCutFlow" % (istep), "(%s)*(%s)" % (weight, cut), "goff")
-
-    if 'hists' not in step: continue
+    chain.Draw("(%d.0)>>hNCutFlow" % (istep), "(%s)" % (cut), "goff")
+    chain.Draw("(%d.0)>>hWCutFlow" % (istep), "(%s)*(%s)" % (weight, cut), "goff")
 
     dout = oFile.mkdir(step['name'])
     dout.cd()
 
+    if 'hists' not in step: continue
     for hname, hdef in [(x, hists[x]) for x in step['hists'] if x in hists]:
         h = None
         bins = hdef['bins']
         if type(bins) == list:
             if len(bins) == 2 and type(bins[0]) == list:
-                h = TH2D(hname, hdef['title'], len(bins[0])-1, array('d', bins[0]),
+                h = TH2D('h'+hname, hdef['title'], len(bins[0])-1, array('d', bins[0]),
                                                len(bins[1])-1, array('d', bins[1]))
             else:
-                h = TH1D(hname, hdef['title'], len(bins)-1, array('d', bins))
+                h = TH1D('h'+hname, hdef['title'], len(bins)-1, array('d', bins))
         else:
             if 'nbinsY' in bins:
-                h = TH2D(hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'],
+                h = TH2D('h'+hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'],
                                                bins['nbinsY'], bins['ymin'], bins['ymax'])
             else:
-                h = TH1D(hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'])
-        h.SetDirectory(dout)
+                h = TH1D('h'+hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'])
+        #h.SetDirectory(dout)
 
         expr = hdef['expr'] if 'expr' in hdef else hname
 
         weights1 = weights
         if 'weight' in hdef:
-            weights1 = list(set(weights)+set(hdef['weight']))
+            weights1 = list(set(weights)|set(hdef['weight']))
         if 'weightsToDrop' in hdef:
             weights1 = list(set(weights1)-set(hdef['weightsToDrop']))
         weight1 = '*'.join(['(%s)' % x for x in weights1])
 
-        cuts1 = cuts
+        cuts1 = cuts[:]
         if 'cuts' in hdef:
-            cuts1 = list(set(cuts)+set(hdef['cuts']))
+            cuts1 = list(set(cuts)|set(hdef['cuts']))
         if 'cutsToDrop' in hdef:
             cuts1 = list(set(cuts)-set(hdef['cutsToDrop']))
         cut1 = '&&'.join(['(%s)' % x for x in cuts1])
 
-        chain.Draw("%s>>%s" % (expr, hname), "%s*(%s)" % (weight1, cut1), "goff")
+        chain.Draw("%s>>h%s" % (expr, hname), "%s*(%s)" % (weight1, cut1), "goff")
         #chain.Draw("%s>>%s" % (expr, hname), "1*(%s)" % (weight1), "goff")
 
         h.Write()
+        objs.append(h)
+        #del h
 
-    oFile.cd()
-
-hCutFlow_noWeight.Write()
-hCutFlow.Write()
+oFile.cd()
+hWCutFlow.Write()
+hNCutFlow.Write()
 oFile.Close()

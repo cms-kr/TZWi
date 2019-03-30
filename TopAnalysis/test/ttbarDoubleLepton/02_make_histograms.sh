@@ -1,8 +1,8 @@
 #!/bin/bash
 
 HISTSET=../../data/histogramming/ttbbDilepton.yaml
-#export NPROOF=$(nproc)
-export NPROOF=4
+export NPROOF=$(nproc)
+#export NPROOF=8
 
 if [ -d ntuple/reco/Run2017 ]; then
     for DIR in ntuple/reco/Run2017/*/MuMu; do

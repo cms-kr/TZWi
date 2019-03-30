@@ -36,7 +36,7 @@ steps:
               "nJet", "nBjet",
               "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
               "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
-              "Jet3_CSV__Jet4_CSV",
+              "CSV2D",
               "MET_pt", "MET_phi",]
     - name: "S5"
       cuts: ["CutStep >= 5"]
@@ -45,7 +45,7 @@ steps:
               "nJet", "nBjet",
               "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
               "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
-              "Jet3_CSV__Jet4_CSV",
+              "CSV2D",
               "MET_pt", "MET_phi",]
     - name: "S6"
       cuts: ["CutStep >= 6"]
@@ -54,7 +54,7 @@ steps:
               "nJet", "nBjet",
               "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
               "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
-              "Jet3_CSV__Jet4_CSV",
+              "CSV2D",
               "MET_pt", "MET_phi",]
 
 hists:
@@ -223,9 +223,10 @@ hists:
             nbinsX: 50
             xmin: 0
             xmax: 1
-    Jet3_CSV__Jet4_CSV:
+    CSV2D:
         title: "Jet3 CSV vs Jet4 CSV;Jet3 CSV;Jet4 CSV"
         expr: "GoodJet_CSVv2[3]:GoodJet_CSVv2[2]" # y:x
+        #cuts: ["nGoodJet >= 4"]
         bins:
             nbinsY: 20
             ymin: 0
@@ -233,3 +234,4 @@ hists:
             nbinsX: 20
             xmin: 0
             xmax: 1
+
