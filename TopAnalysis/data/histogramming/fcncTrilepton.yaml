@@ -1,9 +1,9 @@
 ## Histogramming for ttbb dilepton analysis
 
-commonRun2017:
+commonRun2016:
     weight: 1
 
-commonMC2017:
+commonMC2016:
     weight: "puWeight*BtagWeight"
 
 steps:
@@ -12,12 +12,14 @@ steps:
       hists: ["nPV",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
+              "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
               "Z_pt", "Z_mass",]
     - name: "S2"
       cut: "CutStep >= 2"
       hists: ["nPV",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
+              "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
               "Z_pt", "Z_mass",
               "nJet", "nBjet",
               "MET_pt", "MET_phi",]

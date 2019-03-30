@@ -6,15 +6,15 @@ import sys, os
 from array import array
 
 dataType = sys.argv[1]
-fName = sys.argv[2]
+configFile = sys.argv[2]
 
-config = yaml.load(open("../../data/histogramming/ttbbDilepton.yaml"))
+config = yaml.load(open(configFile))
 steps = config['steps']
 hists = config['hists']
 weight0 = config['common'+dataType]['weight']
 
 chain = TChain("Friends")
-for fName in sys.argv[2:]: chain.Add(fName)
+for fName in sys.argv[3:]: chain.Add(fName)
 gROOT.SetBatch(True)
 
 if 'NPROOF' in os.environ:
