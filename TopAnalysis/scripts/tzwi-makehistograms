@@ -11,7 +11,7 @@ configFile = sys.argv[2]
 config = yaml.load(open(configFile))
 steps = config['steps']
 hists = config['hists']
-weight0 = config['common'+dataType]['weight']
+weights0 = config['common'+dataType]['weights']
 
 fName = sys.argv[3]
 ofName = os.path.dirname(fName).replace('ntuple', 'hist')+".root"
@@ -42,10 +42,16 @@ for istep, step in enumerate(steps):
     hCutFlow_noWeight.GetXaxis().SetBinLabel(istep+1, step['name'])
     hCutFlow.GetXaxis().SetBinLabel(istep+1, step['name'])
 
-    weight = weight0
-    if 'weight' in step: weight = '(%s)*(%s)' % (weight0, step['weight'])
+    weights = weights0[:]
+    if 'weights' in step:
+        weights = list(set(weights)+set(step['weight']))
+    if 'weightsToDrop' in step:
+        weights = list(set(weights)-set(step['weightToDrop']))
+    weight = '*'.join(["(%s)" % x for x in weights])
 
-    cut = step['cut']
+    cuts = step['cuts']
+    cut = '&&'.join(['(%s)' % x for x in cuts])
+
     oFile.cd()
     chain.Draw("%d>>+hCutFlow_noWeight" % (istep), "(1)*(%s)" % (cut), "goff")
     chain.Draw("%d>>+hCutFlow" % (istep), "(%s)*(%s)" % (weight, cut), "goff")
@@ -73,16 +79,20 @@ for istep, step in enumerate(steps):
         h.SetDirectory(dout)
 
         expr = hdef['expr'] if 'expr' in hdef else hname
-        if 'weight' not in hdef:
-            weight1 = weight
-        else:
-            weight1 = hdef['weight']
-            if weight1[0] == '*': weight1 = "(%s)*(%s)" % (weight, weight1[1:])
-        if 'cut' not in hdef:
-            cut1 = cut
-        else:
-            cut1 = hdef['cut']
-            if cut1[0] == '&': cut1 = "(%s)&&(%s)" % (cut, cut1[1:])
+
+        weights1 = weights
+        if 'weight' in hdef:
+            weights1 = list(set(weights)+set(hdef['weight']))
+        if 'weightsToDrop' in hdef:
+            weights1 = list(set(weights1)-set(hdef['weightsToDrop']))
+        weight1 = '*'.join(['(%s)' % x for x in weights1])
+
+        cuts1 = cuts
+        if 'cuts' in hdef:
+            cuts1 = list(set(cuts)+set(hdef['cuts']))
+        if 'cutsToDrop' in hdef:
+            cuts1 = list(set(cuts)-set(hdef['cutsToDrop']))
+        cut1 = '&&'.join(['(%s)' % x for x in cuts1])
 
         chain.Draw("%s>>%s" % (expr, hname), "%s*(%s)" % (weight1, cut1), "goff")
         #chain.Draw("%s>>%s" % (expr, hname), "1*(%s)" % (weight1), "goff")

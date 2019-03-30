@@ -1,14 +1,14 @@
 ## Histogramming for ttbb dilepton analysis
 
 commonRun2016:
-    weight: 1
+    weights: []
 
 commonMC2016:
-    weight: "puWeight*BtagWeight"
+    weights: ["puWeight", "BtagWeight"]
 
 steps:
     - name: "S1"
-      cut: "CutStep >= 1"
+      cuts: ["CutStep >= 1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
@@ -16,7 +16,7 @@ steps:
               "nJet", "nBjet", "nJet_nBjet",
               "Z_pt", "Z_mass",]
     - name: "S2"
-      cut: "CutStep >= 2"
+      cuts: ["CutStep >= 2"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
@@ -25,7 +25,7 @@ steps:
               "nJet", "nBjet", "nJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S3"
-      cut: "CutStep >= 3"
+      cuts: ["CutStep >= 3"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass",
@@ -36,7 +36,8 @@ hists:
     nPV_noWeight:
         title: "nPV_noWeight;Vertex multiplicity;Events (unweighted)"
         expr: "PV_npvsGood"
-        weight: "1" # Replaces existing weight
+        #weights: [] #multiply weights with existing ones
+        weightsToDrop: ["puWeight", "puWeightsUp", "puWeightsDown"] #drop weights from existing ones
         bins:
             nbinsX: 100
             xmin: 0
@@ -151,6 +152,7 @@ hists:
             xmin: 0
             xmax: 20
         expr: "nGoodJet"
+
     nBjet:
         title: "nBjet;Bjet multiplicity;Events"
         bins:
