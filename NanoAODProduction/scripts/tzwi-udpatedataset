@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import yaml
+import sys, os
+import subprocess
+
+siteName = 'T2_KR_KISTI'
+
+for arg in sys.argv[1:]:
+    data = yaml.load(open(arg))
+    dout = '.'.join(arg.split('.')[:-1])
+    if not os.path.exists(dout): os.makedirs(dout)
+
+    print "Processing", arg, "...."
+    if data == None or len(data) == 0 or \
+       "dataset" not in data or data["dataset"] == None or len(data["dataset"]) == 0: continue
+    for alias, datasets in data["dataset"].iteritems():
+        files = []
+        if datasets == None: continue
+        for ds in datasets:
+            print "Retrieving dataset information", alias, "=>", ds, "from DBS..."
+            out = subprocess.Popen(["dasgoclient", "--query=file site=%s dataset=%s" % (siteName, ds)], stdout=subprocess.PIPE, close_fds=True)
+            
+            dirs = []
+            for line in out.stdout.readlines():
+                line = line.strip()
+                if not line.endswith('.root'): continue
+                files.append(line)
+
+                d = os.path.dirname(line)
+                if d not in dirs: dirs.append(d)
+            datasets[ds] = dirs[:]
+
+        if len(files) > 0:
+            with open("%s/%s.txt" % (dout, alias), 'w') as fout:
+                for f in files: print>>fout, f
+
+    yaml.dump(data, open(arg, 'w'), indent=4, default_flow_style=False, width=10000)
