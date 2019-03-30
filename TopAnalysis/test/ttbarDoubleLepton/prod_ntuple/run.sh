@@ -29,9 +29,9 @@ fi
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
 
 ARGS=""
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLepton ttbar_${CHANNEL}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT flags_${DATATYPE}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${DATATYPE}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLepton ttbar_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonCutFlow cutFlow_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
 

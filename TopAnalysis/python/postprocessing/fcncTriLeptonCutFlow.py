@@ -42,7 +42,7 @@ class FCNCTriLeptonCutFlow(Module, object):
             break
         self.out.fillBranch("CutStep", cutStep)
 
-        return True
+        return cutStep > 0
 
 cutFlow_MuMuMu = lambda: FCNCTriLeptonCutFlow(mode="MuMuMu")
 cutFlow_ElElEl = lambda: FCNCTriLeptonCutFlow(mode="ElElEl")
