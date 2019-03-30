@@ -36,6 +36,7 @@ for MODE in E M MM EE ME; do
 done
 ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonHLT flags_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.CopyBranch copyBranch"
 
 #OUTPATH=ntuple/reco
 OUTPATH=ntuple/reco/$DATATYPE0/$DATASET/$CHANNEL
