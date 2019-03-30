@@ -1,13 +1,17 @@
 #!/bin/bash
 
 HISTSET=../../data/histogramming/ttbbDilepton.yaml
+#export NPROOF=$(nproc)
+export NPROOF=4
 
 if [ -d ntuple/reco/Run2017 ]; then
-    find ntuple/reco/Run2017 -name '*.root' | \
-        xargs -n1 -P$(nproc) tzwi-makehistograms Run2017 $HISTSET
+    for DIR in ntuple/reco/Run2017/*/MuMu; do
+        tzwi-makehistograms Run2017 $HISTSET $DIR
+    done
 fi
 
 if [ -d ntuple/reco/MC2017 ]; then
-    find ntuple/reco/MC2017 -name '*.root' | \
-        xargs -n1 -P$(nproc) tzwi-makehistograms MC2017 $HISTSET
+    for DIR in ntuple/reco/MC2017/*/MuMu; do
+        tzwi-makehistograms MC2017 $HISTSET $DIR
+    done
 fi

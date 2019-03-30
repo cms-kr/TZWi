@@ -14,8 +14,8 @@ hists = config['hists']
 weights0 = config['common'+dataType]['weights']
 if len(weights0) == 0: weights0.append("1")
 
-fName = sys.argv[3]
-ofName = os.path.dirname(fName).replace('ntuple', 'hist')+".root"
+dName = sys.argv[3]
+ofName = dName.replace('ntuple', 'hist').rstrip('/')+".root"
 if os.path.exists(ofName): sys.exit(1)
 odName = os.path.dirname(ofName)
 if not os.path.exists(odName):
@@ -23,7 +23,7 @@ if not os.path.exists(odName):
     except: pass
 
 chain = TChain("Friends")
-for fName in sys.argv[3:]: chain.Add(fName)
+chain.Add(dName+"/*.root")
 gROOT.SetBatch(True)
 
 if 'NPROOF' in os.environ:
