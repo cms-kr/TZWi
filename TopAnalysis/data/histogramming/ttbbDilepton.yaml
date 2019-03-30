@@ -199,37 +199,37 @@ hists:
         title: "Jet1_CSV"
         expr: "GoodJet_CSVv2[0]"
         bins:
-            nbinsX: 10
-            xmin: -1
+            nbinsX: 50
+            xmin: 0
             xmax: 1
     Jet2_CSV:
         title: "Jet2_CSV"
         expr: "GoodJet_CSVv2[1]"
         bins:
-            nbinsX: 10
-            xmin: -1
+            nbinsX: 50
+            xmin: 0
             xmax: 1
     Jet3_CSV:
         title: "Jet3_CSV"
         expr: "GoodJet_CSVv2[2]"
         bins:
-            nbinsX: 10
-            xmin: -1
+            nbinsX: 50
+            xmin: 0
             xmax: 1
     Jet4_CSV:
         title: "Jet4_CSV"
         expr: "GoodJet_CSVv2[3]"
         bins:
-            nbinsX: 10
-            xmin: -1
+            nbinsX: 50
+            xmin: 0
             xmax: 1
     Jet3_CSV__Jet4_CSV:
-        title: "Jet3 CSV vs Jet4 CSV"
-        expr: "GoodJet_CSVv2[2]:GoodJet_CSVv2[3]" # y:x
+        title: "Jet3 CSV vs Jet4 CSV;Jet3 CSV;Jet4 CSV"
+        expr: "GoodJet_CSVv2[3]:GoodJet_CSVv2[2]" # y:x
         bins:
-            nbinsX: 10
-            xmin: -1
-            xmax: 1
-            nbinsY: 10
-            ymin: -1
+            nbinsY: 20
+            ymin: 0
             ymax: 1
+            nbinsX: 20
+            xmin: 0
+            xmax: 1
