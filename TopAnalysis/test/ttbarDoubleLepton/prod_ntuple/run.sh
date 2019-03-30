@@ -29,11 +29,11 @@ fi
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
 
 ARGS=""
-ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLepton ttbar_${CHANNEL}"
-ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonHLT flags_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.ttbarDoubleLeptonCutFlow cutFlow_${CHANNEL}"
-ARGS="$ARGS -I TZWi.TopAnalysis.CopyBranch copyBranch"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLepton ttbar_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${DATATYPE}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT flags_${DATATYPE}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonCutFlow cutFlow_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
 
 OUTPATH=ntuple/reco/$DATATYPE0/$DATASET/$CHANNEL
 CMD="nano_postproc.py --friend"
@@ -43,7 +43,7 @@ if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puAutoWeight"
 
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF2017"
-    ARGS="$ARGS -I TZWi.TopAnalysis.btagWeightProducer btagWeight"
+    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.btagWeightProducer btagWeight"
 fi
 echo $CMD $ARGS $OUTPATH $FILENAMES
 $CMD $ARGS $OUTPATH $FILENAMES

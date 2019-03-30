@@ -4,7 +4,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
-from TZWi.TopAnalysis.CombineHLT import CombineHLT
+from TZWi.TopAnalysis.postprocessing.CombineHLT import CombineHLT
 
 hlt_E_MC2016  = lambda : CombineHLT(outName="HLT_E" , fileName="fcncTriLepton/2016.yaml", hltSet="RunIISummer16.SingleElectron")
 hlt_M_MC2016  = lambda : CombineHLT(outName="HLT_M" , fileName="fcncTriLepton/2016.yaml", hltSet="RunIISummer16.SingleMuon")
