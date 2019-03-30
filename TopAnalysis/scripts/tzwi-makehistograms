@@ -47,7 +47,7 @@ for istep, step in enumerate(steps):
 
     cut = step['cut']
     oFile.cd()
-    chain.Draw("%d>>+hCutFlow_noWeight" % (istep), "(%s)*(%s)" % (weight, cut), "goff")
+    chain.Draw("%d>>+hCutFlow_noWeight" % (istep), "(1)*(%s)" % (cut), "goff")
     chain.Draw("%d>>+hCutFlow" % (istep), "(%s)*(%s)" % (weight, cut), "goff")
 
     if 'hists' not in step: continue
@@ -59,14 +59,33 @@ for istep, step in enumerate(steps):
         h = None
         bins = hdef['bins']
         if type(bins) == list:
-            h = TH1D(hname, hdef['title'], len(bins)-1, array('d', bins))
+            if len(bins) == 2 and type(bins[0]) == list:
+                h = TH2D(hname, hdef['title'], len(bins[0])-1, array('d', bins[0]),
+                                               len(bins[1])-1, array('d', bins[1]))
+            else:
+                h = TH1D(hname, hdef['title'], len(bins)-1, array('d', bins))
         else:
-            h = TH1D(hname, hdef['title'], bins['nbins'], bins['xmin'], bins['xmax'])
+            if 'nbinsY' in bins:
+                h = TH2D(hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'],
+                                               bins['nbinsY'], bins['ymin'], bins['ymax'])
+            else:
+                h = TH1D(hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'])
         h.SetDirectory(dout)
 
         expr = hdef['expr'] if 'expr' in hdef else hname
-        chain.Draw("%s>>%s" % (expr, hname), "%s*(%s)" % (weight, cut), "goff")
-        #chain.Draw("%s>>%s" % (expr, hname), "1*(%s)" % (weight), "goff")
+        if 'weight' not in hdef:
+            weight1 = weight
+        else:
+            weight1 = hdef['weight']
+            if weight1[0] == '*': weight1 = "(%s)*(%s)" % (weight, weight1[1:])
+        if 'cut' not in hdef:
+            cut1 = cut
+        else:
+            cut1 = hdef['cut']
+            if cut1[0] == '&': cut1 = "(%s)&&(%s)" % (cut, cut1[1:])
+
+        chain.Draw("%s>>%s" % (expr, hname), "%s*(%s)" % (weight1, cut1), "goff")
+        #chain.Draw("%s>>%s" % (expr, hname), "1*(%s)" % (weight1), "goff")
 
         h.Write()
 
