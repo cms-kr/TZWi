@@ -97,7 +97,7 @@ class FCNCTriLepton(Module, object):
         for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "Lepton2_pdgId", "Lepton3_pdgId",
                         "nVetoLepton", "GoodLeptonCode", "Z_charge", "W_MT",
                         #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
-                        "GoodJet_index", "GoodJet_CSVv2", 
+                        "GoodJet_index", "GoodJet_CSVv2",
                         "nBjet",]:
             setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())
             self.out.fillBranch(varName, getattr(event._tree, "b_out_%s" % varName))

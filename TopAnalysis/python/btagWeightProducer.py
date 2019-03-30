@@ -1,7 +1,6 @@
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
@@ -39,7 +38,7 @@ class btagWeightProducer(Module, object):
 
         if self.jetIndexBrName != "":
             self.in_Jet_index = self.out._tree.GetBranch(self.jetIndexBrName).GetLeaf(self.jetIndexBrName)
-        
+
         self._ttreereaderversion = tree._ttreereaderversion
         pass
     def analyze(self, event):

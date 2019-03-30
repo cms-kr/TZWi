@@ -39,7 +39,7 @@ class CombineHLT(Module, object):
             if tok in oprs:
                 self.shortFormula.append(tok)
                 continue
-            
+
             idx = -1
             if tok in self.names:
                 idx = self.names.index(tok)
