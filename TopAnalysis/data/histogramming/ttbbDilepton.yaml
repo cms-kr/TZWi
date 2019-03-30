@@ -1,0 +1,235 @@
+## Histogramming for ttbb dilepton analysis
+
+commonRun2017:
+    weights: []
+
+commonMC2017:
+    weights: ["puWeight", "BtagWeight"]
+
+steps:
+    - name: "S1"
+      cuts: ["CutStep >= 1"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
+              "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
+              "Z_pt", "Z_mass",]
+    - name: "S2"
+      cuts: ["CutStep >= 2"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
+              "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet",
+              "MET_pt", "MET_phi",]
+    - name: "S3"
+      cuts: ["CutStep >= 3"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet",
+              "MET_pt", "MET_phi",]
+    - name: "S4"
+      cuts: ["CutStep >= 4"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet",
+              "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
+              "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
+              "Jet3_CSV__Jet4_CSV",
+              "MET_pt", "MET_phi",]
+    - name: "S5"
+      cuts: ["CutStep >= 5"]
+      hists: ["nPV", "nPV_noWeight",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet",
+              "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
+              "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
+              "Jet3_CSV__Jet4_CSV",
+              "MET_pt", "MET_phi",]
+    - name: "S6"
+      cuts: ["CutStep >= 6"]
+      hists: ["nPV", "nPV_noWeight",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet",
+              "Jet1_pt", "Jet2_pt", "Jet3_pt", "Jet4_pt",
+              "Jet1_CSV", "Jet2_CSV", "Jet3_CSV", "Jet4_CSV",
+              "Jet3_CSV__Jet4_CSV",
+              "MET_pt", "MET_phi",]
+
+hists:
+    nPV_noWeight:
+        title: "nPV_noWeight;Vertex multiplicity;Events (unweighted)"
+        expr: "PV_npvsGood"
+        #weights: [] #multiply weights with existing ones
+        weightsToDrop: ["puWeight", "puWeightsUp", "puWeightsDown"] #drop weights from existing ones
+        bins:
+            nbinsX: 100
+            xmin: 0
+            xmax: 100
+    nPV:
+        title: "nPV;Vertex multiplicity;Events"
+        expr: "PV_npvsGood"
+        bins:
+            nbinsX: 100
+            xmin: 0
+            xmax: 100
+
+    Lepton1_pt:
+        title: "Lepton1_pt;Leading lepton p_{T} (GeV);Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
+    Lepton1_eta:
+        title: "Lepton1_eta;Leading lepton #eta;Events"
+        bins:
+            nbinsX: 50
+            xmin: -2.5
+            xmax: 2.5
+    Lepton1_phi:
+        title: "Lepton1_phi;Leading lepton #phi (radian);Events"
+        bins:
+            nbinsX: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    Lepton2_pt:
+        title: "Lepton2_pt;2nd leading lepton p_{T} (GeV);Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
+    Lepton2_eta:
+        title: "Lepton2_eta;2nd leading lepton #eta;Events"
+        bins:
+            nbinsX: 50
+            xmin: -2.5
+            xmax: 2.5
+    Lepton2_phi:
+        title: "Lepton2_phi;2nd leading lepton #phi (radian);Events"
+        bins:
+            nbinsX: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    Z_pt:
+        title: "Z_pt;Z p_{T} (GeV);Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
+    Z_eta:
+        title: "Z_eta;Z #eta;Events"
+        bins:
+            nbinsX: 50
+            xmin: -2.5
+            xmax: 2.5
+    Z_phi:
+        title: "Z_phi;Z #phi (radian);Events"
+        bins:
+            nbinsX: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+    Z_mass:
+        title: "Z_mass;Z mass (GeV);Events"
+        bins:
+            nbinsX: 100
+            xmin: 0
+            xmax: 300
+
+    MET_pt:
+        title: "MET;Missing transverse momentum (GeV);Events"
+        bins: 
+            nbinsX: 100
+            xmin: 0
+            xmax: 200
+    MET_phi:
+        title: "MET_phi;MET #phi (radian);Events"
+        bins: 
+            nbinsX: 100
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    nJet:
+        title: "nGoodJet;Jet multiplicity;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 20
+        expr: "nGoodJet"
+
+    nBjet:
+        title: "nBjet;Bjet multiplicity;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 20
+
+    Jet1_pt:
+        title: "Jet1_pt"
+        expr: "GoodJet_pt[0]"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 100
+    Jet2_pt:
+        title: "Jet2_pt"
+        expr: "GoodJet_pt[1]"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 100
+    Jet3_pt:
+        title: "Jet3_pt"
+        expr: "GoodJet_pt[2]"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 100
+    Jet4_pt:
+        title: "Jet4_pt"
+        expr: "GoodJet_pt[3]"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 100
+
+    Jet1_CSV:
+        title: "Jet1_CSV"
+        expr: "GoodJet_CSVv2[0]"
+        bins:
+            nbinsX: 10
+            xmin: -1
+            xmax: 1
+    Jet2_CSV:
+        title: "Jet2_CSV"
+        expr: "GoodJet_CSVv2[1]"
+        bins:
+            nbinsX: 10
+            xmin: -1
+            xmax: 1
+    Jet3_CSV:
+        title: "Jet3_CSV"
+        expr: "GoodJet_CSVv2[2]"
+        bins:
+            nbinsX: 10
+            xmin: -1
+            xmax: 1
+    Jet4_CSV:
+        title: "Jet4_CSV"
+        expr: "GoodJet_CSVv2[3]"
+        bins:
+            nbinsX: 10
+            xmin: -1
+            xmax: 1
+    Jet3_CSV__Jet4_CSV:
+        title: "Jet3 CSV vs Jet4 CSV"
+        expr: "GoodJet_CSVv2[2]:GoodJet_CSVv2[3]" # y:x
+        bins:
+            nbinsX: 10
+            xmin: -1
+            xmax: 1
+            nbinsY: 10
+            ymin: -1
+            ymax: 1

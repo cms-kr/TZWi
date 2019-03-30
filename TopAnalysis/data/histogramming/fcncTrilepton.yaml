@@ -1,0 +1,172 @@
+## Histogramming for ttbb dilepton analysis
+
+commonRun2016:
+    weights: []
+
+commonMC2016:
+    weights: ["puWeight", "BtagWeight"]
+
+steps:
+    - name: "S1"
+      cuts: ["CutStep >= 1"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
+              "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
+              "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
+              "nJet", "nBjet", "nJet_nBjet",
+              "Z_pt", "Z_mass",]
+    - name: "S2"
+      cuts: ["CutStep >= 2"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
+              "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
+              "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet", "nJet_nBjet",
+              "MET_pt", "MET_phi",]
+    - name: "S3"
+      cuts: ["CutStep >= 3"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet", "nJet_nBjet",
+              "MET_pt", "MET_phi",]
+
+hists:
+    nPV_noWeight:
+        title: "nPV_noWeight;Vertex multiplicity;Events (unweighted)"
+        expr: "PV_npvsGood"
+        #weights: [] #multiply weights with existing ones
+        weightsToDrop: ["puWeight", "puWeightsUp", "puWeightsDown"] #drop weights from existing ones
+        bins:
+            nbinsX: 100
+            xmin: 0
+            xmax: 100
+    nPV:
+        title: "nPV;Vertex multiplicity;Events"
+        expr: "PV_npvsGood"
+        bins:
+            nbinsX: 100
+            xmin: 0
+            xmax: 100
+
+    Lepton1_pt:
+        title: "Lepton1_pt;Leading lepton p_{T} (GeV);Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
+    Lepton1_eta:
+        title: "Lepton1_eta;Leading lepton #eta;Events"
+        bins:
+            nbinsX: 50
+            xmin: -2.5
+            xmax: 2.5
+    Lepton1_phi:
+        title: "Lepton1_phi;Leading lepton #phi (radian);Events"
+        bins:
+            nbinsX: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    Lepton2_pt:
+        title: "Lepton2_pt;2nd leading lepton p_{T} (GeV);Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
+    Lepton2_eta:
+        title: "Lepton2_eta;2nd leading lepton #eta;Events"
+        bins:
+            nbinsX: 50
+            xmin: -2.5
+            xmax: 2.5
+    Lepton2_phi:
+        title: "Lepton2_phi;2nd leading lepton #phi (radian);Events"
+        bins:
+            nbinsX: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    Lepton3_pt:
+        title: "Lepton3_pt;3rd leading lepton p_{T} (GeV);Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
+    Lepton3_eta:
+        title: "Lepton3_eta;3rd leading lepton #eta;Events"
+        bins:
+            nbinsX: 50
+            xmin: -2.5
+            xmax: 2.5
+    Lepton3_phi:
+        title: "Lepton3_phi;3rd leading lepton #phi (radian);Events"
+        bins:
+            nbinsX: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    Z_pt:
+        title: "Z_pt;Z p_{T} (GeV);Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
+    Z_eta:
+        title: "Z_eta;Z #eta;Events"
+        bins:
+            nbinsX: 50
+            xmin: -2.5
+            xmax: 2.5
+    Z_phi:
+        title: "Z_phi;Z #phi (radian);Events"
+        bins:
+            nbinsX: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+    Z_mass:
+        title: "Z_mass;Z mass (GeV);Events"
+        bins:
+            nbinsX: 100
+            xmin: 0
+            xmax: 300
+
+    MET_pt:
+        title: "MET;Missing transverse momentum (GeV);Events"
+        bins: 
+            nbinsX: 100
+            xmin: 0
+            xmax: 200
+    MET_phi:
+        title: "MET_phi;MET #phi (radian);Events"
+        bins: 
+            nbinsX: 100
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    nJet:
+        title: "nGoodJet;Jet multiplicity;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 20
+        expr: "nGoodJet"
+
+    nBjet:
+        title: "nBjet;Bjet multiplicity;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 20
+
+    nJet_nBjet:
+        title: "nJet vs nBjet;nJet;nBjet;Events"
+        expr: "nBjet:nJet" # y:x
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 20
+            nbinsY: 20
+            ymin: 0
+            ymax: 20
