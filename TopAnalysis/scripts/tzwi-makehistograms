@@ -31,19 +31,11 @@ if 'NPROOF' in os.environ:
     prf = TProof.Open("workers=%s" % nProc)
     chain.SetProof(True)
 
-oFile = TFile(ofName, 'recreate')
-
-hWCutFlow = TH1D("hWCutFlow", "Cut Flow;Step;Events", len(steps), 0, len(steps))
-hNCutFlow = TH1D("hNCutFlow", "Cut Flow (noWeight);Step;Events (unweighted)", len(steps), 0, len(steps))
-
 print "Processing", ofName
 
-objs = []
+oFile = TFile(ofName, 'recreate')
+
 for istep, step in enumerate(steps):
-
-    hNCutFlow.GetXaxis().SetBinLabel(istep+1, step['name'])
-    hWCutFlow.GetXaxis().SetBinLabel(istep+1, step['name'])
-
     weights = weights0[:]
     if 'weights' in step:
         weights = list(set(weights)|set(step['weight']))
@@ -54,13 +46,16 @@ for istep, step in enumerate(steps):
     cuts = step['cuts']
     cut = '&&'.join(['(%s)' % x for x in cuts])
 
-    oFile.cd()
-    chain.Draw("(%d.0)>>hNCutFlow" % (istep), "(%s)" % (cut), "goff")
-    chain.Draw("(%d.0)>>hWCutFlow" % (istep), "(%s)*(%s)" % (weight, cut), "goff")
-
     dout = oFile.mkdir(step['name'])
     dout.cd()
 
+    ## Fill Weight histogram first
+    hWeight = TH1D("hWeight", "weight;weight;Events", 100, -2, 2)
+    chain.Draw("%s>>hWeight" % weight, cut, "goff")
+    hWeight.Write()
+    del hWeight
+
+    ## Fill histograms in this step
     if 'hists' not in step: continue
     for hname, hdef in [(x, hists[x]) for x in step['hists'] if x in hists]:
         h = None
@@ -99,10 +94,6 @@ for istep, step in enumerate(steps):
         #chain.Draw("%s>>%s" % (expr, hname), "1*(%s)" % (weight1), "goff")
 
         h.Write()
-        objs.append(h)
-        #del h
+        del h
 
-oFile.cd()
-hWCutFlow.Write()
-hNCutFlow.Write()
 oFile.Close()
