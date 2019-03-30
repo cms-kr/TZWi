@@ -26,7 +26,7 @@ steps:
     - name: "S3"
       cut: "CutStep >= 3"
       hists: ["nPV",  
-              "Lepton1_pt", "Lepton2_pt",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass",
               "nJet", "nBjet",
               "MET_pt", "MET_phi",]
@@ -65,6 +65,25 @@ hists:
             xmax: 2.5
     Lepton2_phi:
         title: "Lepton2_phi;2nd leading lepton #phi (radian);Events"
+        bins:
+            nbins: 50
+            xmin: -3.1415922
+            xmax:  3.1415922
+
+    Leptno3_pt:
+        title: "Leptno3_pt;3rd leading lepton p_{T} (GeV);Events"
+        bins:
+            nbins: 50
+            xmin: 0
+            xmax: 300
+    Leptno3_eta:
+        title: "Leptno3_eta;3rd leading lepton #eta;Events"
+        bins:
+            nbins: 50
+            xmin: -2.5
+            xmax: 2.5
+    Leptno3_phi:
+        title: "Leptno3_phi;3rd leading lepton #phi (radian);Events"
         bins:
             nbins: 50
             xmin: -3.1415922
