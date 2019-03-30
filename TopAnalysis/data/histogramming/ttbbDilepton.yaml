@@ -75,76 +75,76 @@ hists:
     Lepton1_pt:
         title: "Lepton1_pt;Leading lepton p_{T} (GeV);Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: 0
             xmax: 300
     Lepton1_eta:
         title: "Lepton1_eta;Leading lepton #eta;Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: -2.5
             xmax: 2.5
     Lepton1_phi:
         title: "Lepton1_phi;Leading lepton #phi (radian);Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: -3.1415922
             xmax:  3.1415922
 
     Lepton2_pt:
         title: "Lepton2_pt;2nd leading lepton p_{T} (GeV);Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: 0
             xmax: 300
     Lepton2_eta:
         title: "Lepton2_eta;2nd leading lepton #eta;Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: -2.5
             xmax: 2.5
     Lepton2_phi:
         title: "Lepton2_phi;2nd leading lepton #phi (radian);Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: -3.1415922
             xmax:  3.1415922
 
     Z_pt:
         title: "Z_pt;Z p_{T} (GeV);Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: 0
             xmax: 300
     Z_eta:
         title: "Z_eta;Z #eta;Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: -2.5
             xmax: 2.5
     Z_phi:
         title: "Z_phi;Z #phi (radian);Events"
         bins:
-            nbins: 50
+            nbinsX: 50
             xmin: -3.1415922
             xmax:  3.1415922
     Z_mass:
         title: "Z_mass;Z mass (GeV);Events"
         bins:
-            nbins: 100
+            nbinsX: 100
             xmin: 0
             xmax: 300
 
     MET_pt:
         title: "MET;Missing transverse momentum (GeV);Events"
         bins: 
-            nbins: 100
+            nbinsX: 100
             xmin: 0
             xmax: 200
     MET_phi:
         title: "MET_phi;MET #phi (radian);Events"
         bins: 
-            nbins: 100
+            nbinsX: 100
             xmin: -3.1415922
             xmax:  3.1415922
 
@@ -169,28 +169,28 @@ hists:
         bins:
             nbinsX: 50
             xmin: 0
-            ymin: 100
+            xmax: 100
     Jet2_pt:
         title: "Jet2_pt"
         expr: "GoodJet_pt[1]"
         bins:
             nbinsX: 50
             xmin: 0
-            ymin: 100
+            xmax: 100
     Jet3_pt:
         title: "Jet3_pt"
         expr: "GoodJet_pt[2]"
         bins:
             nbinsX: 50
             xmin: 0
-            ymin: 100
+            xmax: 100
     Jet4_pt:
         title: "Jet4_pt"
         expr: "GoodJet_pt[3]"
         bins:
             nbinsX: 50
             xmin: 0
-            ymin: 100
+            xmax: 100
 
     Jet1_CSV:
         title: "Jet1_CSV"

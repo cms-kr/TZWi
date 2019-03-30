@@ -12,6 +12,7 @@ config = yaml.load(open(configFile))
 steps = config['steps']
 hists = config['hists']
 weights0 = config['common'+dataType]['weights']
+if len(weights0) == 0: weights0.append("1")
 
 fName = sys.argv[3]
 ofName = os.path.dirname(fName).replace('ntuple', 'hist')+".root"
