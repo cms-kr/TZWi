@@ -47,4 +47,5 @@ if [ ${DATATYPE::2} == "MC" ]; then
 fi
 echo $CMD $ARGS $OUTPATH $FILENAMES
 $CMD $ARGS $OUTPATH $FILENAMES
+[ $? -eq 0 ] || echo $CMD $ARGS $OUTPATH $FILENAMES >> failed.txt
 
