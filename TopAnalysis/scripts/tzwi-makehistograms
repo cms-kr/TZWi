@@ -13,6 +13,12 @@ steps = config['steps']
 hists = config['hists']
 weight0 = config['common'+dataType]['weight']
 
+fName = sys.argv[3]
+ofName = os.path.dirname(fName).replace('ntuple', 'hist')
+if os.path.exists(ofName): sys.exit(1)
+odName = os.path.dirname(ofName)
+if not os.path.exists(odName): os.makedirs(odName)
+
 chain = TChain("Friends")
 for fName in sys.argv[3:]: chain.Add(fName)
 gROOT.SetBatch(True)
@@ -22,11 +28,7 @@ if 'NPROOF' in os.environ:
     prf = TProof.Open("", "workers=%s" % nProc)
     chain.SetProof(True)
 
-ofName = fName.replace('ntuple', 'hist')
-odName = os.path.dirname(ofName)
-if not os.path.exists(odName): os.makedirs(odName)
-
-oFile = TFile(ofName, 'recreate')
+oFile = TFile(ofName+".root", 'recreate')
 oFile.cd()
 hCutFlow_noWeight = TH1D("hCutFlow_noWeight", "Cut Flow (noWeight);Step;Events (unweighted)", len(steps), 0, len(steps))
 hCutFlow = TH1D("hCutFlow", "Cut Flow;Step;Events", len(steps), 0, len(steps))
