@@ -70,20 +70,20 @@ hists:
             xmin: -3.1415922
             xmax:  3.1415922
 
-    Leptno3_pt:
-        title: "Leptno3_pt;3rd leading lepton p_{T} (GeV);Events"
+    Lepton3_pt:
+        title: "Lepton3_pt;3rd leading lepton p_{T} (GeV);Events"
         bins:
             nbins: 50
             xmin: 0
             xmax: 300
-    Leptno3_eta:
-        title: "Leptno3_eta;3rd leading lepton #eta;Events"
+    Lepton3_eta:
+        title: "Lepton3_eta;3rd leading lepton #eta;Events"
         bins:
             nbins: 50
             xmin: -2.5
             xmax: 2.5
-    Leptno3_phi:
-        title: "Leptno3_phi;3rd leading lepton #phi (radian);Events"
+    Lepton3_phi:
+        title: "Lepton3_phi;3rd leading lepton #phi (radian);Events"
         bins:
             nbins: 50
             xmin: -3.1415922
