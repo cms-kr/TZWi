@@ -28,7 +28,7 @@ gROOT.SetBatch(True)
 
 if 'NPROOF' in os.environ:
     nProc = os.environ['NPROOF']
-    prf = TProof.Open("", "workers=%s" % nProc)
+    prf = TProof.Open("workers=%s" % nProc)
     chain.SetProof(True)
 
 oFile = TFile(ofName, 'recreate')
