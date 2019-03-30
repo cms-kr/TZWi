@@ -33,6 +33,6 @@ for arg in sys.argv[1:]:
 
         if len(files) > 0:
             with open("%s/%s.txt" % (dout, alias), 'w') as fout:
-                for f in files: print>>fout, f
+                for f in files: print>>fout, ('/xrootd%s' % f)
 
     yaml.dump(data, open(arg, 'w'), indent=4, default_flow_style=False, width=10000)

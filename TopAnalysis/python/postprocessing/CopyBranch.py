@@ -4,6 +4,8 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
+import sys
+
 class CopyBranch(Module, object):
     def __init__(self, *args, **kwargs):
         self.brNames = []

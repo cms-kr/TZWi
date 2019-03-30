@@ -30,13 +30,13 @@ fi
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
 
 ARGS=""
-ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLepton fcnc_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT flags_${DATATYPE}"
 for MODE in E M MM EE ME; do
-    ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonHLT hlt_${MODE}_${DATATYPE}"
+    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT hlt_${MODE}_${DATATYPE}"
 done
-ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonHLT flags_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
-ARGS="$ARGS -I TZWi.TopAnalysis.CopyBranch copyBranch"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
 
 #OUTPATH=ntuple/reco
 OUTPATH=ntuple/reco/$DATATYPE0/$DATASET/$CHANNEL
@@ -47,7 +47,7 @@ if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight"
 
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF2016"
-    ARGS="$ARGS -I TZWi.TopAnalysis.btagWeightProducer btagWeight"
+    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.btagWeightProducer btagWeight"
 fi
 echo $CMD $ARGS $OUTPATH $FILENAMES
 $CMD $ARGS $OUTPATH $FILENAMES

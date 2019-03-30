@@ -43,7 +43,7 @@ class TTbarDoubleLeptonCutFlow(Module, object):
             break
         self.out.fillBranch("CutStep", cutStep)
 
-        return True
+        return (cutStep > 0)
 
 cutFlow_MuMu = lambda: TTbarDoubleLeptonCutFlow(mode="MuMu")
 cutFlow_ElEl = lambda: TTbarDoubleLeptonCutFlow(mode="ElEl")

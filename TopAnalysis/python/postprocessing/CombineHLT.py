@@ -11,6 +11,7 @@ class CombineHLT(Module, object):
 
         #super(CombineHLT, self).__init__(*args, **kwargs)
         self.outName = kwargs.get("outName") if "outName" in kwargs else "HLT"
+        self.doFilter = kwargs.get("doFilter") if "doFilter" in kwargs else False
 
         if "/CombineHLTCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ CombineHLT worker module"
@@ -79,4 +80,5 @@ class CombineHLT(Module, object):
         res = self.worker.analyze()
         self.out.fillBranch(self.outName, res)
 
+        if self.doFilter: return res
         return True
