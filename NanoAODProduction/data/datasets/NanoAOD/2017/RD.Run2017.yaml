@@ -1,29 +1,29 @@
 dataset:
-    DoubleEG:
+    Run2017.DoubleEG:
         /DoubleEG/Run2017B-Nano14Dec2018-v1/NANOAOD: []
         /DoubleEG/Run2017C-Nano14Dec2018-v1/NANOAOD: []
         /DoubleEG/Run2017D-Nano14Dec2018-v1/NANOAOD: []
         /DoubleEG/Run2017E-Nano14Dec2018-v1/NANOAOD: []
         /DoubleEG/Run2017F-Nano14Dec2018-v1/NANOAOD: []
-    DoubleMuon:
+    Run2017.DoubleMuon:
         /DoubleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD: []
         /DoubleMuon/Run2017C-Nano14Dec2018-v1/NANOAOD: []
         /DoubleMuon/Run2017D-Nano14Dec2018-v1/NANOAOD: []
         /DoubleMuon/Run2017E-Nano14Dec2018-v1/NANOAOD: []
         /DoubleMuon/Run2017F-Nano14Dec2018-v1/NANOAOD: []
-    MuonEG:
+    Run2017.MuonEG:
         /MuonEG/Run2017B-Nano14Dec2018-v1/NANOAOD: []
         /MuonEG/Run2017C-Nano14Dec2018-v1/NANOAOD: []
         /MuonEG/Run2017D-Nano14Dec2018-v1/NANOAOD: []
         /MuonEG/Run2017E-Nano14Dec2018-v1/NANOAOD: []
         /MuonEG/Run2017F-Nano14Dec2018-v1/NANOAOD: []
-    SingleElectron:
+    Run2017.SingleElectron:
         /SingleElectron/Run2017B-Nano14Dec2018-v1/NANOAOD: []
         /SingleElectron/Run2017C-Nano14Dec2018-v1/NANOAOD: []
         /SingleElectron/Run2017D-Nano14Dec2018-v1/NANOAOD: []
         /SingleElectron/Run2017E-Nano14Dec2018-v1/NANOAOD: []
         /SingleElectron/Run2017F-Nano14Dec2018-v1/NANOAOD: []
-    SingleMuon:
+    Run2017.SingleMuon:
         /SingleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD:
         - /store/data/Run2017B/SingleMuon/NANOAOD/Nano14Dec2018-v1/90000
         - /store/data/Run2017B/SingleMuon/NANOAOD/Nano14Dec2018-v1/10000
