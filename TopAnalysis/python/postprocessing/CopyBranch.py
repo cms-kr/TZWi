@@ -36,5 +36,5 @@ class CopyBranch(Module, object):
             self.out.fillBranch(brName, getattr(event, brName))
         return True
 
-copyBranch = lambda: CopyBranch(["PV_npvsGood"])
+copyBranch = lambda: CopyBranch(["run", "event", "PV_npvsGood"])
 
