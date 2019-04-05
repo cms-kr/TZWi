@@ -13,9 +13,10 @@ for arg in sys.argv[1:]:
     if data == None or len(data) == 0 or \
        "dataset" not in data or data["dataset"] == None or len(data["dataset"]) == 0: continue
     for alias, datasets in data["dataset"].iteritems():
-        files = []
         if datasets == None: continue
         for ds in datasets:
+            files = []
+
             print "Retrieving dataset information", alias, "=>", ds, "from DBS..."
             out = subprocess.Popen(["dasgoclient", "--query=file dataset=%s" % ds], stdout=subprocess.PIPE, close_fds=True)
             
@@ -29,11 +30,13 @@ for arg in sys.argv[1:]:
                 if d not in dirs: dirs.append(d)
             datasets[ds] = dirs[:]
 
-        if len(files) == 0: continue
+            if len(files) == 0: continue
 
-        prefix = "root://cms-global-xrd.cern.ch/"
-        if os.path.exists('/xrootd%s' % files[0]): prefix=""
-        with open("%s/%s.txt" % (dout, alias), 'w') as fout:
-            for f in files: print>>fout, (prefix+f)
+            dsout = os.path.join(dout, alias)
+            if not os.path.exists(dsout): os.makedirs(dsout)
+            prefix = "root://cms-global-xrd.cern.ch/"
+            if os.path.exists('/xrootd%s' % files[0]): prefix=""
+            with open("%s/%s.txt" % (dsout, ds.strip('/').replace('/', '__')), 'w') as fout:
+                for f in files: print>>fout, (prefix+f)
 
     yaml.dump(data, open(arg, 'w'), indent=4, default_flow_style=False, width=10000)
