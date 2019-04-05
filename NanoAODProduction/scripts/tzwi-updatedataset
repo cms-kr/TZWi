@@ -34,7 +34,7 @@ for arg in sys.argv[1:]:
 
             dsout = os.path.join(dout, alias)
             if not os.path.exists(dsout): os.makedirs(dsout)
-            prefix = "root://cms-global-xrd.cern.ch/"
+            prefix = "root://cms-xrd-global.cern.ch/"
             if os.path.exists('/xrootd%s' % files[0]): prefix=""
             with open("%s/%s.txt" % (dsout, ds.strip('/').replace('/', '__')), 'w') as fout:
                 for f in files: print>>fout, (prefix+f)
