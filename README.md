@@ -40,21 +40,25 @@ crab submit...
 ## List up NanoAOD samples
 Update sample list, produce file lists
 ```
-tzwi-udpatedataset $CMSSW_BASE/src/TZWi/NanoAODProduction/data/datasets/NanoAOD/201*/*.yaml
+tzwi-updatedataset $CMSSW_BASE/src/TZWi/NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml
+tzwi-updatedataset $CMSSW_BASE/src/TZWi/NanoAODProduction/data/datasets/NanoAOD/2017/*.yaml
 ```
 
 ## Run postprocessors
+
+Assume we are working at KISTI Tier2/3 and cms-kr/hep-tools package is installed.
 ```
 cd $CMSSW_BASE/src/TZWi/TopAnalysis/test/ttbarDoubleLepton
-for MODE in MuMu MuEl ElEl; do
-    for F in `find NanoAOD/2017/ -name '*.txt'`; do
-        N=`cat $F | wc -l`
-        for I in `seq $N`; do
-            echo $MODE $F 1 $((I-1));
-        done
+for MODE in ElEl MuEl MuMu; do
+    for FILELIST in NanoAOD/2017/MC.RunIIFall17.central*/*/*.txt; do
+        NJOBS=`cat $FILELIST | wc -l`
+        JOBNAME=$MODE.`basename $FILELIST | sed -e 's;.txt;;g'`
+        create-batch bash 01_prod_ntuple.sh $MODE $FILELIST 1 --jobName $JOBNAME -T --nJobs $NJOBS; done; done
     done
-done | xargs -l1 -P20 ./01_prod_ntuple.sh > /dev/null
+done
 ```
+
+Wait for the jobs to be finished, check output files, resubmit failed jobs.
 
 ## Make histograms
 ```
