@@ -18,9 +18,12 @@ JOBNUMBER=$4
 [ $CHANNEL == 'MuElEl' ] && CHANNEL=ElElMu
 [ $CHANNEL == 'ElMuMu' ] && CHANNEL=MuMuEl
 
-DATATYPE0=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f1`
-DATASET=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2`
+DATATYPE0=`basename $(dirname $FILELIST) | sed -e 's;.txt;;g' | cut -d. -f1`
+DATASET=`basename $(dirname $FILELIST) | sed -e 's;.txt;;g' | cut -d. -f2`
 DATATYPE=$DATATYPE0
+echo $DATASET $DATATYPE $DATATYPE0
+
+exit
 if [ ${DATATYPE::3} == "Run" ]; then
   #DATATYPE=${DATATYPE::7} ## This gives Run2018A -> Run2018
   [ $DATATYPE == "Run2016B" -o $DATATYPE == "Run2016C" -o $DATATYPE == "Run2016D" -o $DATATYPE == "Run2016E" ] && DATATYPE=Run2016BE
