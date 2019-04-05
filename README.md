@@ -60,6 +60,11 @@ done
 
 Wait for the jobs to be finished, check output files, resubmit failed jobs.
 
+Tip to list up failed job commands:
+```
+for i in */result*.tgz; do tar -Oxzvf $i ./failed.txt ; done > failed.txt
+```
+
 ## Make histograms
 ```
 ./02_make_histograms.sh
