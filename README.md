@@ -65,6 +65,11 @@ Tip to list up failed job commands:
 for i in */result*.tgz; do tar -Oxzvf $i ./failed.txt ; done > failed.txt
 ```
 
+Top to extract all ntuples:
+```bash
+find *NANOAOD/ -name 'result_*.tgz' | awk '{print "xzf "$1" ./ntuple"}' | xargs -L1 -P$(nproc) tar
+```
+
 ## Make histograms
 ```bash
 ./02_make_histograms.sh
