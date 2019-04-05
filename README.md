@@ -50,7 +50,7 @@ Assume we are working at KISTI Tier2/3 and cms-kr/hep-tools package is installed
 ```bash
 cd $CMSSW_BASE/src/TZWi/TopAnalysis/test/ttbarDoubleLepton
 for MODE in ElEl MuEl MuMu; do
-    for FILELIST in NanoAOD/2017/MC.RunIIFall17.central*/*/*.txt; do
+    for FILELIST in NanoAOD/2017/*/*/*.txt; do
         NJOBS=`cat $FILELIST | wc -l`
         JOBNAME=$MODE.`basename $FILELIST | sed -e 's;.txt;;g'`
         create-batch bash 01_prod_ntuple.sh $MODE $FILELIST 1 --jobName $JOBNAME -T --nJobs $NJOBS
