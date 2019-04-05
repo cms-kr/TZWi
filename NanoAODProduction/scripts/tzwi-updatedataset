@@ -35,7 +35,7 @@ for arg in sys.argv[1:]:
             if len(files) == 0: continue
 
             prefix = "root://cms-xrd-global.cern.ch/"
-            if os.path.exists('/xrootd%s' % files[0]): prefix=""
+            if os.path.exists('/xrootd%s' % files[0]): prefix="root://cms-xrdr.private.lo:2094//xrd/"
             with open("%s/%s.txt" % (dsout, ds.strip('/').replace('/', '.')), 'w') as fout:
                 for f in files: print>>fout, (prefix+f)
 
