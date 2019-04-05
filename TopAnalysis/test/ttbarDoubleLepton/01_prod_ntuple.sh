@@ -17,25 +17,32 @@ JOBNUMBER=$4
 
 [ $CHANNEL == 'ElMu' ] && CHANNEL='MuEl'
 
-DATATYPE0=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f1`
-DATASET=`basename $FILELIST | sed -e 's;.txt;;g' | cut -d. -f2`
-DATATYPE=$DATATYPE0
+DATASET0=`basename $FILELIST | sed -e 's;.txt;;g'`
+DATASET='/'`echo $DATASET0 | sed -e 's;\.;/;g'`
+ERA=$(echo $DATASET0 | cut -d. -f2 | cut -d- -f1 | sed -e 's;NanoAOD;;g')
+
+DATATYPE=$(basename $(dirname $FILELIST) | cut -d. -f1)
+ERA4HLT=$DATATYPE
+
 if [ ${DATATYPE::3} == "Run" ]; then
-  DATATYPE=${DATATYPE::7} ## This gives Run2018A -> Run2018
-  
-  [ ${DATATYPE::8} == "Run2017B" ] || DATATYPE=Run2017CF
+# DATATYPE=${DATATYPE0::7} ## This gives Run2018A -> Run2018
+  case $ERA in
+    Run2017C|Run2017D|Run2017E|Run2017F)
+      ERA4HLT=Run2017CF
+      ;;
+  esac
 fi
 
-FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
+FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;^/xrootd/;root://cms-xrdr.private.lo:2094//xrd/;g')
 
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT flags_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${DATATYPE}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${ERA4HLT}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLepton ttbar_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonCutFlow cutFlow_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
 
-OUTPATH=ntuple/reco/$DATATYPE0/$DATASET/$CHANNEL
+OUTPATH=ntuple/reco/$CHANNEL/$DATASET0
 CMD="nano_postproc.py --friend"
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 if [ ${DATATYPE::2} == "MC" ]; then

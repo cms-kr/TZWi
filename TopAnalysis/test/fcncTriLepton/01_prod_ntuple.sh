@@ -15,22 +15,38 @@ FILELIST=$2
 MAXFILES=$3
 JOBNUMBER=$4
 
-[ $CHANNEL == 'MuElEl' ] && CHANNEL=ElElMu
-[ $CHANNEL == 'ElMuMu' ] && CHANNEL=MuMuEl
+case $CHANNEL in
+  MuElEl|ElMuEl)
+    CHANNEL=ElElMu
+    ;;
+  ElMuMu|MuElMu)
+    CHANNEL=MuMuEl
+    ;;
+esac
 
-DATATYPE0=`basename $(dirname $FILELIST) | sed -e 's;.txt;;g' | cut -d. -f1`
-DATASET=`basename $(dirname $FILELIST) | sed -e 's;.txt;;g' | cut -d. -f2`
-DATATYPE=$DATATYPE0
-echo $DATASET $DATATYPE $DATATYPE0
+DATASET0=`basename $FILELIST | sed -e 's;.txt;;g'`
+DATASET='/'`echo $DATASET0 | sed -e 's;\.;/;g'`
+ERA=$(echo $DATASET0 | cut -d. -f2 | cut -d- -f1 | sed -e 's;NanoAOD;;g')
 
-exit
+DATATYPE=$(basename $(dirname $FILELIST) | cut -d. -f1)
+ERA4HLT=$DATATYPE
+
 if [ ${DATATYPE::3} == "Run" ]; then
-  #DATATYPE=${DATATYPE::7} ## This gives Run2018A -> Run2018
-  [ $DATATYPE == "Run2016B" -o $DATATYPE == "Run2016C" -o $DATATYPE == "Run2016D" -o $DATATYPE == "Run2016E" ] && DATATYPE=Run2016BE
-  [ $DATATYPE == "Run2016F" -o $DATATYPE == "Run2016G" ] && DATATYPE=Run2016FG
+# DATATYPE=${DATATYPE0::7} ## This gives Run2018A -> Run2018
+  case $ERA in
+    Run2016B|Run2016C|Run2016D|Run2016E)
+      ERA4HLT=Run2016BE
+      ;;
+    Run2016F|Run2016G)
+      ERA4HLT=Run2016FG
+      ;;
+    Run2017C|Run2017D|Run2017E|Run2017F)
+      ERA4HLT=Run2017CF
+      ;;
+  esac
 fi
 
-FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;/xrootd/;root://cms-xrdr.sdfarm.kr//xrd/;g')
+FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;^/xrootd/;root://cms-xrdr.private.lo:2094//xrd/;g')
 
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT flags_${DATATYPE}"
@@ -39,8 +55,7 @@ ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
 
-#OUTPATH=ntuple/reco
-OUTPATH=ntuple/reco/$DATATYPE0/$DATASET/$CHANNEL
+OUTPATH=ntuple/reco/$CHANNEL/$DATASET0
 CMD="nano_postproc.py --friend"
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 if [ ${DATATYPE::2} == "MC" ]; then
