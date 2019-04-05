@@ -4,8 +4,6 @@ import yaml
 import sys, os
 import subprocess
 
-siteName = 'T2_KR_KISTI'
-
 for arg in sys.argv[1:]:
     data = yaml.load(open(arg))
     dout = '.'.join(arg.split('.')[:-1])
@@ -19,7 +17,7 @@ for arg in sys.argv[1:]:
         if datasets == None: continue
         for ds in datasets:
             print "Retrieving dataset information", alias, "=>", ds, "from DBS..."
-            out = subprocess.Popen(["dasgoclient", "--query=file site=%s dataset=%s" % (siteName, ds)], stdout=subprocess.PIPE, close_fds=True)
+            out = subprocess.Popen(["dasgoclient", "--query=file dataset=%s" % ds], stdout=subprocess.PIPE, close_fds=True)
             
             dirs = []
             for line in out.stdout.readlines():
@@ -31,8 +29,11 @@ for arg in sys.argv[1:]:
                 if d not in dirs: dirs.append(d)
             datasets[ds] = dirs[:]
 
-        if len(files) > 0:
-            with open("%s/%s.txt" % (dout, alias), 'w') as fout:
-                for f in files: print>>fout, ('/xrootd%s' % f)
+        if len(files) == 0: continue
+
+        prefix = "root://cms-global-xrd.cern.ch/"
+        if os.path.exists('/xrootd%s' % files[0]): prefix=""
+        with open("%s/%s.txt" % (dout, alias), 'w') as fout:
+            for f in files: print>>fout, (prefix+f)
 
     yaml.dump(data, open(arg, 'w'), indent=4, default_flow_style=False, width=10000)
