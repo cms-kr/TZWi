@@ -46,7 +46,7 @@ OUTPATH=ntuple/reco/$CHANNEL/$DATASET0
 CMD="nano_postproc.py --friend"
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 if [ ${DATATYPE::2} == "MC" ]; then
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
+    #ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puAutoWeight"
 
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF2017"
