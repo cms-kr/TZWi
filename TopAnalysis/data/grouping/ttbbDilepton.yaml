@@ -1,0 +1,55 @@
+dataset:
+    DYJets:
+        titie: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
+        datasets:
+            - MC2017.DYJetsToLL_M-10to50
+            - MC2017.DYJetsToLL_M-50
+    WJets:
+        title: "W+jets"
+        datasets: [MC2017.WJets]
+    SingleTop:
+        title: "Single top"
+        datasets:
+            - MC2017.ST_s_4f_lepton
+            - MC2017.ST_t
+            - MC2017.ST_tW
+            - MC2017.STbar_t
+            - MC2017.STbar_tW
+    ttbbLL:
+        title: "t#bar{t}b#bar{b}"
+        datasets: [MC2017.TTTo2L2Nu]
+        cut: "genTTBBCategory==55"
+    ttbjLL:
+        title: "t#bar{t}bj"
+        datasets: [MC2017.TTTo2L2Nu]
+        cut: "genTTBBCategory==5"
+    ttccLL:
+        title: "t#bar{t}cc"
+        datasets: [MC2017.TTTo2L2Nu]
+        cut: "genTTBBCategory==3"
+    ttLFLL:
+        title: "t#bar{t}LF"
+        datasets: [MC2017.TTTo2L2Nu]
+        cut: "genTTBBCategory==0"
+    TTOther:
+        title: "t#bar{t} others"
+        datasets: [MC2017.TTToSemilepton, MC2017.TTToHadronic]
+    Dibosons:
+        title: "Dibosons"
+        datasets: [MC2017.WW, MC2017.WZ, MC2017.ZZ]
+    Tribonsons:
+        title: "Tribosons"
+        datasets: [MC2017.WWW, MC2017.WWZ, MC2017.WZZ, MC2017.ZZZ]
+
+    SingleTopV:
+        title: "SingleTop+V"
+        datasets: [MC2017.tZq_ll]
+    ttbb:
+        title: "t#bar{t}b#bar{b}"
+        datasets: [MC2017.ttbb]
+    TTV:
+        title: "t#bar{t}+V"
+        datasets: [MC2017.TTWJetsToLNu, MC2017.TTWJetsToQQ, MC2017.TTZToLLNuNu, MC2017.TTZToQQ]
+    TTH:
+        title: "t#bar{t}+Higgs"
+        datasets: [MC2017.ttHToNonbb, MC2017.ttHTobb]

@@ -1,0 +1,90 @@
+crosssection:
+  DYJetsToLL_M-50    : 5765.4 
+  DYJetsToLL_M-10to50: 18610
+
+  WJets : 61526.7
+  W1Jets:  9625
+  W2Jets:  2793
+  W3Jets:   992.5
+  W4Jets:   544.3
+
+  TT          : 831.76
+  TTFullLepton:  88.29
+  TTSemiLepton: 365.34
+  TTFullHadron: 377.96
+
+  ST_s_lepton:   3.36
+  ST_s       :  11.36
+  ST_t       : 136.02
+  ST_tW      :  35.85
+  STbar_t    :  80.95
+  STbar_tW   :  35.85
+
+  TTZToQQ         :   0.5297
+  TTZToLLNuNu_M-10:   0.2529
+  TTWJetsToQQ     :   0.4062
+  TTWJetsToLNu    :   0.2043
+
+  TTTT: 0.009103
+
+  ZZ       : 16.523
+  ZZTo4L   :  1.212
+  ZZTo2L2Nu:  0.564
+  ZZTo2LQQ :  3.22
+  ZZTo2NuQQ:  4.04
+
+  WZ       : 47.13
+  WZToLNuQQ: 10.71
+  WZTo2LQQ :  5.595
+  WZTo3LNu :  4.679
+
+  WW       : 118.7
+  WWTo2L2Nu:  12.178
+  WWToLNuQQ:  49.997
+  WWTo4Q   :  51.723
+
+  ZZZ: 0.01398
+  WZZ: 0.05565
+  WWZ: 0.1651
+  WWW: 0.2086
+
+  tZqTo2L : 0.0758
+  tZqTo2Nu: 0.1379
+
+  ttHTobb   : 0.2934
+  ttHToNonbb: 0.2151
+
+  QCD_Pt-15to20_MuEnriched   :  3819570     
+  QCD_Pt-20to30_MuEnriched   :  2960198.4
+  QCD_Pt-30to50_MuEnriched   :  1652471.46
+  QCD_Pt-50to80_MuEnriched   :   437504.1
+  QCD_Pt-80to120_MuEnriched  :   106033.6648
+  QCD_Pt-120to170_MuEnriched :    25190.51514
+  QCD_Pt-170to300_MuEnriched :     8654.49315
+  QCD_Pt-300to470_MuEnriched :      797.35269
+  QCD_Pt-470to600_MuEnriched :       79.02553776
+  QCD_Pt-600to800_MuEnriched :       25.09505908
+  QCD_Pt-800to1000_MuEnriched:        4.707368272
+  QCD_Pt-1000toInf_MuEnriched:        1.62131692
+  QCD_Pt-15to20_EMEnriched   :  2302200
+  QCD_Pt-20to30_EMEnriched   :  5352960
+  QCD_Pt-30to50_EMEnriched   :  9928000
+  QCD_Pt-50to80_EMEnriched   :  2890800
+  QCD_Pt-80to120_EMEnriched  :   350000
+  QCD_Pt-120to170_EMEnriched :    62964
+  QCD_Pt-170to300_EMEnriched :    18810
+  QCD_Pt-300toInf_EMEnriched :     1350
+
+  ST_TH_1L3B_Hut      : 13.84 
+  ST_TH_1L3B_Hct      :  1.9
+  TT_TH_1L3B_aTLep_Hut: 26.57
+  TT_TH_1L3B_TLep_Hut : 26.57
+  TT_TH_1L3B_aTLep_Hct: 26.57
+  TT_TH_1L3B_TLep_Hct : 26.57
+
+
+
+
+
+
+
