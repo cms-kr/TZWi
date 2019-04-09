@@ -65,12 +65,18 @@ Tip to list up failed job commands:
 for i in */result*.tgz; do tar -Oxzvf $i ./failed.txt ; done > failed.txt
 ```
 
+You can process failed ones manually:
+```bash
+cat failed.txt | sed 's;nano_postproc.py;;g' | xargs -P$(nproc) -L1 nano_postproc.py
+```
+
 Tip to extract all ntuples:
 ```bash
 find *NANOAOD/ -name 'result_*.tgz' | awk '{print "xzf "$1" ./ntuple"}' | xargs -L1 -P$(nproc) tar
 ```
 
 ## Make histograms
+This step will draw all histograms including systematics variations using maximum 20 CPUs in parallel.
 ```bash
-./02_make_histograms.sh
+./02_make_histograms.py
 ```

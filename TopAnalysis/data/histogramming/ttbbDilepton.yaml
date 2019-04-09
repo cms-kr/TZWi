@@ -1,11 +1,5 @@
 ## Histogramming for ttbb dilepton analysis
 
-commonRun2017:
-    weights: []
-
-commonMC2017:
-    weights: ["puWeight", "BtagWeight"]
-
 steps:
     - name: "S1"
       cuts: ["CutStep >= 1"]
@@ -61,8 +55,7 @@ hists:
     nPV_noWeight:
         title: "nPV_noWeight;Vertex multiplicity;Events (unweighted)"
         expr: "PV_npvsGood"
-        #weights: [] #multiply weights with existing ones
-        weightsToDrop: ["puWeight", "puWeightsUp", "puWeightsDown"] #drop weights from existing ones
+        weightsToDrop: ["pileupWeight", "pileupWeight_up", "pileupWeight_down"]
         bins:
             nbinsX: 100
             xmin: 0
