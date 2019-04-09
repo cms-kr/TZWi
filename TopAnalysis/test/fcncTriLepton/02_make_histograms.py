@@ -12,11 +12,11 @@ if __name__ == '__main__':
 
     ## Load all information
     info = {}
-    histSetFile = "../../data/histogramming/ttbbDilepton.yaml"
+    histSetFile = "../../data/histogramming/fcncTrilepton.yaml"
     info.update(yaml.load(open(histSetFile)))
-    info.update(yaml.load(open("../../data/systematics/ttbbDilepton.yaml")))
-    info.update(yaml.load(open("../../data/grouping/ttbbDilepton.yaml")))
-    for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2017/*.yaml"):
+    info.update(yaml.load(open("../../data/systematics/fcncTrilepton.yaml")))
+    info.update(yaml.load(open("../../data/grouping/fcncTrilepton.yaml")))
+    for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml"):
         if 'dataset' not in info: info['dataset'] = {}
         info['dataset'].update(yaml.load(open(f))['dataset'])
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     ress = []
     for din in glob("ntuple/*/*/*"):
-        channel, dataset = dout.split('/')[2:]
+        channel, dataset = din.split('/')[2:]
         dout = "raw_hist/%s/%s" % (channel, dataset)
 
         dataset = '/'+dataset.replace('.', '/')
@@ -46,3 +46,4 @@ if __name__ == '__main__':
         ress.append(res)
 
     for r in ress: r.get()
+
