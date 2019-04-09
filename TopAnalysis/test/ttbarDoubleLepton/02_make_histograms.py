@@ -28,8 +28,10 @@ if __name__ == '__main__':
         for dataset in datasets: datasetToAlias[dataset] = alias
 
     ress = []
-    for d in glob("ntuple/*/*/*"):
-        channel, dataset = d.split('/')[2:]
+    for din in glob("ntuple/*/*/*"):
+        channel, dataset = dout.split('/')[2:]
+        dout = "raw_hist/%s/%s" % (channel, dataset)
+
         dataset = '/'+dataset.replace('.', '/')
         if dataset not in datasetToAlias: continue
         alias = datasetToAlias[dataset]
@@ -40,7 +42,7 @@ if __name__ == '__main__':
         weight = info['processes'][proc]['weight'] if 'weight' in info['processes'][proc] else '1'
 
         #os.system("NPROC=$(nproc) tzwi-makehistograms %s %s %s %s" % (cut, weight, histSetFile, d))
-        res = pool.apply_async(os.system, ("tzwi-makehistograms %s %s %s %s" % (cut, weight, histSetFile, d),))
+        res = pool.apply_async(os.system, ("tzwi-makehistograms %s %s %s %s %s" % (cut, weight, histSetFile, din, dout),))
         ress.append(res)
 
     for r in ress: r.get()
