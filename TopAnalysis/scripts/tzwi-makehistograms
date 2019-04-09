@@ -5,16 +5,15 @@ import yaml
 import sys, os
 from array import array
 
-dataType = sys.argv[1]
-configFile = sys.argv[2]
+baseWeight = sys.argv[1] ## Baseline weight. this can be overridden by weight definition in the config file
+baseCut = sys.argv[2] ## Baseline cut to apply for every steps. "1" not to apply any cut
+configFile = sys.argv[3] ## the yaml file which defines cut steps and histograms
+dName = sys.argv[4] ## directory name which contains ntuples
 
 config = yaml.load(open(configFile))
 steps = config['steps']
 hists = config['hists']
-weights0 = config['common'+dataType]['weights']
-if len(weights0) == 0: weights0.append("1")
 
-dName = sys.argv[3]
 ofName = dName.replace('ntuple', 'hist').rstrip('/')+".root"
 if os.path.exists(ofName): sys.exit(1)
 odName = os.path.dirname(ofName)
@@ -37,14 +36,11 @@ oFile = TFile(ofName, 'recreate')
 
 hWeights = {}
 for istep, step in enumerate(steps):
-    weights = weights0[:]
-    if 'weights' in step:
-        weights = list(set(weights)|set(step['weight']))
+    weights = baseWeight.split('*')
     if 'weightsToDrop' in step:
-        weights = list(set(weights)-set(step['weightToDrop']))
-    weight = '*'.join(["(%s)" % x for x in weights])
+        weights = list(set(weights)-set(step['weightsToDrop']))
 
-    cuts = step['cuts']
+    cuts = [baseCut]+step['cuts']
     cut = '&&'.join(['(%s)' % x for x in cuts])
 
     dout = oFile.mkdir(step['name'])
@@ -52,7 +48,7 @@ for istep, step in enumerate(steps):
 
     ## Fill Weight histogram first
     hWeight = TH1D("hWeight", "weight;weight;Events", 100, -2, 2)
-    chain.Draw("%s>>hWeight" % weight, cut, "goff")
+    chain.Draw("%s>>hWeight" % ('*'.join(weights)), cut, "goff")
     hWeight.Write()
     hWeights[step['name']] = hWeight
 
@@ -78,11 +74,9 @@ for istep, step in enumerate(steps):
         expr = hdef['expr'] if 'expr' in hdef else hname
 
         weights1 = weights
-        if 'weight' in hdef:
-            weights1 = list(set(weights)|set(hdef['weight']))
         if 'weightsToDrop' in hdef:
-            weights1 = list(set(weights1)-set(hdef['weightsToDrop']))
-        weight1 = '*'.join(['(%s)' % x for x in weights1])
+            weights1 = list(set(weights)-set(hdef['weightsToDrop']))
+        weight1 = '*'.join(weights1)
 
         cuts1 = cuts[:]
         if 'cuts' in hdef:
