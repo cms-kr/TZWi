@@ -1,8 +1,5 @@
 ## Histogramming for ttbb dilepton analysis
 
-weights:
-    nominal: "genWeight*pileupWeight*btagWeight"
-
 steps:
     - name: "S1"
       cuts: ["CutStep >= 1"]

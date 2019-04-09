@@ -25,8 +25,8 @@ chain = TChain("Friends")
 chain.Add(dName+"/*.root")
 gROOT.SetBatch(True)
 
-if 'NPROOF' in os.environ:
-    nProc = os.environ['NPROOF']
+if 'NPROC' in os.environ:
+    nProc = os.environ['NPROC']
     prf = TProof.Open("workers=%s" % nProc)
     chain.SetProof(True)
 
