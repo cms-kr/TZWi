@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     ress = []
     for din in glob("ntuple/*/*/*"):
-        channel, dataset = dout.split('/')[2:]
+        channel, dataset = din.split('/')[2:]
         dout = "raw_hist/%s/%s" % (channel, dataset)
 
         dataset = '/'+dataset.replace('.', '/')
