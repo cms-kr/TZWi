@@ -50,7 +50,7 @@ FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | s
 
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT flags_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT "`echo hlt_{E,M,MM,EE,ME}_${DATATYPE} | tr ' ' ','`
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT "`echo hlt_{E,M,MM,EE,ME}_${ERA4HLT} | tr ' ' ','`
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"

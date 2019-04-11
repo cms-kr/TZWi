@@ -1,4 +1,4 @@
-## Histogramming for ttbb dilepton analysis
+## Histogramming for tcZ trilepton analysis
 
 weights:
     central: "genWeight*puWeight*BtagWeight"
@@ -24,6 +24,27 @@ steps:
               "MET_pt", "MET_phi",]
     - name: "S3"
       cuts: ["CutStep >= 3"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet", "nJet_nBjet",
+              "MET_pt", "MET_phi",]
+    - name: "S4"
+      cuts: ["CutStep >= 4"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet", "nJet_nBjet",
+              "MET_pt", "MET_phi",]
+    - name: "S5"
+      cuts: ["CutStep >= 5"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass",
+              "nJet", "nBjet", "nJet_nBjet",
+              "MET_pt", "MET_phi",]
+    - name: "S6"
+      cuts: ["CutStep >= 6"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass",

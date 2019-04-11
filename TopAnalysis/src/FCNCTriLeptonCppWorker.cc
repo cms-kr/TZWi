@@ -256,7 +256,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
   if ( std::abs(out_GoodLeptonCode) > 110 ) {
     const auto zP4 = lepton2P4+lepton3P4;
-    if ( out_Z_charge == 0 ) 
     out_Z_p4[0] = zP4.Pt();
     out_Z_p4[1] = zP4.Eta();
     out_Z_p4[2] = zP4.Phi();
