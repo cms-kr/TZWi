@@ -4,6 +4,12 @@ import yaml
 import sys, os
 import subprocess
 
+if os.system("voms-proxy-info -exists --valid 8:00") != 0:
+    os.system("voms-proxy-init -voms cms --valid 144:00")
+if os.system("voms-proxy-info -exists --valid 8:00") != 0:
+    print "need GRID PROXY to call dasgoclient."
+    sys.exit(1)
+
 for arg in sys.argv[1:]:
     data = yaml.load(open(arg))
     dout = '.'.join(arg.split('.')[:-1])
