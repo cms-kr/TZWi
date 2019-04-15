@@ -1,25 +1,35 @@
 processes:
-    DataElEl:
+    DataElElEl:
         title: "Data"
         datasets:
             - Run2016.DoubleEG
             - Run2016.SingleElectron
-    DataMuMu:
+    DataMuMuMu:
         title: "Data"
         datasets:
             - Run2016.DoubleMuon
             - Run2016.SingleMuon
-    DataMuEl:
+            - Run2016.MuonEG
+    DataElElMu:
         title: "Data"
         datasets:
             - Run2016.MuonEG
+            - Run2016.DoubleMuon
             - Run2016.SingleMuon
+            - Run2016.DoubleEG
+            - Run2016.SingleElectron
+    DataMuMuEl:
+        title: "Data"
+            - Run2016.MuonEG
+            - Run2016.DoubleMuon
+            - Run2016.SingleMuon
+            - Run2016.DoubleEG
             - Run2016.SingleElectron
 
     DYJets:
         title: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
-        weight: "puWeight*BtagWeight"
-        #weight: "genWeight*puWeight*BtagWeight"
+        #weight: "puWeight*BtagWeight"
+        weight: "genWeight*puWeight*BtagWeight"
         datasets:
             - MC2016.DYJetsToLL_M-10to50
             - MC2016.DYJetsToLL_M-50

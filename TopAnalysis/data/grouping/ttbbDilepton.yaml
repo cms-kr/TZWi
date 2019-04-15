@@ -18,8 +18,8 @@ processes:
 
     DYJets:
         title: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
-        weight: "puWeight*BtagWeight"
-        #weight: "genWeight*puWeight*BtagWeight"
+        #weight: "puWeight*BtagWeight"
+        weight: "genWeight*puWeight*BtagWeight"
         datasets:
             - MC2017.DYJetsToLL_M-10to50
             - MC2017.DYJetsToLL_M-50
