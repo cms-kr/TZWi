@@ -1,0 +1,120 @@
+systematics:
+  pileup:
+    type: weight
+    nominal: "pileupWeight"
+    variations:
+      up: "pileupWeight_up"
+      dn: "pileupWeight_down"
+
+  btagWeight.jes:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_jes"
+      dn: "btagWeight_down_jes"
+  btagWeight.lf:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_lf"
+      dn: "btagWeight_down_lf"
+  btagWeight.hf:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_hf"
+      dn: "btagWeight_down_hf"
+  btagWeight.hfstats1:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_hfstats1"
+      dn: "btagWeight_down_hfstats1"
+  btagWeight.hfstats2:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_hfstats2"
+      dn: "btagWeight_down_hfstats2"
+  btagWeight.lfstats1:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_lfstats1"
+      dn: "btagWeight_down_lfstats1"
+  btagWeight.lfstats2:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_lfstats2"
+      dn: "btagWeight_down_lfstats2"
+  btagWeight.cferr1:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_cferr1"
+      dn: "btagWeight_down_cferr1"
+  btagWeight.cferr2:
+    type: weight
+    nominal: "btagWeight"
+    variations:
+      up: "btagWeight_up_cferr2"
+      dn: "btagWeight_down_cferr2"
+
+  Scale.LHE:
+    type: weight
+    variations:
+      dn.ren0p5fac0p5: "LHEScaleWeight[0]"
+      dn.ren0p5fac1p0: "LHEScaleWeight[1]"
+      #unphysical.ren0p5fac2p0: "LHEScaleWeight[2]"
+      dn.ren1p0fac0p5: "LHEScaleWeight[3]"
+      #nominal.ren10fac10: "LHEScaleWeight[4]"
+      up.ren1p0fac2p0: "LHEScaleWeight[5]"
+      #unphysical.2005: "LHEScaleWeight[6]"
+      up.ren2p0fac1p0: "LHEScaleWeight[7]"
+      up.ren2p0fac2p0: "LHEScaleWeight[8]"
+
+  Scale.PS:
+    type: weight
+    variations:
+      dn.isr0p5fsr1p0: "PSWeight[0]"
+      dn.isr1p0fsr0p5: "PSWeight[1]"
+      up.isr2p0fsr1p0: "PSWeight[2]"
+      up.isr1p0fsr2p0: "PSWeight[3]"
+
+  PDF:
+    type: weight
+    nVariation: "nLHEPdfWeight"
+    variations: "LHEPdfWeight"
+
+  Tune.CP5:
+    type: dataset
+    nominal: MC2016.TTTo2L2Nu
+    variations:
+      up: MC2016.TTTo2L2Nu_TuneCP5up
+      dn: MC2016.TTTo2L2Nu_TuneCP5down
+
+  TOP.hdamp:
+    type: dataset
+    nominal: MC2016.TTTo2L2Nu
+    variations:
+      up: MC2016.TTTo2L2Nu_hdampUP
+      dn: MC2016.TTTo2L2Nu_hdampDOWN
+
+  TOP.mtop:
+    type: dataset
+    nominal: MC2016.TTTo2L2Nu
+    variations:
+      m166p5: MC2016.TTTo2L2Nu_mtop166p5
+      m169p5: MC2016.TTTo2L2Nu_mtop169p5
+      m171p5: MC2016.TTTo2L2Nu_mtop171p5
+      m173p5: MC2016.TTTo2L2Nu_mtop173p5
+      m175p5: MC2016.TTTo2L2Nu_mtop175p5
+      m178p5: MC2016.TTTo2L2Nu_mtop178p5
+
+  generator:
+    type: dataset
+    nominal: MC2016.TTTo2L2Nu
+    variations:
+      MG5_MLM: MC2016.TTJets_MG
+      aMCatNLO_FxFx: MC2016.TTJets_aMC
