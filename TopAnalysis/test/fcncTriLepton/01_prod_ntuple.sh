@@ -33,7 +33,7 @@ ERA4HLT=$DATATYPE
 
 if [ ${DATATYPE::3} == "Run" ]; then
 # DATATYPE=${DATATYPE0::7} ## This gives Run2018A -> Run2018
-  case $ERA in
+  case ${ERA::8} in
     Run2016B|Run2016C|Run2016D|Run2016E)
       ERA4HLT=Run2016BE
       ;;

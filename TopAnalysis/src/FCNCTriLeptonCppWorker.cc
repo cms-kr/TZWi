@@ -102,7 +102,7 @@ bool FCNCTriLeptonCppWorker::isVetoMuon(const unsigned i) const {
 }
 //signal electrons
 bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
-  const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
+  const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:medium, 3:tight
@@ -112,7 +112,7 @@ bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
 }
 //veto electrons
 bool FCNCTriLeptonCppWorker::isVetoElectron(const unsigned i) const {
-  const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
+  const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:medium, 3:tight
@@ -171,8 +171,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   std::sort(muonIdxs.begin(), muonIdxs.end(), [&](const int i, const int j){
               return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
   std::sort(electronIdxs.begin(), electronIdxs.end(), [&](const int i, const int j){
-              return in_Electrons_p4[0]->At(i)*in_Electrons_eCorr->At(i) >
-                     in_Electrons_p4[0]->At(j)*in_Electrons_eCorr->At(j);});
+              return in_Electrons_p4[0]->At(i) > in_Electrons_p4[0]->At(j);});
 
   const int nGoodMuons = muonIdxs.size();
   const int nGoodElectrons = electronIdxs.size();

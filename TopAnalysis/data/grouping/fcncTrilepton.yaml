@@ -1,100 +1,104 @@
 processes:
-    DataElEl:
+    DataElElEl:
         title: "Data"
         datasets:
-            - Run2017.DoubleEG
-            - Run2017.SingleElectron
-    DataMuMu:
+            - Run2016.DoubleEG
+            - Run2016.SingleElectron
+    DataMuMuMu:
         title: "Data"
         datasets:
-            - Run2017.DoubleMuon
-            - Run2017.SingleMuon
-    DataMuEl:
+            - Run2016.DoubleMuon
+            - Run2016.SingleMuon
+            - Run2016.MuonEG
+    DataElElMu:
         title: "Data"
         datasets:
-            - Run2017.MuonEG
-            - Run2017.SingleMuon
-            - Run2017.SingleElectron
+            - Run2016.MuonEG
+            - Run2016.DoubleMuon
+            - Run2016.SingleMuon
+            - Run2016.DoubleEG
+            - Run2016.SingleElectron
+    DataMuMuEl:
+        title: "Data"
+            - Run2016.MuonEG
+            - Run2016.DoubleMuon
+            - Run2016.SingleMuon
+            - Run2016.DoubleEG
+            - Run2016.SingleElectron
 
     DYJets:
         title: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
         #weight: "puWeight*BtagWeight"
         weight: "genWeight*puWeight*BtagWeight"
         datasets:
-            - MC2017.DYJetsToLL_M-10to50
-            - MC2017.DYJetsToLL_M-50
+            - MC2016.DYJetsToLL_M-10to50
+            - MC2016.DYJetsToLL_M-50
     WJets:
         title: "W+jets"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.WJets]
+        datasets: [MC2016.WJets]
     SingleTop:
         title: "Single top"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
         datasets:
-            - MC2017.ST_s_4f_lepton
-            - MC2017.ST_t
-            - MC2017.ST_tW
-            - MC2017.STbar_t
-            - MC2017.STbar_tW
-    ttbbLL:
+            - MC2016.ST_s_4f_lepton
+            - MC2016.ST_t
+            - MC2016.ST_tW
+            - MC2016.STbar_t
+            - MC2016.STbar_tW
+    fcncLL:
         title: "t#bar{t}b#bar{b}"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.TTTo2L2Nu]
+        datasets: [MC2016.TTTo2L2Nu]
         #cut: "genTTBBCategory==55"
-    ttbjLL:
-        title: "t#bar{t}bj"
-        weight: "puWeight*BtagWeight"
-        #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.TTTo2L2Nu]
-        #cut: "genTTBBCategory==5"
     ttccLL:
         title: "t#bar{t}cc"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.TTTo2L2Nu]
+        datasets: [MC2016.TTTo2L2Nu]
         #cut: "genTTBBCategory==3"
     ttLFLL:
         title: "t#bar{t}LF"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.TTTo2L2Nu]
+        datasets: [MC2016.TTTo2L2Nu]
         #cut: "genTTBBCategory==0"
     TTOther:
         title: "t#bar{t} others"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.TTToSemilepton, MC2017.TTToHadronic]
+        datasets: [MC2016.TTToSemilepton, MC2016.TTToHadronic]
     Dibosons:
         title: "Dibosons"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.WW, MC2017.WZ, MC2017.ZZ]
+        datasets: [MC2016.WW, MC2016.WZ, MC2016.ZZ]
     Tribonsons:
         title: "Tribosons"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.WWW, MC2017.WWZ, MC2017.WZZ, MC2017.ZZZ]
+        datasets: [MC2016.WWW, MC2016.WWZ, MC2016.WZZ, MC2016.ZZZ]
 
     SingleTopV:
         title: "SingleTop+V"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.tZq_ll]
+        datasets: [MC2016.tZq_ll]
     ttbb:
         title: "t#bar{t}b#bar{b}"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.ttbb]
+        datasets: [MC2016.ttbb]
     TTV:
         title: "t#bar{t}+V"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.TTWJetsToLNu, MC2017.TTWJetsToQQ, MC2017.TTZToLLNuNu, MC2017.TTZToQQ]
+        datasets: [MC2016.TTWJetsToLNu, MC2016.TTWJetsToQQ, MC2016.TTZToLLNuNu, MC2016.TTZToQQ]
     TTH:
         title: "t#bar{t}+Higgs"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2017.ttHToNonbb, MC2017.ttHTobb]
+        datasets: [MC2016.ttHToNonbb, MC2016.ttHTobb]
