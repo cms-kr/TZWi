@@ -22,22 +22,13 @@ DATASET='/'`echo $DATASET0 | sed -e 's;\.;/;g'`
 ERA=$(echo $DATASET0 | cut -d. -f2 | cut -d- -f1 | sed -e 's;NanoAOD;;g')
 
 DATATYPE=$(basename $(dirname $FILELIST) | cut -d. -f1)
-ERA4HLT=$DATATYPE
-
-if [ ${DATATYPE::3} == "Run" ]; then
-# DATATYPE=${DATATYPE0::7} ## This gives Run2018A -> Run2018
-  case $ERA in
-    Run2017C|Run2017D|Run2017E|Run2017F)
-      ERA4HLT=Run2017CF
-      ;;
-  esac
-fi
+HLTMODULE=$(echo $DATATYPE | cut -d_ -f1)_${CHANNEL}
 
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;^/xrootd/;root://cms-xrdr.private.lo:2094//xrd/;g')
 
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT flags_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${CHANNEL}_${ERA4HLT}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${HLTMODULE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLepton ttbar_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonCutFlow cutFlow_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"

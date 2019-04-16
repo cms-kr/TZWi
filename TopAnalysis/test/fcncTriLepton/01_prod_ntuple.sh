@@ -29,28 +29,17 @@ DATASET='/'`echo $DATASET0 | sed -e 's;\.;/;g'`
 ERA=$(echo $DATASET0 | cut -d. -f2 | cut -d- -f1 | sed -e 's;NanoAOD;;g')
 
 DATATYPE=$(basename $(dirname $FILELIST) | cut -d. -f1)
-ERA4HLT=$DATATYPE
-
 if [ ${DATATYPE::3} == "Run" ]; then
-# DATATYPE=${DATATYPE0::7} ## This gives Run2018A -> Run2018
-  case ${ERA::8} in
-    Run2016B|Run2016C|Run2016D|Run2016E)
-      ERA4HLT=Run2016BE
-      ;;
-    Run2016F|Run2016G)
-      ERA4HLT=Run2016FG
-      ;;
-    Run2017C|Run2017D|Run2017E|Run2017F)
-      ERA4HLT=Run2017CF
-      ;;
-  esac
+  HLTMODULE=${ERA::8}_$(echo $DATASET | cut -d/ -f2)
+else
+  HLTMODULE=$(echo $DATATYPE | cut -d_ -f1)
 fi
 
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;^/xrootd/;root://cms-xrdr.private.lo:2094//xrd/;g')
 
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT flags_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT "`echo hlt_{E,M,MM,EE,ME}_${ERA4HLT} | tr ' ' ','`
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT hlt_${HLTMODULE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
