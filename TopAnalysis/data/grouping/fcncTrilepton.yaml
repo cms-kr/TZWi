@@ -48,18 +48,12 @@ processes:
             - MC2016.ST_tW
             - MC2016.STbar_t
             - MC2016.STbar_tW
-    ttbbLL:
+    fcncLL:
         title: "t#bar{t}b#bar{b}"
         weight: "puWeight*BtagWeight"
         #weight: "genWeight*puWeight*BtagWeight"
         datasets: [MC2016.TTTo2L2Nu]
         #cut: "genTTBBCategory==55"
-    ttbjLL:
-        title: "t#bar{t}bj"
-        weight: "puWeight*BtagWeight"
-        #weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2016.TTTo2L2Nu]
-        #cut: "genTTBBCategory==5"
     ttccLL:
         title: "t#bar{t}cc"
         weight: "puWeight*BtagWeight"
