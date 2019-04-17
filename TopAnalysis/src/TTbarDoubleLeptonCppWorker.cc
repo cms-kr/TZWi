@@ -87,7 +87,7 @@ bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
 }
 
 bool TTbarDoubleLeptonCppWorker::isGoodElectron(const unsigned i) const {
-  const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
+  const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minLepton2Pt_ or std::abs(eta) > maxLepton2Eta_ ) return false;
   if ( in_Electrons_id->At(i) <= 1 ) return false;
@@ -133,19 +133,19 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   int electron1Idx = -1, electron2Idx = -1;
   int nGoodElectrons = 0;
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
-    const double pt = in_Electrons_p4[0]->At(i) * in_Electrons_eCorr->At(i);
+    const double pt = in_Electrons_p4[0]->At(i);
     if ( isGoodElectron(i) ) {
       ++nGoodElectrons;
-      if ( electron2Idx < 0 or pt > in_Electrons_p4[0]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx) ) electron2Idx = i;
-      if ( electron1Idx < 0 or pt > in_Electrons_p4[0]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx) ) std::swap(electron1Idx, electron2Idx);
+      if ( electron2Idx < 0 or pt > in_Electrons_p4[0]->At(electron2Idx) ) electron2Idx = i;
+      if ( electron1Idx < 0 or pt > in_Electrons_p4[0]->At(electron1Idx) ) std::swap(electron1Idx, electron2Idx);
     }
   }
 
   // Select event by decay mode
   auto actualMode = mode_;
   if ( mode_ == MODE::Auto ) {
-    if      ( muon1Idx     == -1 or in_Muons_p4[0]->At(muon1Idx) < in_Electrons_p4[0]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx) ) actualMode = MODE::ElEl;
-    else if ( electron1Idx == -1 or in_Electrons_p4[0]->At(electron1Idx) *  in_Electrons_eCorr->At(electron1Idx) < in_Muons_p4[0]->At(muon2Idx) ) actualMode = MODE::MuMu;
+    if      ( muon1Idx     == -1 or in_Muons_p4[0]->At(muon1Idx) < in_Electrons_p4[0]->At(electron2Idx) ) actualMode = MODE::ElEl;
+    else if ( electron1Idx == -1 or in_Electrons_p4[0]->At(electron1Idx) < in_Muons_p4[0]->At(muon2Idx) ) actualMode = MODE::MuMu;
     else actualMode = MODE::MuEl;
   }
 
@@ -159,8 +159,8 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   }
   else if ( actualMode == MODE::ElEl ) {
     for ( unsigned i=0; i<4; ++i ) {
-      if ( electron1Idx >= 0 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
-      if ( electron2Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx) * in_Electrons_eCorr->At(electron2Idx);
+      if ( electron1Idx >= 0 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
+      if ( electron2Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron2Idx);
     }
     if ( electron1Idx >= 0 ) out_Lepton1_pdgId = -11*in_Electrons_charge->At(electron1Idx);
     if ( electron2Idx >= 0 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron2Idx);
@@ -168,7 +168,7 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   else if ( actualMode == MODE::MuEl ) {
     for ( unsigned i=0; i<4; ++i ) {
       if ( muon1Idx     >= 0 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muon1Idx);
-      if ( electron1Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron1Idx) * in_Electrons_eCorr->At(electron1Idx);
+      if ( electron1Idx >= 0 ) out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electron1Idx);
     }
     if ( muon1Idx     >= 0 ) out_Lepton1_pdgId = -13*in_Muons_charge->At(muon1Idx);
     if ( electron1Idx >= 0 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electron1Idx);
