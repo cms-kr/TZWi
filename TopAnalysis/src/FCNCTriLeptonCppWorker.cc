@@ -255,7 +255,10 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
   if ( std::abs(out_GoodLeptonCode) > 110 ) {
-    const auto zP4 = lepton2P4+lepton3P4;
+    TLorentzVector zP4;
+    if ( out_Lepton1_pdgId == -1*out_Lepton2_pdgId ) zP4 = lepton1P4+lepton2P4;
+    else if ( out_Lepton1_pdgId == -1*out_Lepton3_pdgId ) zP4 = lepton1P4+lepton3P4;
+    else if ( out_Lepton2_pdgId == -1*out_Lepton3_pdgId ) zP4 = lepton2P4+lepton3P4;
     out_Z_p4[0] = zP4.Pt();
     out_Z_p4[1] = zP4.Eta();
     out_Z_p4[2] = zP4.Phi();
@@ -265,8 +268,10 @@ bool FCNCTriLeptonCppWorker::analyze() {
   }
 
   // Transeverse mass of the W boson
-  //Lepton1 comes from W (that lepton has high pT)
-  out_W_MT = computeMT(lepton1P4, out_MET_pt, out_MET_phi);
+  //Lepton comes from W which has high pT
+  if ( out_Lepton1_pdgId == -1*out_Lepton2_pdgId ) out_W_MT = computeMT(lepton3P4, out_MET_pt, out_MET_phi);
+  else if ( out_Lepton1_pdgId == -1*out_Lepton3_pdgId ) out_W_MT = computeMT(lepton2P4, out_MET_pt, out_MET_phi);
+  else if ( out_Lepton2_pdgId == -1*out_Lepton3_pdgId ) out_W_MT = computeMT(lepton1P4, out_MET_pt, out_MET_phi);
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxs;
