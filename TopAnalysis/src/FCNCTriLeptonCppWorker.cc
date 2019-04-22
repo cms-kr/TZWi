@@ -278,7 +278,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
   if ( std::abs(out_GoodLeptonCode) >= 111 ) {
-    const TLorentzVector zP4 = lepton1P4+lepton2Pt;
+    const TLorentzVector zP4 = lepton1P4+lepton2P4;
     out_Z_p4[0] = zP4.Pt();
     out_Z_p4[1] = zP4.Eta();
     out_Z_p4[2] = zP4.Phi();
