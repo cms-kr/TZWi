@@ -9,6 +9,7 @@ class FCNHSingleLepton(Module, object):
     def __init__(self, *args, **kwargs):
         #super(FCNHSingleLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
+        self.btagWP = kwargs.get("btagWP")
 
         if "/FCNHSingleLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ FCNHSingleLepton worker module"
@@ -22,22 +23,22 @@ class FCNHSingleLepton(Module, object):
                 ROOT.gROOT.ProcessLine(".L %s/interface/FCNHSingleLeptonCppWorker.h" % base)
         pass
     def beginJob(self):
-        self.worker = ROOT.FCNHSingleLeptonCppWorker(self.mode)
+        self.worker = ROOT.FCNHSingleLeptonCppWorker(self.mode, self.btagWP)
         pass
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        for objName in ["Lepton",]:
+        for objName in ["Lepton1",]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 self.out.branch("%s_%s" % (objName, varName), "F")
         self.out.branch("MET_pt", "F")
         self.out.branch("MET_phi", "F")
-        self.out.branch("Lepton_pdgId", "I")
+        self.out.branch("Lepton1_pdgId", "I")
         self.out.branch("nVetoLepton", "i")
         self.out.branch("nGoodJet", "i")
         self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
-        for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
+        for varName in ["pt", "eta", "phi", "mass", "DeepCSV"]:
             self.out.branch("GoodJet_%s" % varName, "F", lenVar="nGoodJet")
         self.out.branch("nBjet", "i")
 
@@ -53,7 +54,7 @@ class FCNHSingleLepton(Module, object):
         objName = "Electron"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso03_all", "cutBased_Sum16", "deltaEtaSC", "eCorr",]:
+                        "pfRelIso03_all", "cutBased_Fall17_V1", "deltaEtaSC", "eCorr",]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Muon"
@@ -65,17 +66,17 @@ class FCNHSingleLepton(Module, object):
         objName = "Jet"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass",
-                        "jetId", "puId", "btagCSVV2",]:
+                        "jetId", "puId", "btagDeepB",]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
         self.worker.setElectrons(self.b_Electron_pt, self.b_Electron_eta, self.b_Electron_phi, self.b_Electron_mass, self.b_Electron_charge,
-                                 self.b_Electron_pfRelIso03_all, self.b_Electron_cutBased_Sum16,
+                                 self.b_Electron_pfRelIso03_all, self.b_Electron_cutBased_Fall17_V1,
                                  self.b_Electron_deltaEtaSC, self.b_Electron_eCorr)
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
                              self.b_Muon_pfRelIso04_all,self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
         self.worker.setJets(self.b_Jet_pt, self.b_Jet_eta, self.b_Jet_phi, self.b_Jet_mass,
-                            self.b_Jet_jetId, self.b_Jet_btagCSVV2)
+                            self.b_Jet_jetId, self.b_Jet_btagDeepB)
         self._ttreereaderversion = tree._ttreereaderversion
 
         pass
@@ -85,13 +86,13 @@ class FCNHSingleLepton(Module, object):
             self.initReaders(event._tree)
         self.worker.analyze()
 
-        for objName in ["Lepton", "GoodJet"]:
+        for objName in ["Lepton1", "GoodJet"]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
-        for varName in ["MET_pt", "MET_phi", "Lepton_pdgId", "nVetoLepton",
+        for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "nVetoLepton",
                         #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
-                        "GoodJet_index", "GoodJet_CSVv2", "nBjet",]:
+                        "GoodJet_index", "GoodJet_DeepCSV", "nBjet",]:
             setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())
             self.out.fillBranch(varName, getattr(event._tree, "b_out_%s" % varName))
         ## Special care for nGoodJet
@@ -99,5 +100,5 @@ class FCNHSingleLepton(Module, object):
 
         return True
 
-fcnc_Mu = lambda : FCNHSingleLepton(mode="Mu")
-fcnc_El = lambda : FCNHSingleLepton(mode="El")
+fcnh_Mu = lambda : FCNHSingleLepton(mode="Mu", btagWP=0.4941)
+fcnh_El = lambda : FCNHSingleLepton(mode="El", btagWP=0.4941)

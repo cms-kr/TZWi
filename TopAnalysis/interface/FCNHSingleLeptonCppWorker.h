@@ -18,7 +18,7 @@ public:
   typedef TTreeReaderArray<int>* TRAI;
   typedef TTreeReaderArray<bool>* TRAB;
 
-  FCNHSingleLeptonCppWorker(const std::string modeName);
+  FCNHSingleLeptonCppWorker(const std::string modeName, const double btagWP);
   ~FCNHSingleLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
@@ -26,17 +26,17 @@ public:
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                     TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
-               TRAI id, TRAF CSVv2);
+               TRAI id, TRAF DeepCSV);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
 
   void resetValues();
   bool analyze();
 
-  float get_Lepton_pt()   const { return out_Lepton_p4[0]; }
-  float get_Lepton_eta()  const { return out_Lepton_p4[1]; }
-  float get_Lepton_phi()  const { return out_Lepton_p4[2]; }
-  float get_Lepton_mass() const { return out_Lepton_p4[3]; }
-  int get_Lepton_pdgId() const { return out_Lepton_pdgId; }
+  float get_Lepton1_pt()   const { return out_Lepton1_p4[0]; }
+  float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
+  float get_Lepton1_phi()  const { return out_Lepton1_p4[2]; }
+  float get_Lepton1_mass() const { return out_Lepton1_p4[3]; }
+  int get_Lepton1_pdgId() const { return out_Lepton1_pdgId; }
 
   float get_MET_pt()  const { return out_MET_pt; }
   float get_MET_phi() const { return out_MET_phi; }
@@ -47,15 +47,15 @@ public:
   std::vector<float> get_GoodJet_eta()  const { return out_GoodJet_p4[1]; }
   std::vector<float> get_GoodJet_phi()  const { return out_GoodJet_p4[2]; }
   std::vector<float> get_GoodJet_mass() const { return out_GoodJet_p4[3]; }
-  std::vector<float> get_GoodJet_CSVv2() const { return out_GoodJet_CSVv2; }
+  std::vector<float> get_GoodJet_DeepCSV() const { return out_GoodJet_DeepCSV; }
   std::vector<unsigned short> get_GoodJet_index() const { return out_GoodJet_index; }
   unsigned get_nBjet()   const { return out_nBjet; }
 
 private:
-  const double minMuonPt_ = 30, maxMuonEta_ = 2.5; //Signal & veto reco. cuts are same
-  const double minElectronPt_ = 35, maxElectronEta_ = 2.1; //Signal & veto reco. cuts are same
+  const double minMuonPt_ = 30, maxMuonEta_ = 2.4; //Signal & veto reco. cuts are same
+  const double minElectronPt_ = 30, maxElectronEta_ = 2.4; //Signal & veto reco. cuts are same
   const double minJetPt_ = 30, maxJetEta_ = 2.4;
-  const double minBjetBDiscr_ = 0.5426; // FIXME: give updated number (here, use Loose Working Point)
+  const double minBjetBDiscr_ = -1e9; // give updated number - from constructor
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 
@@ -88,20 +88,20 @@ private:
 
   TRAF in_Jet_p4[4];
   TRAI in_Jet_id = nullptr;
-  TRAF in_Jet_CSVv2 = nullptr;
+  TRAF in_Jet_DeepCSV = nullptr;
 
 private:
   bool _doCppOutput = false;
 
-  float out_Lepton_p4[4];
-  int out_Lepton_pdgId;
+  float out_Lepton1_p4[4];
+  int out_Lepton1_pdgId;
 
   float out_MET_pt, out_MET_phi;
 
   unsigned short out_nVetoLepton;
   unsigned short out_nGoodJet, out_nBjet;
   std::vector<float> out_GoodJet_p4[4];
-  std::vector<float> out_GoodJet_CSVv2;
+  std::vector<float> out_GoodJet_DeepCSV;
   std::vector<unsigned short> out_GoodJet_index;
 
 };

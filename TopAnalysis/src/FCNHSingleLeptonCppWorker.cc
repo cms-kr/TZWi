@@ -6,7 +6,8 @@
 //
 using namespace std;
 
-FCNHSingleLeptonCppWorker::FCNHSingleLeptonCppWorker(const std::string modeName)
+FCNHSingleLeptonCppWorker::FCNHSingleLeptonCppWorker(const std::string modeName, const double btagWP):
+  minBjetBDiscr_(btagWP)
 {
   if ( modeName == "Mu" ) mode_ = MODE::Mu;
   else if ( modeName == "El" ) mode_ = MODE::El;
@@ -48,12 +49,12 @@ void FCNHSingleLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
 }
 
 void FCNHSingleLeptonCppWorker::setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
-                                     TRAI id, TRAF CSVv2) {
+                                     TRAI id, TRAF DeepCSV) {
   in_Jet_p4[0] = pt;
   in_Jet_p4[1] = eta;
   in_Jet_p4[2] = phi;
   in_Jet_p4[3] = mass;
-  in_Jet_CSVv2 = CSVv2;
+  in_Jet_DeepCSV = DeepCSV;
   in_Jet_id = id;
 }
 
@@ -64,13 +65,13 @@ void FCNHSingleLeptonCppWorker::setMET(TTreeReaderValue<float>* pt, TTreeReaderV
 
 void FCNHSingleLeptonCppWorker::resetValues() {
   for ( unsigned i=0; i<4; ++i ) {
-    out_Lepton_p4[i] = 0;
+    out_Lepton1_p4[i] = 0;
   }
-  out_Lepton_pdgId = 0;
+  out_Lepton1_pdgId = 0;
   out_MET_pt = out_MET_phi = 0;
   out_nGoodJet = out_nBjet = 0;
   for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
-  out_GoodJet_CSVv2.clear();
+  out_GoodJet_DeepCSV.clear();
   out_GoodJet_index.clear();
 
 }
@@ -110,7 +111,7 @@ bool FCNHSingleLeptonCppWorker::isVetoElectron(const unsigned i) const {
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
-  if ( in_Electrons_id->At(i) == 0 ) return false;
+  if ( in_Electrons_id->At(i) < 2 ) return false;
 
   return true;
 }
@@ -164,30 +165,30 @@ bool FCNHSingleLeptonCppWorker::analyze() {
   auto actualMode = mode_;
   if ( actualMode == MODE::Mu ) {
     for ( unsigned i=0; i<4; ++i ) {
-        if ( nGoodMuons     >= 1 ) out_Lepton_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
+      if ( nGoodMuons >= 1 ) out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
     }
-    if ( nGoodMuons     >= 1 ) out_Lepton_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+    if ( nGoodMuons >= 1 ) out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
   }
   else if ( actualMode == MODE::El ) {
     for ( unsigned i=0; i<4; ++i ) {
-        if ( nGoodElectrons >= 1 ) out_Lepton_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
+      if ( nGoodElectrons >= 1 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
     }
-    if ( nGoodElectrons >= 1 ) out_Lepton_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    if ( nGoodElectrons >= 1 ) out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
   }
 
-  TLorentzVector leptonP4; //Lepton has the largest pt among the three leptons.
-  leptonP4.SetPtEtaPhiM(out_Lepton_p4[0], out_Lepton_p4[1], out_Lepton_p4[2], out_Lepton_p4[3]);
+  TLorentzVector lepton1P4; //Lepton has the largest pt among the three leptons.
+  lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
   // Done for the leptons
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxs;
-  jetIdxs.reserve(in_Jet_CSVv2->GetSize());
-  for ( unsigned i=0, n=in_Jet_CSVv2->GetSize(); i<n; ++i ) {
+  jetIdxs.reserve(in_Jet_DeepCSV->GetSize());
+  for ( unsigned i=0, n=in_Jet_DeepCSV->GetSize(); i<n; ++i ) {
     if ( !isGoodJet(i) ) continue;
     TLorentzVector jetP4 = buildP4(in_Jet_p4, i);
-    if ( leptonP4.Pt() > 0 and leptonP4.DeltaR(jetP4) < 0.3 ) continue;
+    if ( lepton1P4.Pt() > 0 and lepton1P4.DeltaR(jetP4) < 0.3 ) continue;
     jetIdxs.push_back(i);
-    if ( in_Jet_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjet;
+    if ( in_Jet_DeepCSV->At(i) > minBjetBDiscr_ ) ++out_nBjet;
   }
   out_nGoodJet = jetIdxs.size();
   // Sort jets by pt
@@ -196,7 +197,7 @@ bool FCNHSingleLeptonCppWorker::analyze() {
   for ( unsigned k=0, n=out_nGoodJet; k<n; ++k ) {
     const unsigned kk = jetIdxs.at(k);
     for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].push_back(in_Jet_p4[i]->At(kk));
-    out_GoodJet_CSVv2.push_back(in_Jet_CSVv2->At(kk));
+    out_GoodJet_DeepCSV.push_back(in_Jet_DeepCSV->At(kk));
     out_GoodJet_index.push_back(kk);
   }
 
