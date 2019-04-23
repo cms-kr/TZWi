@@ -9,6 +9,7 @@ class FCNCTriLepton(Module, object):
     def __init__(self, *args, **kwargs):
         #super(FCNCTriLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
+        self.eleIdName = kwargs.get("eleId") if "eleId" in kwargs else "cutBased"
 
         if "/FCNCTriLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ FCNCTriLepton worker module"
@@ -58,7 +59,7 @@ class FCNCTriLepton(Module, object):
         objName = "Electron"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso03_all", "cutBased_Sum16", "deltaEtaSC", "eCorr",]:
+                        "pfRelIso03_all", self.eleIdName, "deltaEtaSC", "eCorr",]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Muon"
@@ -75,7 +76,7 @@ class FCNCTriLepton(Module, object):
 
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
         self.worker.setElectrons(self.b_Electron_pt, self.b_Electron_eta, self.b_Electron_phi, self.b_Electron_mass, self.b_Electron_charge,
-                                 self.b_Electron_pfRelIso03_all, self.b_Electron_cutBased_Sum16,
+                                 self.b_Electron_pfRelIso03_all, getattr(self, 'b_Electron_%s' % self.eleIdName),
                                  self.b_Electron_deltaEtaSC, self.b_Electron_eCorr)
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
                              self.b_Muon_pfRelIso04_all,self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
@@ -106,7 +107,7 @@ class FCNCTriLepton(Module, object):
 
         return True
 
-fcnc_MuMuMu = lambda : FCNCTriLepton(mode="MuMuMu")
-fcnc_ElElEl = lambda : FCNCTriLepton(mode="ElElEl")
-fcnc_MuMuEl = lambda : FCNCTriLepton(mode="MuMuEl")
-fcnc_ElElMu = lambda : FCNCTriLepton(mode="ElElMu")
+fcnc_MuMuMu = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16")
+fcnc_ElElEl = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16")
+fcnc_MuMuEl = lambda : FCNCTriLepton(mode="MuMuEl", eleId="cutBased_Sum16")
+fcnc_ElElMu = lambda : FCNCTriLepton(mode="ElElMu", eleId="cutBased_Sum16")
