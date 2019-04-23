@@ -12,7 +12,7 @@
 class FCNCTriLeptonCppWorker {
 //190306 KST 15:49 : just copy frome TTbarDouble~.h, changed class name
 public:
-  enum class MODE {None=0, ElElMu=111113, MuMuEl=131311, ElElEl=111111, MuMuMu=131313} mode_ = MODE::None;
+  enum class MODE {None=0, MuElEl=131111, ElMuMu=111313, ElElEl=111111, MuMuMu=131313} mode_ = MODE::None;
 
   typedef TTreeReaderArray<float>* TRAF;
   typedef TTreeReaderArray<int>* TRAI;
