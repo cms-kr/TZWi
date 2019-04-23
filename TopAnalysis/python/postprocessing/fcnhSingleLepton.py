@@ -9,7 +9,6 @@ class FCNHSingleLepton(Module, object):
     def __init__(self, *args, **kwargs):
         #super(FCNHSingleLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
-        self.btagWP = kwargs.get("btagWP")
 
         if "/FCNHSingleLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ FCNHSingleLepton worker module"
@@ -23,7 +22,7 @@ class FCNHSingleLepton(Module, object):
                 ROOT.gROOT.ProcessLine(".L %s/interface/FCNHSingleLeptonCppWorker.h" % base)
         pass
     def beginJob(self):
-        self.worker = ROOT.FCNHSingleLeptonCppWorker(self.mode, self.btagWP)
+        self.worker = ROOT.FCNHSingleLeptonCppWorker(self.mode)
         pass
     def endJob(self):
         pass
@@ -100,5 +99,5 @@ class FCNHSingleLepton(Module, object):
 
         return True
 
-fcnh_Mu = lambda : FCNHSingleLepton(mode="Mu", btagWP=0.4941)
-fcnh_El = lambda : FCNHSingleLepton(mode="El", btagWP=0.4941)
+fcnh_Mu = lambda : FCNHSingleLepton(mode="Mu")
+fcnh_El = lambda : FCNHSingleLepton(mode="El")

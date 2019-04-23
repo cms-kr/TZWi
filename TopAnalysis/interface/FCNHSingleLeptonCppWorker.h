@@ -18,7 +18,7 @@ public:
   typedef TTreeReaderArray<int>* TRAI;
   typedef TTreeReaderArray<bool>* TRAB;
 
-  FCNHSingleLeptonCppWorker(const std::string modeName, const double btagWP);
+  FCNHSingleLeptonCppWorker(const std::string modeName);
   ~FCNHSingleLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
@@ -55,7 +55,7 @@ private:
   const double minMuonPt_ = 30, maxMuonEta_ = 2.4; //Signal & veto reco. cuts are same
   const double minElectronPt_ = 30, maxElectronEta_ = 2.4; //Signal & veto reco. cuts are same
   const double minJetPt_ = 30, maxJetEta_ = 2.4;
-  const double minBjetBDiscr_ = -1e9; // give updated number - from constructor
+  const double minBjetBDiscr_ = 0.4941; // give updated number - from constructor
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 

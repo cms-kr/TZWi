@@ -6,8 +6,7 @@
 //
 using namespace std;
 
-FCNHSingleLeptonCppWorker::FCNHSingleLeptonCppWorker(const std::string modeName, const double btagWP):
-  minBjetBDiscr_(btagWP)
+FCNHSingleLeptonCppWorker::FCNHSingleLeptonCppWorker(const std::string modeName)
 {
   if ( modeName == "Mu" ) mode_ = MODE::Mu;
   else if ( modeName == "El" ) mode_ = MODE::El;
