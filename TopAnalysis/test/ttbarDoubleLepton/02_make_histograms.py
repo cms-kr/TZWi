@@ -30,13 +30,14 @@ if __name__ == '__main__':
     ress = []
     for din in glob("ntuple/*/*/*"):
         channel, dataset = din.split('/')[2:]
-        dout = "raw_hist/%s/%s" % (channel, dataset)
 
         dataset = '/'+dataset.replace('.', '/')
         if dataset not in datasetToAlias: continue
         alias = datasetToAlias[dataset]
         if alias not in aliasToProc: continue
         proc = aliasToProc[alias]
+
+        dout = "raw_hist/%s/%s" % (channel, proc)
 
         cut = info['processes'][proc]['cut'] if 'cut' in info['processes'][proc] else '1'
         weight = info['processes'][proc]['weight'] if 'weight' in info['processes'][proc] else '1'
