@@ -41,6 +41,8 @@ public:
   float get_MET_pt()  const { return out_MET_pt; }
   float get_MET_phi() const { return out_MET_phi; }
 
+  float get_W_MT() const { return out_W_MT; }
+
   unsigned get_nVetoLepton() const { return out_nVetoLepton; }
   unsigned get_nGoodJet()   const { return out_nGoodJet; }
   std::vector<float> get_GoodJet_pt()   const { return out_GoodJet_p4[0]; }
@@ -67,6 +69,7 @@ private:
 
 private:
   TLorentzVector buildP4(const TRAF p4Arr[], unsigned i) const;
+  double computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const;
 
 private:
   TTreeReaderValue<float> *in_MET_pt = nullptr, *in_MET_phi = nullptr;
@@ -97,6 +100,8 @@ private:
   int out_Lepton1_pdgId;
 
   float out_MET_pt, out_MET_phi;
+
+  float out_W_MT;
 
   unsigned short out_nVetoLepton;
   unsigned short out_nGoodJet, out_nBjet;

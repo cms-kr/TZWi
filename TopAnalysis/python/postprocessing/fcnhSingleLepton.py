@@ -34,6 +34,7 @@ class FCNHSingleLepton(Module, object):
         self.out.branch("MET_pt", "F")
         self.out.branch("MET_phi", "F")
         self.out.branch("Lepton1_pdgId", "I")
+        self.out.branch("W_MT", "F")
         self.out.branch("nVetoLepton", "i")
         self.out.branch("nGoodJet", "i")
         self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
@@ -89,7 +90,7 @@ class FCNHSingleLepton(Module, object):
             for varName in ["pt", "eta", "phi", "mass"]:
                 setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
-        for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "nVetoLepton",
+        for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "nVetoLepton", "W_MT",
                         #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
                         "GoodJet_index", "GoodJet_DeepCSV", "nBjet",]:
             setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())

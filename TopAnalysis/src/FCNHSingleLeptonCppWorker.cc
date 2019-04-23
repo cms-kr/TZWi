@@ -130,6 +130,19 @@ TLorentzVector FCNHSingleLeptonCppWorker::buildP4(const TRAF p4Arr[], unsigned i
   return p4;
 }
 
+double FCNHSingleLeptonCppWorker::computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const
+{
+  //MET_px = MET_pt*cos(phi) & MET_py = MET_pt*sin(phi)
+  const double met_px = met_pt*cos(met_phi);
+  const double met_py = met_pt*sin(met_phi);
+
+  const double pt = lepP4.Pt() + met_pt;
+  const double px = lepP4.Px() + met_px;
+  const double py = lepP4.Py() + met_py;
+
+  return std::sqrt(std::max(0., pt*pt - px*px - py*py));
+}
+
 bool FCNHSingleLeptonCppWorker::analyze() {
   resetValues();
 
@@ -178,6 +191,8 @@ bool FCNHSingleLeptonCppWorker::analyze() {
   TLorentzVector lepton1P4; //Lepton has the largest pt among the three leptons.
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
   // Done for the leptons
+
+  if ( lepton1P4.Pt() > 0 ) out_W_MT = computeMT(lepton1P4, out_MET_pt, out_MET_phi);
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxs;
