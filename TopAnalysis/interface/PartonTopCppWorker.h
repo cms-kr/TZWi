@@ -1,5 +1,5 @@
-#ifndef PhysicsTools_ChickenChicken_PartonTopCppWorker_H
-#define PhysicsTools_ChickenChicken_PartonTopCppWorker_H
+#ifndef TZWi_TopAnalysis_PartonTopCppWorker_H
+#define TZWi_TopAnalysis_PartonTopCppWorker_H
 
 #include <memory>
 #include <string>

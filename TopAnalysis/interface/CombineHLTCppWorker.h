@@ -1,5 +1,5 @@
-#ifndef PhysicsTools_ChickenChicken_CombineHLTCppWorker_H
-#define PhysicsTools_ChickenChicken_CombineHLTCppWorker_H
+#ifndef TZWi_TopAnalysis_CombineHLTCppWorker_H
+#define TZWi_TopAnalysis_CombineHLTCppWorker_H
 
 #include <memory>
 #include <string>

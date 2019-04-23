@@ -1,5 +1,5 @@
-#ifndef PhysicsTools_ChickenChicken_FCNCTriLeptonCppWorker_H
-#define PhysicsTools_ChickenChicken_FCNCTriLeptonCppWorker_H
+#ifndef TZWi_TopAnalysis_FCNCTriLeptonCppWorker_H
+#define TZWi_TopAnalysis_FCNCTriLeptonCppWorker_H
 
 #include <memory>
 #include <string>

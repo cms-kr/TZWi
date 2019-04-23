@@ -1,5 +1,5 @@
-#ifndef PhysicsTools_ChickenChicken_FCNHSingleLeptonCppWorker_H
-#define PhysicsTools_ChickenChicken_FCNHSingleLeptonCppWorker_H
+#ifndef TZWi_TopAnalysis_FCNHSingleLeptonCppWorker_H
+#define TZWi_TopAnalysis_FCNHSingleLeptonCppWorker_H
 
 #include <memory>
 #include <string>

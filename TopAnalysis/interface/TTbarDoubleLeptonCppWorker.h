@@ -1,5 +1,5 @@
-#ifndef PhysicsTools_ChickenChicken_TTbarDoubleLeptonCppWorker_H
-#define PhysicsTools_ChickenChicken_TTbarDoubleLeptonCppWorker_H
+#ifndef TZWi_TopAnalysis_TTbarDoubleLeptonCppWorker_H
+#define TZWi_TopAnalysis_TTbarDoubleLeptonCppWorker_H
 
 #include <memory>
 #include <string>
