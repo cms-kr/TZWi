@@ -78,4 +78,4 @@ processes:
         datasets: [MC2017.TTWJetsToLNu, MC2017.TTWJetsToQQ, MC2017.TTZToLLNuNu, MC2017.TTZToQQ]
     TTH:
         title: "t#bar{t}+Higgs"
-        atasets: [MC2017.ttHToNonbb, MC2017.ttHTobb]
+        datasets: [MC2017.ttHToNonbb, MC2017.ttHTobb]
