@@ -48,12 +48,13 @@ tzwi-updatedataset $CMSSW_BASE/src/TZWi/NanoAODProduction/data/datasets/NanoAOD/
 
 Assume we are working at KISTI Tier2/3 and cms-kr/hep-tools package is installed.
 ```bash
+NFILE=5
 cd $CMSSW_BASE/src/TZWi/TopAnalysis/test/ttbarDoubleLepton
 for MODE in ElEl MuEl MuMu; do
     for FILELIST in NanoAOD/2017/*/*/*.txt; do
-        NJOBS=`cat $FILELIST | wc -l`
+        NJOBS=`cat $FILELIST | xargs -n$NFILE | wc -l`
         JOBNAME=$MODE.`basename $FILELIST | sed -e 's;.txt;;g'`
-        create-batch bash 01_prod_ntuple.sh $MODE $FILELIST 1 --jobName $JOBNAME -T --nJobs $NJOBS
+        create-batch bash 01_prod_ntuple.sh $MODE $FILELIST $NFILE --jobName $JOBNAME -T --nJobs $NJOBS
     done
 done
 ```
