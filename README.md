@@ -60,9 +60,30 @@ done
 
 Wait for the jobs to be finished, check output files, resubmit failed jobs.
 
-Tip to list up failed job commands:
+Tip to list up failed job and resubmit them:
 ```bash
-for i in */result*.tgz; do tar -Oxzvf $i ./failed.txt ; done > failed.txt
+for i in *NANOAOD*/; do
+    cd $i
+    [ `cat failed.txt | wc -l` == 0 ] && rm -f failed.txt
+    cd ..
+done
+
+for i in *NANOAOD*/; do
+    cd $i
+    if [ -f failed.txt ]; then
+        echo -n "$i " && cat failed.txt | wc -l
+    fi
+    cd ..
+done
+
+for i in *NANOAOD*/; do
+    cd $i
+    if [ -f failed.txt ]; then
+        rm -f result*.tgz job*.err job*.log failed.txt
+        ./submit.sh
+    fi
+    cd ..
+done
 ```
 
 You can process failed ones manually:
