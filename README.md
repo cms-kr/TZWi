@@ -65,13 +65,18 @@ Tip to list up failed job and resubmit them:
 ```bash
 for i in *NANOAOD*/; do
     cd $i
-    [ `cat failed.txt | wc -l` == 0 ] && rm -f failed.txt
+    rm -f failed.txt
+    for j in result*.tgz; do
+      tar -Oxzf $j failed.txt >> failed.txt
+    done
     cd ..
 done
 
 for i in *NANOAOD*/; do
     cd $i
-    if [ -f failed.txt ]; then
+    if [ `cat failed.txt | wc -l` == 0 ]; then
+        rm -f failed.txt
+    else
         echo -n "$i " && cat failed.txt | wc -l
     fi
     cd ..
