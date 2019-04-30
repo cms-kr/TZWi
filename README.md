@@ -99,7 +99,7 @@ cat failed.txt | sed 's;nano_postproc.py;;g' | xargs -P$(nproc) -L1 nano_postpro
 
 Tip to extract all ntuples:
 ```bash
-find *NANOAOD/ -name 'result_*.tgz' | awk '{print "xzf "$1" ./ntuple"}' | xargs -L1 -P$(nproc) tar
+find *NANOAOD*/ -name 'result_*.tgz' | awk '{print "xzf "$1" ./ntuple"}' | xargs -L1 -P$(nproc) tar
 ```
 
 ## Make histograms
