@@ -12,10 +12,10 @@ if __name__ == '__main__':
 
     ## Load all information
     info = {}
-    histSetFile = "../../data/histogramming/fcncTrilepton.yaml"
+    histSetFile = "../../data/histogramming/fcncTriLepton.yaml"
     info.update(yaml.load(open(histSetFile)))
-    info.update(yaml.load(open("../../data/systematics/fcncTrilepton.yaml")))
-    info.update(yaml.load(open("../../data/grouping/fcncTrilepton.yaml")))
+    info.update(yaml.load(open("../../data/systematics/fcncTriLepton.yaml")))
+    info.update(yaml.load(open("../../data/grouping/fcncTriLepton.yaml")))
     for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml"):
         if 'dataset' not in info: info['dataset'] = {}
         info['dataset'].update(yaml.load(open(f))['dataset'])

@@ -20,6 +20,7 @@ processes:
             - Run2016.SingleElectron
     DataMuMuEl:
         title: "Data"
+        datasets:
             - Run2016.MuonEG
             - Run2016.DoubleMuon
             - Run2016.SingleMuon

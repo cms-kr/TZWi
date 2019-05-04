@@ -7,7 +7,7 @@ steps:
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
               "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
-              "nJet", "nBjet", "nJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "Z_pt", "Z_mass",]
     - name: "S2"
       cuts: ["CutStep >= 2"]
@@ -16,35 +16,35 @@ steps:
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
               "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
               "Z_pt", "Z_mass",
-              "nJet", "nBjet", "nJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S3"
       cuts: ["CutStep >= 3"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass",
-              "nJet", "nBjet", "nJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S4"
       cuts: ["CutStep >= 4"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass",
-              "nJet", "nBjet", "nJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S5"
       cuts: ["CutStep >= 5"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass",
-              "nJet", "nBjet", "nJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S6"
       cuts: ["CutStep >= 6"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass",
-              "nJet", "nBjet", "nJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
 
 hists:
@@ -159,7 +159,7 @@ hists:
             xmin: -3.1415922
             xmax:  3.1415922
 
-    nJet:
+    nGoodJet:
         title: "nGoodJet;Jet multiplicity;Events"
         bins:
             nbinsX: 20
@@ -174,9 +174,9 @@ hists:
             xmin: 0
             xmax: 20
 
-    nJet_nBjet:
-        title: "nJet vs nBjet;nJet;nBjet;Events"
-        expr: "nBjet:nJet" # y:x
+    nGoodJet_nBjet:
+        title: "nGoodJet vs nBjet;nGoodJet;nBjet;Events"
+        expr: "nBjet:nGoodJet" # y:x
         bins:
             nbinsX: 20
             xmin: 0
