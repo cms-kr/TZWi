@@ -64,10 +64,11 @@ Wait for the jobs to be finished, check output files, resubmit failed jobs.
 Tip to list up failed job and resubmit them:
 ```bash
 for i in *NANOAOD*/; do
+    echo $i
     cd $i
     rm -f failed.txt
     for j in result*.tgz; do
-      tar -Oxzf $j failed.txt >> failed.txt
+      tar -Oxzf $j failed.txt >> failed.txt 2> /dev/null
     done
     cd ..
 done
