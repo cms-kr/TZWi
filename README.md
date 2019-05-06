@@ -68,18 +68,8 @@ for i in *NANOAOD*/; do
     cd $i
     rm -f failed.txt
     for j in result*.tgz; do
-      tar -Oxzf $j failed.txt >> failed.txt 2> /dev/null
+      tar tzf $j | grep -q failed.txt && tar -Oxzf $j failed.txt >> failed.txt 2> /dev/null
     done
-    cd ..
-done
-
-for i in *NANOAOD*/; do
-    cd $i
-    if [ `cat failed.txt | wc -l` == 0 ]; then
-        rm -f failed.txt
-    else
-        echo -n "$i " && cat failed.txt | wc -l
-    fi
     cd ..
 done
 
