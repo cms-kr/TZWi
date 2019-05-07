@@ -1,0 +1,11 @@
+drop *
+keep run
+keep event
+keep PV_npvsGood
+keep genWeight
+keep LHEWeight_originalXWGTUP
+keep LHEPdfWeight
+keep LHEScaleWeight
+keep PSWeight
+keep genTtbarId
+
