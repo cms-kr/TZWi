@@ -9,7 +9,7 @@ class TTbarDoubleLepton(Module, object):
     def __init__(self, *args, **kwargs):
         #super(TTbarDoubleLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
-        self.eleId = kwargs.get("eleId") if "eleId" in kwargs else "cutBased"
+        self.eleIdName = kwargs.get("eleId") if "eleId" in kwargs else "cutBased"
 
         if "/TTbarDoubleLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ TTbarDoubleLepton worker module"
@@ -105,3 +105,6 @@ ttbar_DoubleLepton = lambda : TTbarDoubleLepton(mode="Auto")
 ttbar_MuMu = lambda : TTbarDoubleLepton(mode="MuMu")
 ttbar_ElEl = lambda : TTbarDoubleLepton(mode="ElEl")
 ttbar_MuEl = lambda : TTbarDoubleLepton(mode="MuEl")
+ttbar_MuMu_2016 = lambda : TTbarDoubleLepton(mode="MuMu", eleId="cutBased_Sum16")
+ttbar_ElEl_2016 = lambda : TTbarDoubleLepton(mode="ElEl", eleId="cutBased_Sum16")
+ttbar_MuEl_2016 = lambda : TTbarDoubleLepton(mode="MuEl", eleId="cutBased_Sum16")
