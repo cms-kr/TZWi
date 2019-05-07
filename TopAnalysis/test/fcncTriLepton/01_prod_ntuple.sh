@@ -29,6 +29,7 @@ DATASET='/'`echo $DATASET0 | sed -e 's;\.;/;g'`
 ERA=$(echo $DATASET0 | cut -d. -f2 | cut -d- -f1 | sed -e 's;NanoAOD;;g')
 
 DATATYPE=$(basename $(dirname $FILELIST) | cut -d. -f1)
+YEAR=${DATATYPE:(-4)}
 if [ ${DATATYPE::3} == "Run" ]; then
   HLTMODULE=${ERA::8}_$(echo $DATASET | cut -d/ -f2)
 else
@@ -42,20 +43,34 @@ ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.flags flags_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT hlt_${HLTMODULE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
+
+#CMD="nano_postproc.py --friend"
+#ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
+BRANCHSEL="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/branchsel.txt"
+CMD="nano_postproc.py --bo $BRANCHSEL"
 
 OUTPATH=ntuple/reco/$CHANNEL/$DATASET0
-CMD="nano_postproc.py --friend"
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="-I PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule countHistogramsModule $ARGS"
-    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyMCBranch"
+    #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyMCBranch"
 
     #ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight"
+    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight_${YEAR}"
 
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF2016"
+    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF${YEAR}"
     ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.btagWeightProducer btagWeight"
+else
+    if [ $DATATYPE == "Run2016" ]; then
+        JSONFILE="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/lumi/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
+        ARGS="-J $JSONFILE $ARGS"
+    elif [ $DATATYPE == "Run2017" ]; then
+        JSONFILE="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/lumi/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"
+        ARGS="-J $JSONFILE $ARGS"
+    elif [ $DATATYPE == "Run2018" ]; then
+        JSONFILE="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/lumi/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"
+        ARGS="-J $JSONFILE $ARGS"
+    fi
 fi
 echo $CMD $ARGS $OUTPATH $FILENAMES
 $CMD $ARGS $OUTPATH $FILENAMES

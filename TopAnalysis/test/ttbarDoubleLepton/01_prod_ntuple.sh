@@ -22,8 +22,8 @@ DATASET='/'`echo $DATASET0 | sed -e 's;\.;/;g'`
 ERA=$(echo $DATASET0 | cut -d. -f2 | cut -d- -f1 | sed -e 's;NanoAOD;;g')
 
 DATATYPE=$(basename $(dirname $FILELIST) | cut -d. -f1)
-HLTMODULE=$(echo $DATATYPE | cut -d_ -f1)_${CHANNEL}
 YEAR=${DATATYPE:(-4)}
+HLTMODULE=$(echo $DATATYPE | cut -d_ -f1)_${CHANNEL}
 
 FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | sed 's;^/xrootd/;root://cms-xrdr.private.lo:2094//xrd/;g')
 
