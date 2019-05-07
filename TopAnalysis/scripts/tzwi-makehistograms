@@ -21,7 +21,8 @@ if not os.path.exists(odName):
     try: os.makedirs(odName)
     except: pass
 
-chain = TChain("Friends")
+#chain = TChain("Friends")
+chain = TChain("Events")
 chain.Add(dName+"/*.root")
 gROOT.SetBatch(True)
 
