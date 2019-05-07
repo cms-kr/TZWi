@@ -185,8 +185,28 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   out_Z_p4[1] = zP4.Eta();
   out_Z_p4[2] = zP4.Phi();
   out_Z_p4[3] = zP4.M();
-  out_Z_charge = out_Lepton1_pdgId+out_Lepton2_pdgId;
-  out_Z_charge = out_Z_charge == 0 ? 0 : 2*out_Z_charge/abs(out_Z_charge);
+  switch ( out_Lepton1_pdgId+out_Lepton2_pdgId ) {
+    case -13-13:
+    case -11-11:
+    case -13-11:
+      out_Z_charge = +2;
+      break;
+    case  13+13:
+    case  11+11:
+    case  11+13:
+      out_Z_charge = -2;
+      break;
+    case 11:
+    case 13:
+      out_Z_charge = -1;
+      break;
+    case -11:
+    case -13:
+      out_Z_charge = +1;
+      break;
+    default:
+      out_Z_charge = 0;
+  }
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxsByPt, jetIdxsByBDiscr;
