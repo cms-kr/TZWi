@@ -278,13 +278,33 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
   if ( std::abs(out_GoodLeptonCode) >= 111 ) {
-    const TLorentzVector zP4 = lepton1P4+lepton2P4;
+    const TLorentzVector zP4 = lepton2P4+lepton3P4;
     out_Z_p4[0] = zP4.Pt();
     out_Z_p4[1] = zP4.Eta();
     out_Z_p4[2] = zP4.Phi();
     out_Z_p4[3] = zP4.M();
-    out_Z_charge = out_Lepton2_pdgId+out_Lepton3_pdgId; // actually, this can be inferred from the out_GoodLeptonCode sign
-    out_Z_charge = out_Z_charge == 0 ? 0 : 2*out_Z_charge/abs(out_Z_charge);
+    switch ( out_Lepton2_pdgId+out_Lepton3_pdgId ) {
+      case -13-13:
+      case -11-11:
+      case -13-11:
+        out_Z_charge = +2;
+        break;
+      case  13+13:
+      case  11+11:
+      case  11+13:
+        out_Z_charge = -2;
+        break;
+      case 11:
+      case 13:
+        out_Z_charge = -1;
+        break;
+      case -11:
+      case -13:
+        out_Z_charge = +1;
+        break;
+      default:
+        out_Z_charge = 0;
+    }
   }
 
   // Transeverse mass of the W boson

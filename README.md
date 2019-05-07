@@ -48,21 +48,39 @@ tzwi-updatedataset $CMSSW_BASE/src/TZWi/NanoAODProduction/data/datasets/NanoAOD/
 
 Assume we are working at KISTI Tier2/3 and cms-kr/hep-tools package is installed.
 ```bash
+NFILE=5
 cd $CMSSW_BASE/src/TZWi/TopAnalysis/test/ttbarDoubleLepton
 for MODE in ElEl MuEl MuMu; do
     for FILELIST in NanoAOD/2017/*/*/*.txt; do
-        NJOBS=`cat $FILELIST | wc -l`
+        NJOBS=`cat $FILELIST | xargs -n$NFILE | wc -l`
         JOBNAME=$MODE.`basename $FILELIST | sed -e 's;.txt;;g'`
-        create-batch bash 01_prod_ntuple.sh $MODE $FILELIST 1 --jobName $JOBNAME -T --nJobs $NJOBS
+        create-batch bash 01_prod_ntuple.sh $MODE $FILELIST $NFILE --jobName $JOBNAME -T --nJobs $NJOBS
     done
 done
 ```
 
 Wait for the jobs to be finished, check output files, resubmit failed jobs.
 
-Tip to list up failed job commands:
+Tip to list up failed job and resubmit them:
 ```bash
-for i in */result*.tgz; do tar -Oxzvf $i ./failed.txt ; done > failed.txt
+for i in *NANOAOD*/; do
+    echo $i
+    cd $i
+    rm -f failed.txt
+    for j in result*.tgz; do
+      tar tzf $j | grep -q failed.txt && tar -Oxzf $j failed.txt >> failed.txt 2> /dev/null
+    done
+    cd ..
+done
+
+for i in *NANOAOD*/; do
+    cd $i
+    if [ -f failed.txt ]; then
+        rm -f result*.tgz job*.err job*.log failed.txt
+        ./submit.sh
+    fi
+    cd ..
+done
 ```
 
 You can process failed ones manually:
@@ -72,7 +90,7 @@ cat failed.txt | sed 's;nano_postproc.py;;g' | xargs -P$(nproc) -L1 nano_postpro
 
 Tip to extract all ntuples:
 ```bash
-find *NANOAOD/ -name 'result_*.tgz' | awk '{print "xzf "$1" ./ntuple"}' | xargs -L1 -P$(nproc) tar
+find *NANOAOD*/ -name 'result_*.tgz' | awk '{print "xzf "$1" ./ntuple"}' | xargs -L1 -P$(nproc) tar
 ```
 
 ## Make histograms

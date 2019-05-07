@@ -15,7 +15,3 @@ for dataset in ['SingleMuon', 'SingleElectron',
     for e in "FG":
         vars()['hlt_Run2016%s_%s' % (e, dataset)] = lambda : CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016FG.%s" % dataset, doFilter=True)
     vars()['hlt_Run2016H_%s'  % dataset] = lambda : CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016H.%s"  % dataset, doFilter=True)
-
-flags_MC2016 = lambda : CombineHLT(outName="Flag", fileName="flags/2016.yaml", hltSet="RunIISummer16", doFilter=True)
-flags_Run2016 = lambda : CombineHLT(outName="Flag", fileName="flags/2016.yaml", hltSet="Run2016", doFilter=True)
-

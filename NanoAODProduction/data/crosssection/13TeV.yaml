@@ -1,5 +1,5 @@
 crosssection:
-  DYJetsToLL_M-50    : 5765.4 
+  DYJetsToLL_M-50    : 6225.42
   DYJetsToLL_M-10to50: 18610
 
   WJets : 61526.7
@@ -18,11 +18,11 @@ crosssection:
   ST_t       : 136.02
   ST_tW      :  35.85
   STbar_t    :  80.95
-  STbar_tW   :  35.85
+  STbar_tW   :  38.85
 
   TTZToQQ         :   0.5297
   TTZToLLNuNu_M-10:   0.2529
-  TTWJetsToQQ     :   0.4062
+  TTWJetsToQQ     :   0.4026
   TTWJetsToLNu    :   0.2043
 
   TTTT: 0.009103
@@ -54,7 +54,7 @@ crosssection:
   ttHTobb   : 0.2934
   ttHToNonbb: 0.2151
 
-  QCD_Pt-15to20_MuEnriched   :  3819570     
+  QCD_Pt-15to20_MuEnriched   :  3819570
   QCD_Pt-20to30_MuEnriched   :  2960198.4
   QCD_Pt-30to50_MuEnriched   :  1652471.46
   QCD_Pt-50to80_MuEnriched   :   437504.1
@@ -75,16 +75,9 @@ crosssection:
   QCD_Pt-170to300_EMEnriched :    18810
   QCD_Pt-300toInf_EMEnriched :     1350
 
-  ST_TH_1L3B_Hut      : 13.84 
+  ST_TH_1L3B_Hut      : 13.84
   ST_TH_1L3B_Hct      :  1.9
-  TT_TH_1L3B_aTLep_Hut: 26.57
-  TT_TH_1L3B_TLep_Hut : 26.57
-  TT_TH_1L3B_aTLep_Hct: 26.57
-  TT_TH_1L3B_TLep_Hct : 26.57
-
-
-
-
-
-
-
+  TT_TH_1L3B_aTLep_Hut: 23.25
+  TT_TH_1L3B_TLep_Hut : 23.25
+  TT_TH_1L3B_aTLep_Hct: 23.25
+  TT_TH_1L3B_TLep_Hct : 23.25

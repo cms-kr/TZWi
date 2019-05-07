@@ -1,0 +1,5 @@
+RunIIFall17.SingleMuon : "HLT_IsoMu24"
+RunIIFall17.SingleElectron: "HLT_Ele32_WPTight_Gsf || HLT_Ele28_eta2p1_WPTight_Gsf_HT150"
+
+Run2017.SingleMuon : "HLT_IsoMu24"
+Run2017.SingleElectron: "HLT_Ele32_WPTight_Gsf || HLT_Ele28_eta2p1_WPTight_Gsf_HT150"

@@ -5,47 +5,43 @@ import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
-class FCNCTriLepton(Module, object):
+class FCNHSingleLepton(Module, object):
     def __init__(self, *args, **kwargs):
-        #super(FCNCTriLepton, self).__init__(*args, **kwargs)
+        #super(FCNHSingleLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
         self.eleIdName = kwargs.get("eleId") if "eleId" in kwargs else "cutBased"
 
-        if "/FCNCTriLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
-            print "Load C++ FCNCTriLepton worker module"
+        if "/FCNHSingleLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
+            print "Load C++ FCNHSingleLepton worker module"
             base = os.getenv("NANOAODTOOLS_BASE")
             if base:
-                ROOT.gROOT.ProcessLine(".L %s/src/FCNCTriLeptonCppWorker.cc+O" % base)
+                ROOT.gROOT.ProcessLine(".L %s/src/FCNHSingleLeptonCppWorker.cc+O" % base)
             else:
                 base = "%s/src/TZWi/TopAnalysis"%os.getenv("CMSSW_BASE")
                 ROOT.gSystem.Load("libPhysicsToolsNanoAODTools.so")
                 ROOT.gSystem.Load("libTZWiTopAnalysis.so")
-                ROOT.gROOT.ProcessLine(".L %s/interface/FCNCTriLeptonCppWorker.h" % base)
+                ROOT.gROOT.ProcessLine(".L %s/interface/FCNHSingleLeptonCppWorker.h" % base)
         pass
     def beginJob(self):
-        self.worker = ROOT.FCNCTriLeptonCppWorker(self.mode)
+        self.worker = ROOT.FCNHSingleLeptonCppWorker(self.mode)
         pass
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z"]:
+        for objName in ["Lepton1",]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 self.out.branch("%s_%s" % (objName, varName), "F")
         self.out.branch("MET_pt", "F")
         self.out.branch("MET_phi", "F")
         self.out.branch("Lepton1_pdgId", "I")
-        self.out.branch("Lepton2_pdgId", "I")
-        self.out.branch("Lepton3_pdgId", "I")
-        self.out.branch("Z_charge", "I")
+        self.out.branch("W_MT", "F")
         self.out.branch("nVetoLepton", "i")
-        self.out.branch("GoodLeptonCode", "I")
-        #self.out.branch("nGoodJet", "i")
+        self.out.branch("nGoodJet", "i")
         self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
-        for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
+        for varName in ["pt", "eta", "phi", "mass", "DeepCSV"]:
             self.out.branch("GoodJet_%s" % varName, "F", lenVar="nGoodJet")
         self.out.branch("nBjet", "i")
-        self.out.branch("W_MT", "F")
 
         self.initReaders(inputTree)
         pass
@@ -71,7 +67,7 @@ class FCNCTriLepton(Module, object):
         objName = "Jet"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass",
-                        "jetId", "puId", "btagCSVV2",]:
+                        "jetId", "puId", "btagDeepB",]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
@@ -81,7 +77,7 @@ class FCNCTriLepton(Module, object):
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
                              self.b_Muon_pfRelIso04_all,self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
         self.worker.setJets(self.b_Jet_pt, self.b_Jet_eta, self.b_Jet_phi, self.b_Jet_mass,
-                            self.b_Jet_jetId, self.b_Jet_btagCSVV2)
+                            self.b_Jet_jetId, self.b_Jet_btagDeepB)
         self._ttreereaderversion = tree._ttreereaderversion
 
         pass
@@ -91,15 +87,13 @@ class FCNCTriLepton(Module, object):
             self.initReaders(event._tree)
         self.worker.analyze()
 
-        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "GoodJet"]:
+        for objName in ["Lepton1", "GoodJet"]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
-        for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "Lepton2_pdgId", "Lepton3_pdgId",
-                        "nVetoLepton", "GoodLeptonCode", "Z_charge", "W_MT",
+        for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "nVetoLepton", "W_MT",
                         #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
-                        "GoodJet_index", "GoodJet_CSVv2",
-                        "nBjet",]:
+                        "GoodJet_index", "GoodJet_DeepCSV", "nBjet",]:
             setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())
             self.out.fillBranch(varName, getattr(event._tree, "b_out_%s" % varName))
         ## Special care for nGoodJet
@@ -107,7 +101,5 @@ class FCNCTriLepton(Module, object):
 
         return True
 
-fcnc_MuMuMu = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16")
-fcnc_ElElEl = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16")
-fcnc_MuMuEl = lambda : FCNCTriLepton(mode="MuMuEl", eleId="cutBased_Sum16")
-fcnc_ElElMu = lambda : FCNCTriLepton(mode="ElElMu", eleId="cutBased_Sum16")
+fcnh_Mu = lambda : FCNHSingleLepton(mode="Mu")
+fcnh_El = lambda : FCNHSingleLepton(mode="El")
