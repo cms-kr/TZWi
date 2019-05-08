@@ -202,7 +202,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodElectrons >= 1 ) out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
     if ( nGoodElectrons >= 2 ) out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
     // Check the sign of Z-candidate. Flip the sign for the same-signed lepton pair
-    if ( out_Lepton2_pdgId*out_Lepton3_pdgId < 0 ) out_GoodLeptonCode *= -1;
+    if ( out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) out_GoodLeptonCode *= -1;
   }
   else if ( actualMode == MODE::ElMuMu ) {
     if ( nGoodMuons     < 2 ) out_GoodLeptonCode -=   1;
@@ -217,7 +217,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodMuons     >= 1 ) out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
     if ( nGoodMuons     >= 2 ) out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
     // Check the sign of Z-candidate. Flip the sign for the same-signed lepton pair
-    if ( out_Lepton2_pdgId*out_Lepton3_pdgId < 0 ) out_GoodLeptonCode *= -1;
+    if ( out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) out_GoodLeptonCode *= -1;
   }
   else if ( actualMode == MODE::ElElEl ) {
     if ( nGoodElectrons < 3 ) out_GoodLeptonCode -=   1;

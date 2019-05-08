@@ -109,5 +109,5 @@ class FCNCTriLepton(Module, object):
 
 fcnc_MuMuMu = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16")
 fcnc_ElElEl = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16")
-fcnc_MuMuEl = lambda : FCNCTriLepton(mode="MuMuEl", eleId="cutBased_Sum16")
-fcnc_ElElMu = lambda : FCNCTriLepton(mode="ElElMu", eleId="cutBased_Sum16")
+fcnc_ElMuMu = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Sum16")
+fcnc_MuElEl = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Sum16")

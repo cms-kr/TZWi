@@ -46,5 +46,5 @@ class FCNCTriLeptonCutFlow(Module, object):
 
 cutFlow_MuMuMu = lambda: FCNCTriLeptonCutFlow(mode="MuMuMu")
 cutFlow_ElElEl = lambda: FCNCTriLeptonCutFlow(mode="ElElEl")
-cutFlow_ElElMu = lambda: FCNCTriLeptonCutFlow(mode="ElElMu")
-cutFlow_MuMuEl = lambda: FCNCTriLeptonCutFlow(mode="MuMuEl")
+cutFlow_MuElEl = lambda: FCNCTriLeptonCutFlow(mode="MuElEl")
+cutFlow_ElMuMu = lambda: FCNCTriLeptonCutFlow(mode="ElMuMu")
