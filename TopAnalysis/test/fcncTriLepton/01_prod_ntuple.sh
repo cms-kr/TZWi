@@ -16,11 +16,11 @@ MAXFILES=$3
 JOBNUMBER=$4
 
 case $CHANNEL in
-  MuElEl|ElMuEl)
-    CHANNEL=ElElMu
+  ElElMu|ElMuEl)
+    CHANNEL=MuElEl
     ;;
-  ElMuMu|MuElMu)
-    CHANNEL=MuMuEl
+  MuMuEl|MuElMu)
+    CHANNEL=ElMuMu
     ;;
 esac
 
