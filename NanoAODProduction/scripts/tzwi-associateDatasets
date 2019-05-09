@@ -50,16 +50,21 @@ if __name__ == '__main__':
                 runLumiToFiles2[(run, lumi)].append(fName)
 
     print "Build up file mapping A->B"
-    f1f2, f2f1 = {}, {}
+    f1f2 = {}
     for key in runLumiToFiles1:
         for fName1 in runLumiToFiles1[key]:
-            f1f2[fName1] = runLumiToFiles2[key] if key in runLumiToFiles2 else []
+            if fName1 not in f1f2: f1f2[fName1] = []
+            f1f2[fName1].extend(runLumiToFiles2[key] if key in runLumiToFiles2 else [])
+    print "Build up file mapping B->A"
+    f2f1 = {}
     for key in runLumiToFiles2:
         for fName2 in runLumiToFiles2[key]:
-            f2f1[fName2] = runLumiToFiles1[key] if key in runLumiToFiles1 else []
+            if fName2 not in f2f1: f2f1[fName2] = []
+            f2f1[fName2].extend(runLumiToFiles1[key] if key in runLumiToFiles1 else [])
 
+    print "Dump results"
     with open("a2b.yaml", "w") as fout:
-        yaml.write(f1f2, fout)
+        yaml.dump(f1f2, fout)
     with open("b2a.yaml", "w") as fout:
-        yaml.write(f2f1, fout)
+        yaml.dump(f2f1, fout)
     
