@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+import sys, os
+from ROOT import *
+import uproot, pyxrootd
+import pandas as pd
+from multiprocessing import Pool, cpu_count
+import yaml
+
+def getEventList(fName):
+    openFile = uproot.xrootd if fName.startswith('root://') else uproot.open
+    t = openFile(fName)["Events"]
+    if t == None: t = openFile(fName)["Friends"]
+    if t == None: return pd.DataFrame()
+    return t.pandas.df(["run", "luminosityBlock", "event"])
+
+if __name__ == '__main__':
+    p = Pool(cpu_count())
+
+    fNames1, fNames2 = [], []
+    for i, fName in enumerate(open(sys.argv[1]).readlines()):
+        fName = fName.strip()
+        if not fName.endswith(".root"): continue
+        if fName.startswith('/store/'): fName = '/xrootd'+fName
+        fNames1.append(fName)
+    for i, fName in enumerate(open(sys.argv[2]).readlines()):
+        fName = fName.strip()
+        if not fName.endswith(".root"): continue
+        if fName.startswith('/store/'): fName = '/xrootd'+fName
+        fNames2.append(fName)
+
+    df1 = p.map(getEventList, fNames1)
+    df2 = p.map(getEventList, fNames2)
+
+    print "Loading event list from(%d)... %s" % (len(fNames1), sys.argv[1])
+    runLumiToFiles1 = {}
+    for fName, df in zip(fNames1, df1):
+        for run in df['run'].unique():
+            lumis = df.query('run==%d' % run)['luminosityBlock'].unique()
+            for lumi in lumis:
+                if (run, lumi) not in runLumiToFiles1: runLumiToFiles1[(run, lumi)] = []
+                runLumiToFiles1[(run, lumi)].append(fName)
+
+    print "Loading event list from(%d)... %s" % (len(fNames2), sys.argv[2])
+    runLumiToFiles2 = {}
+    for fName, df in zip(fNames2, df2):
+        for run in df['run'].unique():
+            lumis = df.query('run==%d' % run)['luminosityBlock'].unique()
+            for lumi in lumis:
+                if (run, lumi) not in runLumiToFiles2: runLumiToFiles2[(run, lumi)] = []
+                runLumiToFiles2[(run, lumi)].append(fName)
+
+    print "Build up file mapping A->B"
+    f1f2, f2f1 = {}, {}
+    for key in runLumiToFiles1:
+        for fName1 in runLumiToFiles1[key]:
+            f1f2[fName1] = runLumiToFiles2[key] if key in runLumiToFiles2 else []
+    for key in runLumiToFiles2:
+        for fName2 in runLumiToFiles2[key]:
+            f2f1[fName2] = runLumiToFiles1[key] if key in runLumiToFiles1 else []
+
+    with open("a2b.yaml", "w") as fout:
+        yaml.write(f1f2, fout)
+    with open("b2a.yaml", "w") as fout:
+        yaml.write(f2f1, fout)
+    
