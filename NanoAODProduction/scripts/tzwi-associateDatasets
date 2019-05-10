@@ -50,21 +50,22 @@ if __name__ == '__main__':
                 runLumiToFiles2[(run, lumi)].append(fName)
 
     print "Build up file mapping A->B"
-    f1f2 = {}
+    a2b = {}
     for key in runLumiToFiles1:
         for fName1 in runLumiToFiles1[key]:
-            if fName1 not in f1f2: f1f2[fName1] = []
-            f1f2[fName1].extend(runLumiToFiles2[key] if key in runLumiToFiles2 else [])
+            if fName1 not in a2b: a2b[fName1] = []
+            a2b[fName1].extend(runLumiToFiles2[key] if key in runLumiToFiles2 else [])
+    print "Clean up duplicated entries"
+    for x in a2b: a2b[x] = list(set(a2b[x]))
     print "Build up file mapping B->A"
-    f2f1 = {}
+    b2a = {}
     for key in runLumiToFiles2:
         for fName2 in runLumiToFiles2[key]:
-            if fName2 not in f2f1: f2f1[fName2] = []
-            f2f1[fName2].extend(runLumiToFiles1[key] if key in runLumiToFiles1 else [])
+            if fName2 not in b2a: b2a[fName2] = []
+            b2a[fName2].extend(runLumiToFiles1[key] if key in runLumiToFiles1 else [])
+    print "Clean up duplicated entries"
+    for x in b2a: b2a[x] = list(set(b2a[x]))
 
     print "Dump results"
-    with open("a2b.yaml", "w") as fout:
-        yaml.dump(f1f2, fout)
-    with open("b2a.yaml", "w") as fout:
-        yaml.dump(f2f1, fout)
-    
+    with open("a2b.yaml", "w") as fout: yaml.dump(a2b, fout)
+    with open("b2a.yaml", "w") as fout: yaml.dump(b2a, fout)
