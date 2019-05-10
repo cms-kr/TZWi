@@ -65,7 +65,7 @@ public:
 private:
   const double minLepton1Pt_ = 25, maxLepton1Eta_ = 2.4;
   const double minLepton2Pt_ = 20, maxLepton2Eta_ = 2.4;
-  const double minJetPt_ = 30, maxJetEta_ = 2.5;
+  const double minJetPt_ = 30, maxJetEta_ = 2.4;
   const double minBjetBDiscr_ = 0.8484; // FIXME: give updated number
   const double maxMuonRelIso_ = 0.15;
 
