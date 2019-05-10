@@ -90,7 +90,7 @@ bool TTbarDoubleLeptonCppWorker::isGoodElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
   if ( pt < minLepton2Pt_ or std::abs(eta) > maxLepton2Eta_ ) return false;
-  if ( in_Electrons_id->At(i) <= 1 ) return false;
+  if ( in_Electrons_id->At(i) <= 3 ) return false;
   //if ( in_Electrons_relIso->At(i) < 0.15 ) return false; // Note: commented out since already applied in Cut based ID
 
   return true;
