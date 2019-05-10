@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+import sys, os
+from ROOT import *
+import uproot, pyxrootd
+import pandas as pd
+from multiprocessing import Pool, cpu_count
+import yaml
+
+def getEventList(fName):
+    openFile = uproot.xrootd if fName.startswith('root://') else uproot.open
+    t = openFile(fName)["LuminosityBlocks"]
+    #t = openFile(fName)["Events"]
+    #if t == None: t = openFile(fName)["Friends"]
+    if t == None: return pd.DataFrame()
+    return t.pandas.df(["run", "luminosityBlock"])#, "event"])
+
+if __name__ == '__main__':
+    p = Pool(cpu_count())
+
+    fileListA, fileListB = sys.argv[1], sys.argv[2]
+
+    fNamesA, fNamesB = [], []
+    for i, fName in enumerate(open(fileListA).readlines()):
+        fName = fName.strip()
+        if not fName.endswith(".root"): continue
+        if fName.startswith('/store/'): fName = '/xrootd'+fName
+        fNamesA.append(fName)
+    for i, fName in enumerate(open(fileListB).readlines()):
+        fName = fName.strip()
+        if not fName.endswith(".root"): continue
+        if fName.startswith('/store/'): fName = '/xrootd'+fName
+        fNamesB.append(fName)
+
+    dfA = p.map(getEventList, fNamesA)
+    dfB = p.map(getEventList, fNamesB)
+
+    print "Loading event list from(%d)... %s" % (len(fNamesA), fileListA)
+    runLumiToFilesA = {}
+    for fName, df in zip(fNamesA, dfA):
+        for run in df['run'].unique():
+            lumis = df.query('run==%d' % run)['luminosityBlock'].unique()
+            for lumi in lumis:
+                if (run, lumi) not in runLumiToFilesA: runLumiToFilesA[(run, lumi)] = []
+                runLumiToFilesA[(run, lumi)].append(fName)
+
+    print "Loading event list from(%d)... %s" % (len(fNamesB), fileListB)
+    runLumiToFilesB = {}
+    for fName, df in zip(fNamesB, dfB):
+        for run in df['run'].unique():
+            lumis = df.query('run==%d' % run)['luminosityBlock'].unique()
+            for lumi in lumis:
+                if (run, lumi) not in runLumiToFilesB: runLumiToFilesB[(run, lumi)] = []
+                runLumiToFilesB[(run, lumi)].append(fName)
+
+    print "Build up file mapping A->B"
+    a2b = {}
+    for key in runLumiToFilesA:
+        for fNameA in runLumiToFilesA[key]:
+            if fNameA not in a2b: a2b[fNameA] = []
+            a2b[fNameA].extend(runLumiToFilesB[key] if key in runLumiToFilesB else [])
+    print "Clean up duplicated entries"
+    for x in a2b: a2b[x] = list(set(a2b[x]))
+    print "Build up file mapping B->A"
+    b2a = {}
+    for key in runLumiToFilesB:
+        for fNameB in runLumiToFilesB[key]:
+            if fNameB not in b2a: b2a[fNameB] = []
+            b2a[fNameB].extend(runLumiToFilesA[key] if key in runLumiToFilesA else [])
+    print "Clean up duplicated entries"
+    for x in b2a: b2a[x] = list(set(b2a[x]))
+
+    print "Dump results"
+    yaml.dump(a2b, open("a2b.yaml", "w"))
+    yaml.dump(b2a, open("b2a.yaml", "w"))
