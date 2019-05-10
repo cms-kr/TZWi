@@ -15,8 +15,8 @@ def getSEBaseURL(fName):
     xrdFile = xrdclient.File()
     for seBaseURL in ["root://cms-xrdr.private.lo:2094//xrd/",
                       "root://cms-t2-se01.sdfarm.kr:1094//pnfs/sdfarm.kr/data/cms/"]:
-        xrdFile.open(seBaseURL+fName)
-        if xrdFile.stat()[0].status == 0: return seBaseURL
+        ff = xrdFile.open(seBaseURL+fName)
+        if xrdFile.is_open() and xrdFile.stat()[0].status == 0: return seBaseURL
 
     return "root://cms-xrd-global.cern.ch/"
 
