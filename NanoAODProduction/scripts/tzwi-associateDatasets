@@ -8,10 +8,11 @@ import yaml
 
 def getEventList(fName):
     openFile = uproot.xrootd if fName.startswith('root://') else uproot.open
-    t = openFile(fName)["Events"]
-    if t == None: t = openFile(fName)["Friends"]
+    t = openFile(fName)["LuminosityBlocks"]
+    #t = openFile(fName)["Events"]
+    #if t == None: t = openFile(fName)["Friends"]
     if t == None: return pd.DataFrame()
-    return t.pandas.df(["run", "luminosityBlock", "event"])
+    return t.pandas.df(["run", "luminosityBlock"])#, "event"])
 
 if __name__ == '__main__':
     p = Pool(cpu_count())
