@@ -77,6 +77,7 @@ for mode in ["MuMu", "MuEl", "ElEl"]:
                         houtPath = "%s/%s" % (hinPath, title)
                         if houtPath not in hists:
                             hists[houtPath] = hin.Clone()
+                            hists[houtPath].SetTitle(longTitle)
                             hists[houtPath].Reset()
 
                         hists[houtPath].Add(hin, xsec*scales[fName])
