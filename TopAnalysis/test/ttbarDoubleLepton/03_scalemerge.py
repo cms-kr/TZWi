@@ -31,16 +31,12 @@ for f in glob("raw_hist/*/*/*.root"):
     fin = TFile(f)
     fins[f.split('/',1)[-1]] = fin
     scale = 1.0
-    hCount = fin.Get("nEventsGenWeighted")
-    if hCount != None: scale /= hCount.Integral()
+    hCutFlow = fin.Get("hCutFlow")
+    nEvent = hCutFlow.GetBinContent(1)
+    if nEvent != 0: scale /= nEvent
     scales[f.split('/',1)[-1]] = scale
 
 ## Plan how to merge histograms
-## First update histogram definition to include cut flows -> double check with tzwi-makehistograms
-nsteps = len(info['steps'])
-info['hists']['hCutFlow'  ] = {'bins': {'xmin': 1, 'nbinsX': nsteps, 'xmax': nsteps}, 'title': 'Cut flow;;Events'}
-info['hists']['hCutFlowNW'] = {'bins': {'xmin': 1, 'nbinsX': nsteps, 'xmax': nsteps}, 'title': 'Cut flow No Weight;;Events (unweighted)'}
-
 def makedirs(d, dName):
     if '/' not in dName: return d.mkdir(dName)
 

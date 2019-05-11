@@ -93,22 +93,31 @@ for istep, step in enumerate(steps):
         del h
 
 oFile.cd()
-hCutFlow = TH1D("hCutFlow", "Cut flow;;Events", len(steps), 1, len(steps)+1)
-hCutFlowNW = TH1D("hCutFlowNW", "Cut flow No Weight;;Events (unweighted)", len(steps), 1, len(steps)+1)
+hCutFlow = TH1D("hCutFlow", "Cut flow;;Events", len(steps)+1, 0, len(steps)+1)
+hCutFlowNW = TH1D("hCutFlowNW", "Cut flow No Weight;;Events (unweighted)", len(steps)+1, 0, len(steps)+1)
 for istep, step in enumerate(steps):
     stepName = step['name']
 
-    hCutFlow.GetXaxis().SetBinLabel(istep+1, stepName)
-    hCutFlowNW.GetXaxis().SetBinLabel(istep+1, stepName)
+    hCutFlow.GetXaxis().SetBinLabel(istep+2, stepName)
+    hCutFlowNW.GetXaxis().SetBinLabel(istep+2, stepName)
 
     nEventNW = hWeights[stepName].GetEntries()
     avgW = hWeights[stepName].GetMean()
-    hCutFlowNW.SetBinContent(istep+1, nEventNW)
-    #hCutFlowNW.SetBinError(istep+1, sqrt(nEventNW))
-    hCutFlow.SetBinContent(istep+1, nEventNW*avgW)
+    hCutFlowNW.SetBinContent(istep+2, nEventNW)
+    #hCutFlowNW.SetBinError(istep+2, sqrt(nEventNW))
+    hCutFlow.SetBinContent(istep+2, nEventNW*avgW)
     #rmsW = hWeights[step['name']].GetRMS()
-    #hCutFlow.SetBinError(istep+1, sqrt(rms*avgW*nEventNW))
+    #hCutFlow.SetBinError(istep+2, sqrt(rms*avgW*nEventNW))
+
+fins = chain.GetListOfFiles()
+for fName in [fins.At(i).GetTitle() for i in range(fins.GetEntries())]:
+    fin = TFile(fName)
+    h = fin.Get("nEventsGenWeighted")
+    hNW = fin.Get("nEvents")
+    if h != None: hCutFlow.AddBinContent(1, h.Integral())
+    if hNW != None: hCutFlowNW.AddBinContent(1, hNW.Integral())
+
+oFile.cd()
 hCutFlow.Write()
 hCutFlowNW.Write()
-
 oFile.Close()
