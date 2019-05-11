@@ -49,6 +49,7 @@ for istep, step in enumerate(steps):
 
     ## Fill Weight histogram first
     hWeight = TH1D("hWeight", "weight;weight;Events", 100, -2, 2)
+    hWeight.Sumw2()
     chain.Draw("%s>>hWeight" % ('*'.join(weights)), cut, "goff")
     hWeight.Write()
     hWeights[step['name']] = hWeight
@@ -70,6 +71,7 @@ for istep, step in enumerate(steps):
                                                bins['nbinsY'], bins['ymin'], bins['ymax'])
             else:
                 h = TH1D('h'+hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'])
+        h.Sumw2()
         #h.SetDirectory(dout)
 
         expr = hdef['expr'] if 'expr' in hdef else hname
@@ -95,6 +97,8 @@ for istep, step in enumerate(steps):
 oFile.cd()
 hCutFlow = TH1D("hCutFlow", "Cut flow;;Events", len(steps)+1, 0, len(steps)+1)
 hCutFlowNW = TH1D("hCutFlowNW", "Cut flow No Weight;;Events (unweighted)", len(steps)+1, 0, len(steps)+1)
+hCutFlow.Sumw2()
+hCutFlowNW.Sumw2()
 for istep, step in enumerate(steps):
     stepName = step['name']
 
