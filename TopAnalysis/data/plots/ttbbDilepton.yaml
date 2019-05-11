@@ -1,0 +1,43 @@
+lumi: [5.814,2.615,4.281,4.035,3.119,7.658,8.773]
+
+canvasStyles: ## Styling rules, later item overrides earlier ones
+  - substr: '' # null string matches to everything
+    logy: true
+  - substr: 'S5'
+    logy: false
+  - substr: 'S6'
+    logy: false
+
+histStyles: # Styling rules, later item overrides earlier ones
+  - title: DYJets
+    color: "kOrange+1"
+  - title: SingleTop
+    color: "kMagenta+1"
+  - title: SingleTopV
+    color: "kMagenta+2"
+  - title: Tribosons
+    color: "kWhite"
+  - title: Dibosons
+    color: "kWhite"
+  - title: Wjets
+    color: "kGreen+1"
+  - title: ttH
+    color: "kRed+3"
+  - title: ttV
+    color: "kRed+4"
+  - title: ttOthers
+    color: "kRed"
+  - title: ttJets
+    color: "kRed"
+
+plotorders: ## MC samples to stack
+  - DYJets
+  - SingleTop
+  - SingleTopV
+  - Tribosons
+  - Dibosons
+  - Wjets
+  - ttH
+  - ttV
+  - ttOthers
+  - ttJets
