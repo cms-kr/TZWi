@@ -16,16 +16,16 @@ if __name__ == '__main__':
     info.update(yaml.load(open(histSetFile)))
     info.update(yaml.load(open("../../data/systematics/ttbbDilepton.yaml")))
     info.update(yaml.load(open("../../data/grouping/ttbbDilepton.yaml")))
-    for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2017/*.yaml"):
+    for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml"):
         if 'dataset' not in info: info['dataset'] = {}
         info['dataset'].update(yaml.load(open(f))['dataset'])
 
     aliasToProc = {}
     for proc, aliases in info['processes'].iteritems():
-        for alias in aliases['datasets']: aliasToProc[alias] = proc
+        for alias in aliases['datasets']: aliasToProc[alias.split('.',1)[-1]] = proc
     datasetToAlias = {}
     for alias, datasets in info['dataset'].iteritems():
-        for dataset in datasets: datasetToAlias[dataset] = alias
+        for dataset in datasets: datasetToAlias[dataset] = alias.split('.',1)[-1]
 
     ress = []
     for din in glob("ntuple/*/*/*"):
