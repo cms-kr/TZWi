@@ -135,9 +135,9 @@ def buildCanvas(prefix, hists, opt):
     
 
 info = {}
-info.update(yaml.load(open("../../data/plots/ttbbDilepton.yaml")))
-info.update(yaml.load(open("../../data/grouping/ttbbDilepton.yaml")))
-info.update(yaml.load(open("../../data/histogramming/ttbbDilepton.yaml")))
+info.update(yaml.load(open("config/plots.yaml")))
+info.update(yaml.load(open("config/grouping.yaml")))
+info.update(yaml.load(open("config/histogramming.yaml")))
 
 modes = ["ElEl", "MuMu", "MuEl"]
 files = []

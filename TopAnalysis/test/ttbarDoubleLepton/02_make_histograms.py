@@ -12,11 +12,11 @@ if __name__ == '__main__':
 
     ## Load all information
     info = {}
-    histSetFile = "../../data/histogramming/ttbbDilepton.yaml"
+    histSetFile = "config/histogramming.yaml"
     info.update(yaml.load(open(histSetFile)))
-    info.update(yaml.load(open("../../data/systematics/ttbbDilepton.yaml")))
-    info.update(yaml.load(open("../../data/grouping/ttbbDilepton.yaml")))
-    for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml"):
+    info.update(yaml.load(open("config/systematics.yaml")))
+    info.update(yaml.load(open("config/grouping.yaml")))
+    for f in glob("config/datasets/*.yaml"):
         if 'dataset' not in info: info['dataset'] = {}
         info['dataset'].update(yaml.load(open(f))['dataset'])
 
