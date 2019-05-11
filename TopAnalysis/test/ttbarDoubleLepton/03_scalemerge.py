@@ -14,7 +14,7 @@ info.update(yaml.load(open(histSetFile)))
 info.update(yaml.load(open(xsecSetFile)))
 info.update(yaml.load(open("../../data/systematics/ttbbDilepton.yaml")))
 info.update(yaml.load(open("../../data/grouping/ttbbDilepton.yaml")))
-for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2017/*.yaml"):
+for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml"):
     if 'dataset' not in info: info['dataset'] = {}
     info['dataset'].update(yaml.load(open(f))['dataset'])
 
