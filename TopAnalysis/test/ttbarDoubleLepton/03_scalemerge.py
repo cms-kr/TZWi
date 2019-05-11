@@ -86,7 +86,9 @@ for mode in ["MuMu", "MuEl", "ElEl"]:
                         hists[houtPath].Add(hin, xsec*scales[fName])
 
     for houtPath, h in sorted(hists.iteritems(), key=lambda x: x[0]):
-        dout = makedirs(fout, houtPath)
+        dout = fout.GetDirectory(os.path.dirname(houtPath))
+        if dout == None: dout = makedirs(fout, os.path.dirname(houtPath))
         dout.cd()
+        h.SetName(os.path.basename(houtPath))
         h.Write()
 
