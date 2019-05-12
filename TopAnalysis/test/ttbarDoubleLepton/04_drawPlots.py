@@ -165,9 +165,9 @@ for mode in modes:
                 if color != None: h.SetFillColor(eval(color))
 
                 if title.startswith("Data"): hRDs.append(h)
-                elif title in info['plotorders']: hMCs.append(h)
+                elif title in info['stackorders']: hMCs.append(h)
                 else: hNoStacks.append(h)
-            hMCs.sort(key=lambda x : info['plotorders'].index(x.GetName()))
+            hMCs.sort(key=lambda x : info['stackorders'].index(x.GetName()))
 
             opt = {}
             opt['lumi'] = sum(info['lumi'])
