@@ -30,37 +30,61 @@ processes:
     DYJets:
         title: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
         weight: "genWeight*puWeight*BtagWeight"
+        cut: "HLT"
         datasets:
             - MC2016.DYJetsToLL_M-10to50
             - MC2016.DYJetsToLL_M-50
     WJets:
         title: "W+jets"
         weight: "genWeight*puWeight*BtagWeight"
+        cut: "HLT"
         datasets: [MC2016.WJets]
     SingleTop:
         title: "Single top"
         weight: "genWeight*puWeight*BtagWeight"
+        cut: "HLT"
         datasets:
             - MC2016.ST_s_4f_lepton
             - MC2016.ST_t
             - MC2016.ST_tW
             - MC2016.STbar_t
             - MC2016.STbar_tW
-    fcncLL:
-        title: "t#bar{t}b#bar{b}"
+    TTJets:
+        title: "ttJets"
+        longTitle: "t#bar{t}"
         weight: "genWeight*puWeight*BtagWeight"
+        cut: "HLT"
         datasets: [MC2016.TTTo2L2Nu]
-        #cut: "genTTBBCategory==55"
-    ttccLL:
-        title: "t#bar{t}cc"
-        weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2016.TTTo2L2Nu]
-        #cut: "genTTBBCategory==3"
-    ttLFLL:
-        title: "t#bar{t}LF"
-        weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2016.TTTo2L2Nu]
-        #cut: "genTTBBCategory==0"
+#    STZct:
+#        title: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.ST_FCNC-TLL_zct]
+#        cut: ""
+#    STZut:
+#        title: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.ST_FCNC-TLL_zut]
+#        cut: ""
+#    TTZct:
+#        title: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.TT_FCNC-T2ZJ_zct, MC2016.TT_FCNC-aT2ZJ_zct]
+#        cut: ""
+#    TTZut:
+#        title: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.TT_FCNC-T2ZJ_zut, MC2016.TT_FCNC-aT2ZJ_zut]
+#        cut: ""
+#    ttccLL:
+#        title: "t#bar{t}cc"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.TTTo2L2Nu]
+#        cut: "genTTBBCategory==3"
+#    ttLFLL:
+#        title: "t#bar{t}LF"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.TTTo2L2Nu]
+#        cut: "genTTBBCategory==0"
     TTOther:
         title: "t#bar{t} others"
         weight: "genWeight*puWeight*BtagWeight"
@@ -78,10 +102,10 @@ processes:
         title: "SingleTop+V"
         weight: "genWeight*puWeight*BtagWeight"
         datasets: [MC2016.tZq_ll]
-    ttbb:
-        title: "t#bar{t}b#bar{b}"
-        weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2016.ttbb]
+#    ttbb:
+#        title: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.ttbb]
     TTV:
         title: "t#bar{t}+V"
         weight: "genWeight*puWeight*BtagWeight"
