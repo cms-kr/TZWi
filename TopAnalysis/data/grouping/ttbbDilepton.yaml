@@ -78,7 +78,7 @@ processes:
         weight: "genWeight*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.WW, MC2016.WZ, MC2016.ZZ]
-    Tribonsons:
+    Tribosons:
         title: "Tribosons"
         weight: "genWeight*puWeight*BtagWeight"
         cut: "HLT"
@@ -104,4 +104,6 @@ processes:
     TTH:
         title: "ttH"
         longTitle: "t#bar{t}+Higgs"
+        weight: "genWeight*puWeight*BtagWeight"
+        cut: "HLT"
         datasets: [MC2016.ttHToNonbb, MC2016.ttHTobb]

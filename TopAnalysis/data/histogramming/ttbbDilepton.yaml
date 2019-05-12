@@ -55,7 +55,7 @@ hists:
     nPV_noWeight:
         title: "nPV_noWeight;Vertex multiplicity;Events (unweighted)"
         expr: "PV_npvsGood"
-        weightsToDrop: ["pileupWeight", "pileupWeight_up", "pileupWeight_down"]
+        weightsToDrop: ["puWeight", "puWeightUp", "puWeightDown"]
         bins:
             nbinsX: 100
             xmin: 0
