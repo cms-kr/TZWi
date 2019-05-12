@@ -48,7 +48,7 @@ for istep, step in enumerate(steps):
     dout.cd()
 
     ## Fill Weight histogram first
-    hWeight = TH1D("hWeight", "weight;weight;Events", 100, -2, 2)
+    hWeight = TH1D("hWeight", "weight;weight;Events", 150, -5, 10)
     hWeight.Sumw2()
     chain.Draw("%s>>hWeight" % ('*'.join(weights)), cut, "goff")
     hWeight.Write()
