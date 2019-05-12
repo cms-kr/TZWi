@@ -30,13 +30,7 @@ def buildCanvas(prefix, hists, opt):
     hRD, hMC = None, None
     hsMC = THStack(dirname+"/hsMC"+basename, prefix)
     hsNoStack = THStack(dirname+"/hsNoStack"+basename, prefix) if len(hNoStacks) > 0 else None
-    leg = TLegend(0.55, 0.72, 0.93, 0.85)
-
-    for h in hNoStacks:
-        leg.AddEntry(h, h.GetTitle(), "l")
-    for h in hMCs:
-        leg.AddEntry(h, h.GetTitle(), "F")
-    leg.AddEntry(hRD, "Data", "lp")
+    leg = TLegend(0.50, 0.72, 0.90, 0.85)
 
     for h in hRDs:
         if hRD == None:
@@ -56,6 +50,12 @@ def buildCanvas(prefix, hists, opt):
         h.Scale(lumi*1E3)
         hsNoStack.Add(h)
 
+    for h in hNoStacks:
+        leg.AddEntry(h, h.GetTitle(), "l")
+    for h in hMCs:
+        leg.AddEntry(h, h.GetTitle(), "F")
+    leg.AddEntry(hRD, "Data", "lp")
+
     hRatio = hRD.Clone()
     hRatio.SetName(dirname+"/hr"+basename)
     hRatio.Reset()
@@ -64,15 +64,12 @@ def buildCanvas(prefix, hists, opt):
     ## Set range
     maxY = max(hMC.GetMaximum(), hRD.GetMaximum())
     if opt['doLogY']:
-        #hsMC.SetMinimum(1e-2)
-        #hMC.SetMinimum(0.1*min([hMC.GetBinContent(i+1) for i in range(hMC.GetNbinsX()) if hMC.GetBinContent(i+1) > 0]+
-        #                       [hRD.GetBinContent(i+1) for i in range(hRD.GetNbinsX()) if hRD.GetBinContent(i+1) > 0]))
         hMC.SetMinimum(0.1*min([hMCs[-1].GetBinContent(i+1) for i in range(hMCs[-1].GetNbinsX()) if hMCs[-1].GetBinContent(i+1) > 0]+
                                [hRD.GetBinContent(i+1) for i in range(hRD.GetNbinsX()) if hRD.GetBinContent(i+1) > 0]))
-        hMC.SetMaximum(maxY*pow(10, 1./0.7))
+        hMC.SetMaximum(maxY*pow(10, 1./0.6))
     else:
         hMC.SetMinimum(0)
-        hMC.SetMaximum(maxY/0.7)
+        hMC.SetMaximum(maxY/0.6)
     hRatio.SetMinimum(0)
     hRatio.SetMaximum(2)
 
@@ -162,6 +159,7 @@ for mode in modes:
                 for histStyle in info['histStyles']:
                     if 'title' in histStyle and histStyle['title'] != title: continue
                     if 'color' in histStyle: color = histStyle['color']
+                h.SetLineColor(kBlack)
                 if color != None: h.SetFillColor(eval(color))
 
                 if title.startswith("Data"): hRDs.append(h)
@@ -174,8 +172,8 @@ for mode in modes:
             opt['doLogY'] = True
             for canvasStyle in info['canvasStyles']:
                 if 'substr' in canvasStyle and \
-                   not (canvasStyle['substr'] != '' and canvasStyle['substr'] not in mode+'/'+stepName): continue
-                if 'logy' in canvasStyle: doLogY = canvasStyle['logy']
+                   not (canvasStyle['substr'] == '' or canvasStyle['substr'] in mode+'/'+stepName): continue
+                if 'logy' in canvasStyle: opt['doLogY'] = canvasStyle['logy']
 
             obj = buildCanvas("%s/%s/%s" % (mode, stepName, hName), (hRDs, hMCs, hNoStacks), opt)
             #objs["%s/%s/%s" % (mode, stepName, hName)] = [c]#, hsMC, hMC, hRD, hRatio, leg]

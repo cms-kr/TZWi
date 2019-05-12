@@ -5,6 +5,7 @@ from glob import *
 from ROOT import *
 import os
 
+modes = ["MuMu", "MuEl", "ElEl"]
 odName = "hist"
 
 info = {}
@@ -46,7 +47,7 @@ def makedirs(d, dName):
     return makedirs(dNext, d2)
 
 if not os.path.exists(odName): os.makedirs(odName)
-for mode in ["MuMu", "MuEl", "ElEl"]:
+for mode in modes:
     fout = TFile("%s/%s.root" % (odName, mode), "recreate")
     hists = {}
 
