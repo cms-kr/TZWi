@@ -43,7 +43,7 @@ if __name__ == '__main__':
         weight = info['processes'][proc]['weight'] if 'weight' in info['processes'][proc] else '1'
 
         #os.system("NPROC=$(nproc) tzwi-makehistograms %s %s %s %s" % (cut, weight, histSetFile, d))
-        res = pool.apply_async(os.system, ("tzwi-makehistograms %s %s %s %s %s" % (cut, weight, histSetFile, din, dout),))
+        res = pool.apply_async(os.system, ("tzwi-makehistograms '%s' '%s' %s %s %s" % (cut, weight, histSetFile, din, dout),))
         ress.append(res)
 
     for r in ress: r.get()
