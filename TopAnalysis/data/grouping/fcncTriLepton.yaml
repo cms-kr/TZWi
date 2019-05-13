@@ -54,7 +54,7 @@ processes:
         longTitle: "t#bar{t}"
         weight: "genWeight*puWeight*BtagWeight"
         cut: "HLT"
-        datasets: [MC2016.TTTo2L2Nu]
+        datasets: [TT_powheg]
 #    STZct:
 #        title: "t#bar{t}b#bar{b}"
 #        weight: "genWeight*puWeight*BtagWeight"
@@ -75,20 +75,6 @@ processes:
 #        weight: "genWeight*puWeight*BtagWeight"
 #        datasets: [MC2016.TT_FCNC-T2ZJ_zut, MC2016.TT_FCNC-aT2ZJ_zut]
 #        cut: ""
-#    ttccLL:
-#        title: "t#bar{t}cc"
-#        weight: "genWeight*puWeight*BtagWeight"
-#        datasets: [MC2016.TTTo2L2Nu]
-#        cut: "genTTBBCategory==3"
-#    ttLFLL:
-#        title: "t#bar{t}LF"
-#        weight: "genWeight*puWeight*BtagWeight"
-#        datasets: [MC2016.TTTo2L2Nu]
-#        cut: "genTTBBCategory==0"
-    TTOther:
-        title: "t#bar{t} others"
-        weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2016.TTToSemilepton, MC2016.TTToHadronic]
     Dibosons:
         title: "Dibosons"
         weight: "genWeight*puWeight*BtagWeight"
@@ -102,10 +88,6 @@ processes:
         title: "SingleTop+V"
         weight: "genWeight*puWeight*BtagWeight"
         datasets: [MC2016.tZq_ll]
-#    ttbb:
-#        title: "t#bar{t}b#bar{b}"
-#        weight: "genWeight*puWeight*BtagWeight"
-#        datasets: [MC2016.ttbb]
     TTV:
         title: "t#bar{t}+V"
         weight: "genWeight*puWeight*BtagWeight"
