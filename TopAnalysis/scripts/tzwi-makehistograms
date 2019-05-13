@@ -5,8 +5,8 @@ import yaml
 import sys, os
 from array import array
 
-baseWeight = sys.argv[1] ## Baseline weight. this can be overridden by weight definition in the config file
-baseCut = sys.argv[2] ## Baseline cut to apply for every steps. "1" not to apply any cut
+baseCut = sys.argv[1] ## Baseline cut to apply for every steps. "1" not to apply any cut
+baseWeight = sys.argv[2] ## Baseline weight. this can be overridden by weight definition in the config file
 configFile = sys.argv[3] ## the yaml file which defines cut steps and histograms
 dName = sys.argv[4] ## directory name which contains ntuples
 odName = sys.argv[5] ## output directory name
@@ -48,7 +48,7 @@ for istep, step in enumerate(steps):
     dout.cd()
 
     ## Fill Weight histogram first
-    hWeight = TH1D("hWeight", "weight;weight;Events", 100, -2, 2)
+    hWeight = TH1D("hWeight", "weight;weight;Events", 150, -5, 10)
     hWeight.Sumw2()
     chain.Draw("%s>>hWeight" % ('*'.join(weights)), cut, "goff")
     hWeight.Write()
@@ -71,12 +71,12 @@ for istep, step in enumerate(steps):
                                                bins['nbinsY'], bins['ymin'], bins['ymax'])
             else:
                 h = TH1D('h'+hname, hdef['title'], bins['nbinsX'], bins['xmin'], bins['xmax'])
-	h.Sumw2()
+        h.Sumw2()
         #h.SetDirectory(dout)
 
         expr = hdef['expr'] if 'expr' in hdef else hname
 
-        weights1 = weights
+        weights1 = weights[:]
         if 'weightsToDrop' in hdef:
             weights1 = list(set(weights)-set(hdef['weightsToDrop']))
         weight1 = '*'.join(weights1)

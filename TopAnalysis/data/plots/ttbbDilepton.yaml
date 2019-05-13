@@ -30,7 +30,7 @@ histStyles: # Styling rules, later item overrides earlier ones
   - title: ttJets
     color: "kRed"
 
-plotorders: ## MC samples to stack
+stackorders: ## MC samples to stack
   - DYJets
   - SingleTop
   - SingleTopV
