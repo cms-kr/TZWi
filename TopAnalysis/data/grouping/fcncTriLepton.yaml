@@ -78,7 +78,7 @@ processes:
     Dibosons:
         title: "Dibosons"
         weight: "genWeight*puWeight*BtagWeight"
-        datasets: [MC2016.WW, MC2016.WZ, MC2016.ZZ]
+        datasets: [MC2016.WWTo2L2Nu, MC2016.WWToLNuQQ, MC2016.WZTo1L1Nu2Q, MC2016.WZTo1L3Nu, MC2016.WZTo2L2Q, MC2016.WZTo3LNu, MC2016.ZZTo2L2Nu, MC2016.ZZTo2L2Q, MC2016.ZZTo4L]
     Tribonsons:
         title: "Tribosons"
         weight: "genWeight*puWeight*BtagWeight"

@@ -77,7 +77,7 @@ processes:
         title: "Dibosons"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
-        datasets: [MC2016.WW, MC2016.WZ, MC2016.ZZ]
+        datasets: [MC2016.WWTo2L2Nu, MC2016.WWToLNuQQ, MC2016.WZTo1L1Nu2Q, MC2016.WZTo1L3Nu, MC2016.WZTo2L2Q, MC2016.WZTo3LNu, MC2016.ZZTo2L2Nu, MC2016.ZZTo2L2Q, MC2016.ZZTo4L]
     Tribosons:
         title: "Tribosons"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
