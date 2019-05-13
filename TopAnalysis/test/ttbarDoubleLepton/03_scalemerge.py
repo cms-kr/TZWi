@@ -5,16 +5,17 @@ from glob import *
 from ROOT import *
 import os
 
+modes = ["MuMu", "MuEl", "ElEl"]
 odName = "hist"
 
 info = {}
-xsecSetFile = "../../../NanoAODProduction/data/crosssection/13TeV.yaml"
-histSetFile = "../../data/histogramming/ttbbDilepton.yaml"
+xsecSetFile = "config/crosssection.yaml"
+histSetFile = "config/histogramming.yaml"
 info.update(yaml.load(open(histSetFile)))
 info.update(yaml.load(open(xsecSetFile)))
-info.update(yaml.load(open("../../data/systematics/ttbbDilepton.yaml")))
-info.update(yaml.load(open("../../data/grouping/ttbbDilepton.yaml")))
-for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2017/*.yaml"):
+info.update(yaml.load(open("config/systematics.yaml")))
+info.update(yaml.load(open("config/grouping.yaml")))
+for f in glob("config/datasets/*.yaml"):
     if 'dataset' not in info: info['dataset'] = {}
     info['dataset'].update(yaml.load(open(f))['dataset'])
 
@@ -31,16 +32,12 @@ for f in glob("raw_hist/*/*/*.root"):
     fin = TFile(f)
     fins[f.split('/',1)[-1]] = fin
     scale = 1.0
-    hCount = fin.Get("nEventsGenWeighted")
-    if hCount != None: scale /= hCount.Integral()
+    hCutFlow = fin.Get("hCutFlow")
+    nEvent = hCutFlow.GetBinContent(1)
+    if nEvent != 0: scale /= nEvent
     scales[f.split('/',1)[-1]] = scale
 
 ## Plan how to merge histograms
-## First update histogram definition to include cut flows -> double check with tzwi-makehistograms
-nsteps = len(info['steps'])
-info['hists']['hCutFlow'  ] = {'bins': {'xmin': 1, 'nbinsX': nsteps, 'xmax': nsteps}, 'title': 'Cut flow;;Events'}
-info['hists']['hCutFlowNW'] = {'bins': {'xmin': 1, 'nbinsX': nsteps, 'xmax': nsteps}, 'title': 'Cut flow No Weight;;Events (unweighted)'}
-
 def makedirs(d, dName):
     if '/' not in dName: return d.mkdir(dName)
 
@@ -50,7 +47,7 @@ def makedirs(d, dName):
     return makedirs(dNext, d2)
 
 if not os.path.exists(odName): os.makedirs(odName)
-for mode in ["MuMu", "MuEl", "ElEl"]:
+for mode in modes:
     fout = TFile("%s/%s.root" % (odName, mode), "recreate")
     hists = {}
 
@@ -81,12 +78,15 @@ for mode in ["MuMu", "MuEl", "ElEl"]:
                         houtPath = "%s/%s" % (hinPath, title)
                         if houtPath not in hists:
                             hists[houtPath] = hin.Clone()
+                            hists[houtPath].SetTitle(longTitle)
                             hists[houtPath].Reset()
 
                         hists[houtPath].Add(hin, xsec*scales[fName])
 
     for houtPath, h in sorted(hists.iteritems(), key=lambda x: x[0]):
-        dout = makedirs(fout, houtPath)
+        dout = fout.GetDirectory(os.path.dirname(houtPath))
+        if dout == None: dout = makedirs(fout, os.path.dirname(houtPath))
         dout.cd()
+        h.SetName(os.path.basename(houtPath))
         h.Write()
 

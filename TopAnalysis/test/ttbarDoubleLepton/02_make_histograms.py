@@ -12,20 +12,20 @@ if __name__ == '__main__':
 
     ## Load all information
     info = {}
-    histSetFile = "../../data/histogramming/ttbbDilepton.yaml"
+    histSetFile = "config/histogramming.yaml"
     info.update(yaml.load(open(histSetFile)))
-    info.update(yaml.load(open("../../data/systematics/ttbbDilepton.yaml")))
-    info.update(yaml.load(open("../../data/grouping/ttbbDilepton.yaml")))
-    for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2017/*.yaml"):
+    info.update(yaml.load(open("config/systematics.yaml")))
+    info.update(yaml.load(open("config/grouping.yaml")))
+    for f in glob("config/datasets/*.yaml"):
         if 'dataset' not in info: info['dataset'] = {}
         info['dataset'].update(yaml.load(open(f))['dataset'])
 
     aliasToProc = {}
     for proc, aliases in info['processes'].iteritems():
-        for alias in aliases['datasets']: aliasToProc[alias] = proc
+        for alias in aliases['datasets']: aliasToProc[alias.split('.',1)[-1]] = proc
     datasetToAlias = {}
     for alias, datasets in info['dataset'].iteritems():
-        for dataset in datasets: datasetToAlias[dataset] = alias
+        for dataset in datasets: datasetToAlias[dataset] = alias.split('.',1)[-1]
 
     ress = []
     for din in glob("ntuple/*/*/*"):
@@ -43,7 +43,7 @@ if __name__ == '__main__':
         weight = info['processes'][proc]['weight'] if 'weight' in info['processes'][proc] else '1'
 
         #os.system("NPROC=$(nproc) tzwi-makehistograms %s %s %s %s" % (cut, weight, histSetFile, d))
-        res = pool.apply_async(os.system, ("tzwi-makehistograms %s %s %s %s %s" % (cut, weight, histSetFile, din, dout),))
+        res = pool.apply_async(os.system, ("tzwi-makehistograms '%s' '%s' %s %s %s" % (cut, weight, histSetFile, din, dout),))
         ress.append(res)
 
     for r in ress: r.get()
