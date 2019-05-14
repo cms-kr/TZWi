@@ -148,8 +148,8 @@ for mode in modes:
         for hName in step['hists']:
             d = f.Get("%s/h%s" % (stepName, hName))
             hRDs, hMCs, hNoStacks = [], [], []
-            for procName, proc in info['processes'].iteritems():
-                title = proc['title']
+            titles = [x.GetName() for x in d.GetListOfKeys()]
+            for title in titles:
                 h = d.Get(title)
                 if h == None: continue
                 h.AddBinContent(h.GetNbinsX(), h.GetBinContent(h.GetNbinsX()+1))
