@@ -5,16 +5,17 @@ from glob import *
 from ROOT import *
 import os
 
+modes = ["MuMuMu", "MuElEl", "ElMuMu", "ElElEl"]
 odName = "hist"
 
 info = {}
-xsecSetFile = "../../../NanoAODProduction/data/crosssection/13TeV.yaml"
-histSetFile = "../../data/histogramming/fcncTriLepton.yaml"
+xsecSetFile = "config/crosssection.yaml"
+histSetFile = "config/histogramming.yaml"
 info.update(yaml.load(open(histSetFile)))
 info.update(yaml.load(open(xsecSetFile)))
-info.update(yaml.load(open("../../data/systematics/fcncTriLepton.yaml")))
-info.update(yaml.load(open("../../data/grouping/fcncTriLepton.yaml")))
-for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml"):
+info.update(yaml.load(open("config/systematics.yaml")))
+info.update(yaml.load(open("config/grouping.yaml")))
+for f in glob("config/datasets/*.yaml"):
     if 'dataset' not in info: info['dataset'] = {}
     info['dataset'].update(yaml.load(open(f))['dataset'])
 
@@ -50,7 +51,7 @@ def makedirs(d, dName):
     return makedirs(dNext, d2)
 
 if not os.path.exists(odName): os.makedirs(odName)
-for mode in ["MuMuMu", "MuElEl", "ElMuMu", "ElElEl"]:
+for mode in modes:
     fout = TFile("%s/%s.root" % (odName, mode), "recreate")
     hists = {}
 
