@@ -69,7 +69,11 @@ for mode in ["MuMuMu", "MuElEl", "ElMuMu", "ElElEl"]:
                 for alias in procInfo['datasets']:
                     if alias not in info['dataset']: continue
                     physProcName = alias.split('.',1)[-1]
-                    xsec = info['crosssection'][physProcName] if physProcName in info['crosssection'] else 1.0
+                    xsec = 1.0
+                    if physProcName in info['crosssection']:
+                      xsec = info['crosssection'][physProcName]
+                    elif title != "Data":
+                      print "Could not find", physProcName, "in the cross section list. setting it to be 1.0"
 
                     for ds in info['dataset'][alias].keys():
                         fName = "%s/%s/%s.root" % (mode, proc, ds[1:].replace('/', '.'))
