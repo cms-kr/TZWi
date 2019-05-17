@@ -12,11 +12,11 @@ if __name__ == '__main__':
 
     ## Load all information
     info = {}
-    histSetFile = "../../data/histogramming/fcncTriLepton.yaml"
+    histSetFile = "config/histogramming.yaml"
     info.update(yaml.load(open(histSetFile)))
-    info.update(yaml.load(open("../../data/systematics/fcncTriLepton.yaml")))
-    info.update(yaml.load(open("../../data/grouping/fcncTriLepton.yaml")))
-    for f in glob("../../../NanoAODProduction/data/datasets/NanoAOD/2016/*.yaml"):
+    info.update(yaml.load(open("config/systematics.yaml")))
+    info.update(yaml.load(open("config/grouping.yaml")))
+    for f in glob("config/datasets/*.yaml"):
         if 'dataset' not in info: info['dataset'] = {}
         info['dataset'].update(yaml.load(open(f))['dataset'])
 
@@ -43,8 +43,7 @@ if __name__ == '__main__':
         weight = info['processes'][proc]['weight'] if 'weight' in info['processes'][proc] else '1'
 
         #os.system("NPROC=$(nproc) tzwi-makehistograms %s %s %s %s" % (cut, weight, histSetFile, d))
-        res = pool.apply_async(os.system, ("tzwi-makehistograms %s %s %s %s %s" % (cut, weight, histSetFile, din, dout),))
+        res = pool.apply_async(os.system, ("tzwi-makehistograms '%s' '%s' %s %s %s" % (cut, weight, histSetFile, din, dout),))
         ress.append(res)
 
     for r in ress: r.get()
-
