@@ -8,22 +8,22 @@ crosssection:
   W3Jets:   992.5
   W4Jets:   544.3
 
-  TT_powheg     : 831.76
+  TT            : 831.76
   TTTo2L2Nu     :  88.29
   TTToSemilepton: 365.34
   TTToFullHadron: 377.96
 
   ST_s_4f_lepton:   3.36
-  ST_s       :  11.36
-  ST_t       : 136.02
-  ST_tW      :  35.85
-  STbar_t    :  80.95
-  STbar_tW   :  38.85
+  ST_s          :  11.36
+  ST_t          : 136.02
+  ST_tW         :  35.85
+  STbar_t       :  80.95
+  STbar_tW      :  38.85
 
-  TTZToQQ         :   0.5297
-  TTZToLLNuNu     :   0.2529
-  TTWJetsToQQ     :   0.4026
-  TTWJetsToLNu    :   0.2043
+  TTZToQQ     : 0.5297
+  TTZToLLNuNu : 0.2529
+  TTWJetsToQQ : 0.4026
+  TTWJetsToLNu: 0.2043
 
   TTTT: 0.009103
 
@@ -33,11 +33,11 @@ crosssection:
   ZZTo2L2Q :  3.22
   ZZTo2Nu2Q:  4.04
 
-  WZ       : 47.13
-  WZTo1LNu2Q: 10.71
-  WZTo2L2Q :  5.595
-  WZTo3LNu :  4.679
-  WZTo1L3Nu: 3.033
+  WZ         : 47.13
+  WZTo1L1Nu2Q: 10.71
+  WZTo2L2Q   :  5.595
+  WZTo3LNu   :  4.679
+  WZTo1L3Nu  :  3.033
 
   WW       : 118.7
   WWTo2L2Nu:  12.178

@@ -1,0 +1,1 @@
+../common/01.2_checkFailed.sh
