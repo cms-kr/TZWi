@@ -28,19 +28,22 @@ processes:
             - Run2016.SingleElectron
 
     DYJets:
-        title: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
+        title: "DYJets"
+        longTitle: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
         datasets:
             - MC2016.DYJetsToLL_M-10to50
             - MC2016.DYJetsToLL_M-50
     WJets:
-        title: "W+jets"
+        title: "Wjets"
+        longTitle: "W+jets"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.WJets]
     SingleTop:
-        title: "Single top"
+        title: "SingleTop"
+        longTitle: "Single top"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
         datasets:
@@ -56,22 +59,26 @@ processes:
         cut: "HLT"
         datasets: [TT_powheg]
 #    STZct:
-#        title: "t#bar{t}b#bar{b}"
+#        title: "STZct"
+#        longTitle: "t#bar{t}b#bar{b}"
 #        weight: "genWeight*puWeight*BtagWeight"
 #        datasets: [MC2016.ST_FCNC-TLL_zct]
 #        cut: ""
 #    STZut:
-#        title: "t#bar{t}b#bar{b}"
+#        title: "STZut"
+#        longTitle: "t#bar{t}b#bar{b}"
 #        weight: "genWeight*puWeight*BtagWeight"
 #        datasets: [MC2016.ST_FCNC-TLL_zut]
 #        cut: ""
 #    TTZct:
-#        title: "t#bar{t}b#bar{b}"
+#        title: "TTZct"
+#        longTitle: "t#bar{t}b#bar{b}"
 #        weight: "genWeight*puWeight*BtagWeight"
 #        datasets: [MC2016.TT_FCNC-T2ZJ_zct, MC2016.TT_FCNC-aT2ZJ_zct]
 #        cut: ""
 #    TTZut:
-#        title: "t#bar{t}b#bar{b}"
+#        title: "TTZut"
+#        longTitle: "t#bar{t}b#bar{b}"
 #        weight: "genWeight*puWeight*BtagWeight"
 #        datasets: [MC2016.TT_FCNC-T2ZJ_zut, MC2016.TT_FCNC-aT2ZJ_zut]
 #        cut: ""
@@ -87,17 +94,20 @@ processes:
         datasets: [MC2016.WWW, MC2016.WWZ, MC2016.WZZ, MC2016.ZZZ]
 
     SingleTopV:
-        title: "SingleTop+V"
+        title: "SingleTopV"
+        longTitle: "SingleTop+V"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.tZq_ll]
     TTV:
-        title: "t#bar{t}+V"
+        title: "ttV"
+        longTitle: "t#bar{t}+V"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.TTWJetsToLNu, MC2016.TTWJetsToQQ, MC2016.TTZToLLNuNu, MC2016.TTZToQQ]
     TTH:
-        title: "t#bar{t}+Higgs"
+        title: "ttH"
+        longTitle: "t#bar{t}+Higgs"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.ttHToNonbb, MC2016.ttHTobb]
