@@ -8,7 +8,7 @@ crosssection:
   W3Jets:   992.5
   W4Jets:   544.3
 
-  TT            : 831.76
+  TT_powheg     : 831.76
   TTTo2L2Nu     :  88.29
   TTToSemilepton: 365.34
   TTToFullHadron: 377.96
@@ -30,13 +30,14 @@ crosssection:
   ZZ       : 16.523
   ZZTo4L   :  1.212
   ZZTo2L2Nu:  0.564
-  ZZTo2LQQ :  3.22
-  ZZTo2NuQQ:  4.04
+  ZZTo2L2Q :  3.22
+  ZZTo2Nu2Q:  4.04
 
   WZ       : 47.13
-  WZToLNuQQ: 10.71
-  WZTo2LQQ :  5.595
+  WZTo1LNu2Q: 10.71
+  WZTo2L2Q :  5.595
   WZTo3LNu :  4.679
+  WZTo1L3Nu: 3.033
 
   WW       : 118.7
   WWTo2L2Nu:  12.178

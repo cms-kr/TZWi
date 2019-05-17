@@ -1,16 +1,31 @@
 processes:
-    DataElEl:
+    DataElElEl:
         title: "Data"
         datasets:
             - Run2016.DoubleEG
-    DataMuMu:
+            - Run2016.SingleElectron
+    DataMuMuMu:
         title: "Data"
         datasets:
             - Run2016.DoubleMuon
-    DataMuEl:
+            - Run2016.SingleMuon
+            - Run2016.MuonEG
+    DataElElMu:
         title: "Data"
         datasets:
             - Run2016.MuonEG
+            - Run2016.DoubleMuon
+            - Run2016.SingleMuon
+            - Run2016.DoubleEG
+            - Run2016.SingleElectron
+    DataMuMuEl:
+        title: "Data"
+        datasets:
+            - Run2016.MuonEG
+            - Run2016.DoubleMuon
+            - Run2016.SingleMuon
+            - Run2016.DoubleEG
+            - Run2016.SingleElectron
 
     DYJets:
         title: "DYJets"
@@ -42,37 +57,31 @@ processes:
         longTitle: "t#bar{t}"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
-        datasets: [MC2016.TTTo2L2Nu]
-    #ttbbLL:
-    #    title: "ttbb"
-    #    longTitle: "t#bar{t}b#bar{b}"
-    #    weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
-    #    datasets: [MC2016.TTTo2L2Nu]
-    #    #cut: "genTTBBCategory==55"
-    #ttbjLL:
-    #    title: "ttbj"
-    #    longTitle: "t#bar{t}bj"
-    #    weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
-    #    datasets: [MC2016.TTTo2L2Nu]
-    #    #cut: "genTTBBCategory==5"
-    #ttccLL:
-    #    title: "ttcc"
-    #    longTitle: "t#bar{t}cc"
-    #    weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
-    #    datasets: [MC2016.TTTo2L2Nu]
-    #    #cut: "genTTBBCategory==3"
-    #ttLFLL:
-    #    title: "ttLF"
-    #    longTitle: "t#bar{t}LF"
-    #    weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
-    #    datasets: [MC2016.TTTo2L2Nu]
-    #    #cut: "genTTBBCategory==0"
-    TTOther:
-        title: "ttOthers"
-        longTitle: "t#bar{t} others"
-        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
-        cut: "HLT"
-        datasets: [MC2016.TTToSemilepton, MC2016.TTToHadronic]
+        datasets: [TT_powheg]
+#    STZct:
+#        title: "STZct"
+#        longTitle: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.ST_FCNC-TLL_zct]
+#        cut: ""
+#    STZut:
+#        title: "STZut"
+#        longTitle: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.ST_FCNC-TLL_zut]
+#        cut: ""
+#    TTZct:
+#        title: "TTZct"
+#        longTitle: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.TT_FCNC-T2ZJ_zct, MC2016.TT_FCNC-aT2ZJ_zct]
+#        cut: ""
+#    TTZut:
+#        title: "TTZut"
+#        longTitle: "t#bar{t}b#bar{b}"
+#        weight: "genWeight*puWeight*BtagWeight"
+#        datasets: [MC2016.TT_FCNC-T2ZJ_zut, MC2016.TT_FCNC-aT2ZJ_zut]
+#        cut: ""
     Dibosons:
         title: "Dibosons"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
@@ -90,11 +99,6 @@ processes:
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.tZq_ll]
-    #ttbb:
-    #    title: "ttbb"
-    #    longTitle: "t#bar{t}b#bar{b}"
-    #    weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
-    #    datasets: [MC2016.ttbb]
     TTV:
         title: "ttV"
         longTitle: "t#bar{t}+V"
