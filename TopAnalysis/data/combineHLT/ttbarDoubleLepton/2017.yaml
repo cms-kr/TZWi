@@ -4,6 +4,12 @@ RunIIFall17.MuonEG: "
 RunIIFall17.DoubleMuon: "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8"
 RunIIFall17.DoubleEG: "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"
 
+RunIIFall17: "
+    HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+ || HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+ || HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+"
+
 Run2017B.MuonEG: "
     HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
 "
