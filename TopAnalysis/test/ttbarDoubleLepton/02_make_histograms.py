@@ -22,10 +22,10 @@ if __name__ == '__main__':
 
     aliasToProc = {}
     for proc, aliases in info['processes'].iteritems():
-        for alias in aliases['datasets']: aliasToProc[alias.split('.',1)[-1]] = proc
+        for alias in aliases['datasets']: aliasToProc[alias.split('.')[1]] = proc
     datasetToAlias = {}
     for alias, datasets in info['dataset'].iteritems():
-        for dataset in datasets: datasetToAlias[dataset] = alias.split('.',1)[-1]
+        for dataset in datasets: datasetToAlias[dataset] = alias.split('.')[1]
 
     ress = []
     for din in glob("ntuple/*/*/*"):
