@@ -12,6 +12,7 @@ done
 for i in submit/*NANOAOD/ submit/*NANOAODSIM/; do
     cd $i
     if [ -f failed.txt ]; then
+        echo $i
         rm -f result*.tgz job*.err job*.log failed.txt
         ./submit.sh
     fi
