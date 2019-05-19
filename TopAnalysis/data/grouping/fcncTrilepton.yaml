@@ -57,7 +57,7 @@ processes:
         longTitle: "t#bar{t}"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/LHEWeight_originalXWGTUP)*puWeight*BtagWeight"
         cut: "HLT"
-        datasets: [MC2016.TT_powheg]
+        datasets: [MC2016.TT.powheg]
 #    STZct:
 #        title: "STZct"
 #        longTitle: "t#bar{t}b#bar{b}"
