@@ -5,7 +5,6 @@ from glob import glob
 from multiprocessing import Pool, cpu_count
 
 def runCmd(cmd):
-    print cmd
     os.system(cmd)
 
 if __name__ == '__main__':

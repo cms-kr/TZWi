@@ -57,16 +57,16 @@ hists:
         expr: "PV_npvsGood"
         weightsToDrop: ["puWeight", "puWeightUp", "puWeightDown"]
         bins:
-            nbinsX: 100
+            nbinsX: 50
             xmin: 0
-            xmax: 100
+            xmax: 50
     nPV:
         title: "nPV;Vertex multiplicity;Events"
         expr: "PV_npvsGood"
         bins:
-            nbinsX: 100
+            nbinsX: 50
             xmin: 0
-            xmax: 100
+            xmax: 50
 
     Lepton1_pt:
         title: "Lepton1_pt;Leading lepton p_{T} (GeV);Events"
