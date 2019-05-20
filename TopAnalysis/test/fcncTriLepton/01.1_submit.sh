@@ -2,7 +2,7 @@
 
 [ -d submit ] || mkdir submit
 
-NFILE=5
+[ _$NFILE == _ ] && NFILE=5
 for MODE in ElElEl MuElEl ElMuMu MuMuMu; do
     for FILELIST in NanoAOD/2016/RD.Run2016/*/*.txt; do
         NJOBS=`cat $FILELIST | xargs -n$NFILE | wc -l`; NJOBS=`cat $FILELIST | xargs -n$NFILE | wc -l`

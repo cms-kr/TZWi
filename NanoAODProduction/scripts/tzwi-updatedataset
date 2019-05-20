@@ -3,12 +3,13 @@
 import yaml
 import sys, os
 import subprocess
+import Utilities.General.cmssw_das_client as das_client
 import XRootD.client as xrdclient
 
 if os.system("voms-proxy-info -exists --valid 8:00") != 0:
     os.system("voms-proxy-init -voms cms --valid 144:00")
 if os.system("voms-proxy-info -exists --valid 8:00") != 0:
-    print "need GRID PROXY to call dasgoclient."
+    print "need GRID PROXY to call dasclient."
     sys.exit(1)
 
 def getSEBaseURL(fName):
@@ -42,15 +43,16 @@ for arg in sys.argv[1:]:
             files = []
 
             print "Retrieving dataset information", alias, "=>", ds, "from DBS..."
-            out = subprocess.Popen(["dasgoclient", "--query=file dataset=%s" % ds], stdout=subprocess.PIPE, close_fds=True)
+            das_results = das_client.get_data("file dataset=%s" % ds)
             
             dirs = []
-            for line in out.stdout.readlines():
-                line = line.strip()
-                if not line.endswith('.root'): continue
-                files.append(line)
+            for das_result in das_results['data']:
+                if len(das_result['file']) == 0: continue
+                fileInfo = das_result['file'][0]
+                fileName = str(fileInfo['name'])
+                files.append(fileName)
 
-                d = os.path.dirname(line)
+                d = os.path.dirname(fileName)
                 if d not in dirs: dirs.append(d)
             datasets[ds] = dirs[:]
 
