@@ -86,10 +86,13 @@ for istep, step in enumerate(steps):
             cuts1 = list(set(cuts)|set(hdef['cuts']))
         if 'cutsToDrop' in hdef:
             cuts1 = list(set(cuts)-set(hdef['cutsToDrop']))
-        cut1 = '&&'.join(['(%s)' % x for x in cuts1])
+        cut1 = '&&'.join(['(%s)' % x for x in cuts1 if x != "1"])
+        if cut1 == "": cut1 = "1"
 
-        chain.Draw("%s>>h%s" % (expr, hname), "%s*(%s)" % (weight1, cut1), "goff")
-        #chain.Draw("%s>>%s" % (expr, hname), "1*(%s)" % (weight1), "goff")
+        if weight1 != "1":
+            chain.Draw("%s>>h%s" % (expr, hname), "(%s)*(%s)" % (weight1, cut1), "goff")
+        else:
+            chain.Draw("%s>>h%s" % (expr, hname), "(%s)" % (cut1), "goff")
 
         h.Write()
         del h
