@@ -47,40 +47,15 @@ tzwi-updatedataset $CMSSW_BASE/src/TZWi/NanoAODProduction/data/datasets/NanoAOD/
 ## Run postprocessors
 
 Assume we are working at KISTI Tier2/3 and cms-kr/hep-tools package is installed.
-```bash
-NFILE=5
-cd $CMSSW_BASE/src/TZWi/TopAnalysis/test/ttbarDoubleLepton
-for MODE in ElEl MuEl MuMu; do
-    for FILELIST in NanoAOD/2017/*/*/*.txt; do
-        NJOBS=`cat $FILELIST | xargs -n$NFILE | wc -l`
-        JOBNAME=$MODE.`basename $FILELIST | sed -e 's;.txt;;g'`
-        create-batch bash 01_prod_ntuple.sh $MODE $FILELIST $NFILE --jobName $JOBNAME -T --nJobs $NJOBS
-    done
-done
+```
+./01.1_submit.py
 ```
 
 Wait for the jobs to be finished, check output files, resubmit failed jobs.
 
 Tip to list up failed job and resubmit them:
-```bash
-for i in *NANOAOD*/; do
-    echo $i
-    cd $i
-    rm -f failed.txt
-    for j in result*.tgz; do
-      tar tzf $j | grep -q failed.txt && tar -Oxzf $j failed.txt >> failed.txt 2> /dev/null
-    done
-    cd ..
-done
-
-for i in *NANOAOD*/; do
-    cd $i
-    if [ -f failed.txt ]; then
-        rm -f result*.tgz job*.err job*.log failed.txt
-        ./submit.sh
-    fi
-    cd ..
-done
+```
+./01.2_checkFailed.sh
 ```
 
 You can process failed ones manually:
@@ -98,3 +73,11 @@ This step will draw all histograms including systematics variations using maximu
 ```bash
 ./02_make_histograms.py
 ```
+
+## To the plotting steps
+Run the followings
+```bash
+./03_scalemerge.py
+./04_drawPlots.py
+```
+Then you will have plots in "plots" directory.
