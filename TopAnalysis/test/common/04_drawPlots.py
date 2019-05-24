@@ -24,7 +24,7 @@ def findPlots(din):
 
 def buildCanvas(prefix, hists, opt):
     dirname, basename = os.path.dirname(prefix), os.path.basename(prefix)
-    lumi = opt['lumi']
+    lumi = opt['lumi']*1E3
 
     hRDs, hMCs, hNoStacks = hists
     hRD, hMC = None, None
@@ -39,7 +39,7 @@ def buildCanvas(prefix, hists, opt):
             hRD.Reset()
         hRD.Add(h)
     for h in reversed(hMCs):
-        h.Scale(lumi*1E3)
+        h.Scale(lumi)
         if hMC == None:
             hMC = h.Clone()
             hMC.SetName(dirname+"/hMC"+basename)
@@ -47,7 +47,7 @@ def buildCanvas(prefix, hists, opt):
         hsMC.Add(h)
         hMC.Add(h)
     for h in reversed(hNoStacks):
-        h.Scale(lumi*1E3)
+        h.Scale(lumi)
         hsNoStack.Add(h)
 
     for h in hNoStacks:
