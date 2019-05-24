@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-modes = ["ElElEl", "MuElEl", "ElMuMu", "MuMuMu"]
+modes = ["ElEl", "MuEl", "MuMu"]
 nFilePerJob = int(os.environ["NFILE"]) if "NFILE" in os.environ else 5
 if not os.path.exists("submit"): os.mkdir("submit")
 
