@@ -6,18 +6,18 @@ if not os.path.exists("submit"): os.mkdir("submit")
 
 import yaml
 from glob import glob
-config = yaml.load(open("config/grouping.yaml").read())
+procInfo = yaml.load(open("config/grouping.yaml").read())["processes"]
+datasetInfo = {}
 for f in glob("NanoAOD/2016/*.yaml"):
-    config.update(yaml.load(open(f).read()))
+    for datasetGroup, dataset in yaml.load(open(f).read())['dataset'].iteritems():
+        datasetInfo[datasetGroup] = dataset.keys()
 
 fLists = []
-for proc in config['processes']:
-    datasetGroups = config['processes'][proc]['datasets']
-    for datasetGroup in datasetGroups:
-        if datasetGroup not in config['dataset']: continue
+for proc in procInfo:
+    for datasetGroup in procInfo[proc]['datasets']:
+        if datasetGroup not in datasetInfo: continue
 
-        datasets = config['dataset'][datasetGroup].keys()
-        for dataset in datasets:
+        for dataset in datasetInfo[datasetGroup]:
             fLists.extend(glob("NanoAOD/2016/*/%s/%s.txt" % (datasetGroup, dataset.replace('/','.')[1:])))
 
 from math import ceil
@@ -27,6 +27,6 @@ for mode in modes:
         nJobs = ceil(1.*nFiles/nFilePerJob)
 
         jobName = "%s.%s" % (mode, os.path.basename(fList)[:-4])
-        cmd = "create-batch bash ../01_prod_ntuple.sh %s ../%s %d --jobName %s -T --nJobs %d" % (mode, fList, nFilePerJob, jobName, nJobs)
+        cmd = "cd submit; create-batch bash ../01_prod_ntuple.sh %s ../%s %d --jobName %s -T --nJobs %d" % (mode, fList, nFilePerJob, jobName, nJobs)
         os.system(cmd)
 
