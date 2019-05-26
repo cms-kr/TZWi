@@ -25,8 +25,8 @@ class TTbarDoubleLeptonCutFlow(Module, object):
     def analyze(self, event):
         cutStep = 0
         while True:
-            if event._tree.b_out_Z_charge != 0 or \
-               event._tree.b_out_Lepton1_pt < 25 or event._tree.b_out_Lepton2_pt < 25: break
+            if event._tree.b_out_Z_charge != 0 or event._tree.b_out_Z_mass < 20 or\
+               event._tree.b_out_Lepton1_pt < 25 or event._tree.b_out_Lepton2_pt < 20: break
             cutStep += 1
             if self.doZVetoCut and ((75 < event._tree.b_out_Z_mass) and (event._tree.b_out_Z_mass < 105)): break
             cutStep += 1

@@ -11,9 +11,16 @@ hlt_MC2017 = lambda : CombineHLT(fileName="ttbarDoubleLepton/2017.yaml", hltSet=
 
 for dataset in ['SingleMuon', 'SingleElectron',
                 'DoubleMuon', 'DoubleEG', 'MuonEG']:
-    for e in "BCDEFG":
-        vars()["hlt_Run2016%s_%s" % (e, dataset)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016BG.%s" % dataset, doFilter=True)
-    vars()["hlt_Run2016H_%s" % dataset] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016H.%s" % dataset, doFilter=True)
+    if (dataset == ('SingleMuon' or 'SingleElectron')):
+        for channel in ['MuEl', 'MuMu', 'ElEl']:
+            for e in "BCDEFG":
+                vars()["hlt_Run2016%s_%s_%s" % (e, dataset,channel)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016BG.%s.%s" % (dataset,channel), doFilter=True)
+            vars()["hlt_Run2016H_%s_%s" % (dataset,channel)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016H.%s.%s" % (dataset,channel), doFilter=True)                
+
+    else:
+        for e in "BCDEFG":
+            vars()["hlt_Run2016%s_%s" % (e, dataset)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016BG.%s" % dataset, doFilter=True)
+        vars()["hlt_Run2016H_%s" % dataset] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016H.%s" % dataset, doFilter=True)
 
     vars()["hlt_Run2017B_%s" % dataset] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2017.yaml", hltSet="Run2017B.%s" % dataset, doFilter=True)
     for e in "CDEF":

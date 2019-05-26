@@ -10,21 +10,19 @@ canvasStyles: ## Styling rules, later item overrides earlier ones
 
 histStyles: # Styling rules, later item overrides earlier ones
   - title: DYJets
-    color: "kOrange+1"
+    color: "kBlue"
   - title: SingleTop
-    color: "kMagenta+1"
-  - title: SingleTopV
-    color: "kMagenta+2"
+    color: "kOrange"
   - title: Tribosons
-    color: "kWhite"
+    color: "kCyan+1"
   - title: Dibosons
-    color: "kWhite"
+    color: "kCyan"
   - title: Wjets
-    color: "kGreen+1"
+    color: "kGreen"
   - title: ttH
-    color: "kRed+3"
+    color: "kWhite"
   - title: ttV
-    color: "kRed+4"
+    color: "kMagenta"
   - title: ttOthers
     color: "kRed"
   - title: ttJets
@@ -33,7 +31,6 @@ histStyles: # Styling rules, later item overrides earlier ones
 stackorders: ## MC samples to stack
   - DYJets
   - SingleTop
-  - SingleTopV
   - Tribosons
   - Dibosons
   - Wjets
