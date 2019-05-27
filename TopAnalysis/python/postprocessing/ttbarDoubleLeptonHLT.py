@@ -11,7 +11,7 @@ hlt_MC2017 = lambda : CombineHLT(fileName="ttbarDoubleLepton/2017.yaml", hltSet=
 
 for dataset in ['SingleMuon', 'SingleElectron',
                 'DoubleMuon', 'DoubleEG', 'MuonEG']:
-    if (dataset == ('SingleMuon' or 'SingleElectron')):
+    if dataset in ["SingleMuon" or "SingleElectron"]:
         for channel in ['MuEl', 'MuMu', 'ElEl']:
             for e in "BCDEFG":
                 vars()["hlt_Run2016%s_%s_%s" % (e, dataset,channel)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016BG.%s.%s" % (dataset,channel), doFilter=True)
