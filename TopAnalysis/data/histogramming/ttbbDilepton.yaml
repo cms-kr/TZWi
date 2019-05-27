@@ -57,163 +57,163 @@ hists:
         expr: "PV_npvsGood"
         weightsToDrop: ["puWeight", "puWeightUp", "puWeightDown"]
         bins:
-            nbinsX: 50
+            nbinsX: 40
             xmin: 0
-            xmax: 50
+            xmax: 40
     nPV:
         title: "nPV;Vertex multiplicity;Events"
         expr: "PV_npvsGood"
         bins:
-            nbinsX: 50
+            nbinsX: 40
             xmin: 0
-            xmax: 50
+            xmax: 40
 
     Lepton1_pt:
         title: "Lepton1_pt;Leading lepton p_{T} (GeV);Events"
         bins:
-            nbinsX: 50
+            nbinsX: 150
             xmin: 0
-            xmax: 300
+            xmax: 150
     Lepton1_eta:
         title: "Lepton1_eta;Leading lepton #eta;Events"
         bins:
-            nbinsX: 50
-            xmin: -2.5
-            xmax: 2.5
+            nbinsX: 10
+            xmin: -3.0
+            xmax:  3.0
     Lepton1_phi:
         title: "Lepton1_phi;Leading lepton #phi (radian);Events"
         bins:
             nbinsX: 50
-            xmin: -3.1415922
+            xmin:  -3.1415922
             xmax:  3.1415922
 
     Lepton2_pt:
         title: "Lepton2_pt;2nd leading lepton p_{T} (GeV);Events"
         bins:
-            nbinsX: 50
+            nbinsX: 150
             xmin: 0
-            xmax: 300
+            xmax: 150
     Lepton2_eta:
         title: "Lepton2_eta;2nd leading lepton #eta;Events"
         bins:
-            nbinsX: 50
-            xmin: -2.5
-            xmax: 2.5
+            nbinsX: 10
+            xmin: -3.0
+            xmax:  3.0
     Lepton2_phi:
         title: "Lepton2_phi;2nd leading lepton #phi (radian);Events"
         bins:
             nbinsX: 50
             xmin: -3.1415922
-            xmax:  3.1415922
+            xmax: 3.1415922
 
     Z_pt:
         title: "Z_pt;Z p_{T} (GeV);Events"
         bins:
-            nbinsX: 50
+            nbinsX: 30
             xmin: 0
             xmax: 300
     Z_eta:
         title: "Z_eta;Z #eta;Events"
         bins:
-            nbinsX: 50
-            xmin: -2.5
-            xmax: 2.5
+            nbinsX: 10
+            xmin: -3.0
+            xmax:  3.0
     Z_phi:
         title: "Z_phi;Z #phi (radian);Events"
         bins:
             nbinsX: 50
             xmin: -3.1415922
-            xmax:  3.1415922
+            xmax: 3.1415922
     Z_mass:
         title: "Z_mass;Z mass (GeV);Events"
         bins:
-            nbinsX: 100
+            nbinsX: 30
             xmin: 0
             xmax: 300
 
     MET_pt:
         title: "MET;Missing transverse momentum (GeV);Events"
         bins: 
-            nbinsX: 100
+            nbinsX: 30
             xmin: 0
-            xmax: 200
+            xmax: 300
     MET_phi:
         title: "MET_phi;MET #phi (radian);Events"
         bins: 
-            nbinsX: 100
+            nbinsX: 50
             xmin: -3.1415922
-            xmax:  3.1415922
+            xmax: 3.1415922
 
     nJet:
         title: "nGoodJet;Jet multiplicity;Events"
         bins:
-            nbinsX: 20
+            nbinsX: 10
             xmin: 0
-            xmax: 20
+            xmax: 10
         expr: "nGoodJet"
 
     nBjet:
         title: "nBjet;Bjet multiplicity;Events"
         bins:
-            nbinsX: 20
+            nbinsX: 6
             xmin: 0
-            xmax: 20
+            xmax: 6
 
     Jet1_pt:
         title: "Jet1_pt"
         expr: "GoodJet_pt[0]"
         bins:
-            nbinsX: 50
+            nbinsX: 20
             xmin: 0
-            xmax: 100
+            xmax: 200
     Jet2_pt:
         title: "Jet2_pt"
         expr: "GoodJet_pt[1]"
         bins:
-            nbinsX: 50
+            nbinsX: 20
             xmin: 0
-            xmax: 100
+            xmax: 200
     Jet3_pt:
         title: "Jet3_pt"
         expr: "GoodJet_pt[2]"
         bins:
-            nbinsX: 50
+            nbinsX: 20
             xmin: 0
-            xmax: 100
+            xmax: 200
     Jet4_pt:
         title: "Jet4_pt"
         expr: "GoodJet_pt[3]"
         bins:
-            nbinsX: 50
+            nbinsX: 20
             xmin: 0
-            xmax: 100
+            xmax: 200
 
     Jet1_CSV:
         title: "Jet1_CSV"
         expr: "GoodJet_CSVv2[0]"
         bins:
-            nbinsX: 50
+            nbinsX: 10
             xmin: 0
             xmax: 1
     Jet2_CSV:
         title: "Jet2_CSV"
         expr: "GoodJet_CSVv2[1]"
         bins:
-            nbinsX: 50
+            nbinsX: 10
             xmin: 0
             xmax: 1
     Jet3_CSV:
         title: "Jet3_CSV"
         expr: "GoodJet_CSVv2[2]"
         bins:
-            nbinsX: 50
+            nbinsX: 10
             xmin: 0
             xmax: 1
     Jet4_CSV:
         title: "Jet4_CSV"
         expr: "GoodJet_CSVv2[3]"
         bins:
-            nbinsX: 50
+            nbinsX: 10
             xmin: 0
             xmax: 1
     CSV2D:
@@ -221,10 +221,10 @@ hists:
         expr: "GoodJet_CSVv2[3]:GoodJet_CSVv2[2]" # y:x
         #cuts: ["nGoodJet >= 4"]
         bins:
-            nbinsY: 20
+            nbinsY: 10
             ymin: 0
             ymax: 1
-            nbinsX: 20
+            nbinsX: 10
             xmin: 0
             xmax: 1
 
