@@ -83,8 +83,8 @@ hists:
     Lepton1_phi:
         title: "Lepton1_phi;Leading lepton #phi (radian);Events"
         bins:
-            nbinsX: 10
-            xmin:  0
+            nbinsX: 50
+            xmin:  -3.1415922
             xmax:  3.1415922
 
     Lepton2_pt:
@@ -102,8 +102,8 @@ hists:
     Lepton2_phi:
         title: "Lepton2_phi;2nd leading lepton #phi (radian);Events"
         bins:
-            nbinsX: 10
-            xmin: 0
+            nbinsX: 50
+            xmin: -3.1415922
             xmax: 3.1415922
 
     Z_pt:
@@ -121,8 +121,8 @@ hists:
     Z_phi:
         title: "Z_phi;Z #phi (radian);Events"
         bins:
-            nbinsX: 10
-            xmin: 0
+            nbinsX: 50
+            xmin: -3.1415922
             xmax: 3.1415922
     Z_mass:
         title: "Z_mass;Z mass (GeV);Events"
@@ -140,8 +140,8 @@ hists:
     MET_phi:
         title: "MET_phi;MET #phi (radian);Events"
         bins: 
-            nbinsX: 10
-            xmin: 0
+            nbinsX: 50
+            xmin: -3.1415922
             xmax: 3.1415922
 
     nJet:
