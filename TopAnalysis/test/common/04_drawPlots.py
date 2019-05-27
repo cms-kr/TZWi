@@ -150,14 +150,17 @@ info.update(yaml.load(open("config/plots.yaml")))
 info.update(yaml.load(open("config/grouping.yaml")))
 info.update(yaml.load(open("config/histogramming.yaml")))
 
+imgs = {}
 files = []
 objs = {}
+htmlElements = {}
 for fName in glob("hist/*.root"):
     f = TFile(fName)
     mode = os.path.basename(fName)[:-5]
 
     for step in info['steps']:
         stepName = step['name']
+        if stepName not in htmlElements: htmlElements[stepName] = []
         if not os.path.exists("plots/%s/%s" % (mode, stepName)): os.makedirs("plots/%s/%s" % (mode, stepName))
         for hName in step['hists']:
             d = f.Get("%s/h%s" % (stepName, hName))
@@ -193,6 +196,21 @@ for fName in glob("hist/*.root"):
             #objs["%s/%s/%s" % (mode, stepName, hName)] = [c]#, hsMC, hMC, hRD, hRatio, leg]
 
             #obj[0].Print("plots/%s/%s/%s.png" % (mode, stepName, hName))
+            htmlElements[stepName].append( "%s/%s/%s" % (mode, stepName, hName) )
 
     files.append(f)
 
+with open("index.html", "w") as fout:
+    print>>fout, """<html><head><title>plots</title></head><body>"""
+    for stepName in sorted(htmlElements.keys()):
+        print>>fout, """<h2>%s</h2>""" % stepName
+        items = {}
+        for x in htmlElements[stepName]:
+            mode, step, name = x.split('/')
+            if name not in items: items[name] = []
+            items[name].append(x)
+        for name in sorted(items.keys()):
+            for item in sorted(items[name]):
+                print>>fout, '<div style="display:inline-block;border:1px solid grey;"><span>{0}</span><br/><a href="plots/{0}.png"><img style="width:300px" src="plots/{0}.png"/></a></div>'.format(item)
+            print>>fout, '<br/>'
+    print>>fout, """</body></html>"""
