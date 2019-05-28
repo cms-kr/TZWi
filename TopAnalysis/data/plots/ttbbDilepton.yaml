@@ -34,7 +34,7 @@ stackorders: ## MC samples to stack
   - Tribosons
   - Dibosons
   - Wjets
-  - ttH
-  - ttV
   - ttOthers
   - ttJets
+  - ttV
+  - ttH
