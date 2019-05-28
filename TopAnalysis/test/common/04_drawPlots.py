@@ -71,9 +71,9 @@ def buildCanvas(prefix, hists, opt):
     if hToDraw != None:
         if opt['doLogY'] and maxY != 0:
             mins = [maxY]
-            if hRD != None: mins.append(min([hRD.GetBinContent(i+1) for i in range(hRD.GetNbinsX()) if hRD.GetBinContent(i+1) > 0]))
-            if len(hMCs) != 0: mins.append(min([hMCs[-1].GetBinContent(i+1) for i in range(hMCs[-1].GetNbinsX()) if hMCs[-1].GetBinContent(i+1) > 0]))
-            for h in hNoStacks: mins.append(min([h.GetBinContent(i+1) for i in range(h.GetNbinsX()) if h.GetBinContent(i+1) > 0]))
+            if hRD != None: mins.extend([hRD.GetBinContent(i+1) for i in range(hRD.GetNbinsX()) if hRD.GetBinContent(i+1) > 0])
+            if len(hMCs) != 0: mins.extend([hMCs[-1].GetBinContent(i+1) for i in range(hMCs[-1].GetNbinsX()) if hMCs[-1].GetBinContent(i+1) > 0])
+            for h in hNoStacks: mins.extend([h.GetBinContent(i+1) for i in range(h.GetNbinsX()) if h.GetBinContent(i+1) > 0])
             hToDraw.SetMinimum(0.5*min(mins))
 
             hToDraw.SetMaximum(maxY*pow(10, 1./0.5))
