@@ -131,7 +131,7 @@ def buildCanvas(prefix, hists, opt):
         hToDraw.Draw("hist")
         hsMC.Draw("histsame")
         if hRD != None: hRD.Draw("sameLP")
-        if hsNoStack != None: hsNoStack.Draw("same,nostack")
+        if hsNoStack != None: hsNoStack.Draw("same,nostack,hist")
         hToDraw.Draw("axissame")
     leg.Draw()
 
@@ -177,7 +177,10 @@ for fName in glob("hist/*.root"):
                     if 'title' in histStyle and histStyle['title'] != title: continue
                     if 'color' in histStyle: color = histStyle['color']
                 h.SetLineColor(kBlack)
-                if color != None: h.SetFillColor(eval(color))
+                if color != None and not title.startswith("Data"):
+                    color = eval(color)
+                    if title in info['stackorders']: h.SetFillColor(color)
+                    else: h.SetLineColor(color)
 
                 if title.startswith("Data"): hRDs.append(h)
                 elif title in info['stackorders']: hMCs.append(h)
