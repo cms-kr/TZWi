@@ -81,8 +81,8 @@ processes:
         datasets: [MC2016.WWW, MC2016.WWZ, MC2016.WZZ, MC2016.ZZZ]
 
     SingleTopV:
-        title: "SingleTopV"
-        longTitle: "SingleTop+V"
+        title: "SingleTop"
+        longTitle: "SingleTop"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.tZq_ll]
