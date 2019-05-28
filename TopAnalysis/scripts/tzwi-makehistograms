@@ -23,7 +23,7 @@ if not os.path.exists(odName):
 
 #chain = TChain("Friends")
 chain = TChain("Events")
-chain.Add(dName+"/*.root")
+chain.Add(dName+"/*_Skim.root")
 gROOT.SetBatch(True)
 
 if 'NPROC' in os.environ:
