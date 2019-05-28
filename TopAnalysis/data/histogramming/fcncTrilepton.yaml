@@ -142,45 +142,45 @@ hists:
     Z_mass:
         title: "Z_mass;Z mass (GeV);Events"
         bins:
-            nbinsX: 100
+            nbinsX: 50
             xmin: 0
             xmax: 300
 
     MET_pt:
         title: "MET;Missing transverse momentum (GeV);Events"
         bins: 
-            nbinsX: 100
+            nbinsX: 50
             xmin: 0
             xmax: 200
     MET_phi:
         title: "MET_phi;MET #phi (radian);Events"
         bins: 
-            nbinsX: 100
+            nbinsX: 50
             xmin: -3.1415922
             xmax:  3.1415922
 
     nGoodJet:
         title: "nGoodJet;Jet multiplicity;Events"
         bins:
-            nbinsX: 20
+            nbinsX: 10
             xmin: 0
-            xmax: 20
+            xmax: 10
         expr: "nGoodJet"
 
     nBjet:
         title: "nBjet;Bjet multiplicity;Events"
         bins:
-            nbinsX: 20
+            nbinsX: 5
             xmin: 0
-            xmax: 20
+            xmax: 5
 
     nGoodJet_nBjet:
         title: "nGoodJet vs nBjet;nGoodJet;nBjet;Events"
         expr: "nBjet:nGoodJet" # y:x
         bins:
-            nbinsX: 20
+            nbinsX: 5
             xmin: 0
-            xmax: 20
-            nbinsY: 20
+            xmax: 5
+            nbinsY: 10
             ymin: 0
-            ymax: 20
+            ymax: 10

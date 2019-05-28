@@ -19,6 +19,7 @@ for proc in procInfo:
 
         for dataset in datasetInfo[datasetGroup]:
             fLists.extend(glob("NanoAOD/2016/*/%s/%s.txt" % (datasetGroup, dataset.replace('/','.')[1:])))
+fLists = list(set(fLists))
 
 from math import ceil
 for mode in modes:
