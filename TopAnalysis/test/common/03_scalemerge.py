@@ -39,7 +39,7 @@ def makedirs(d, dName):
 for mode in modes:
     fout = TFile("%s/%s.root" % (odName, mode), "recreate")
     ## Plan how to merge histograms
-    hists = {}
+    houts = {}
 
     ## Loop over steps x histograms
     for stepInfo in info['steps']:
@@ -53,7 +53,7 @@ for mode in modes:
                 longTitle = procInfo['longTitle'] if 'longTitle' in procInfo else title
 
                 houtPath = "%s/%s" % (hinPath, title)
-                hists[houtPath] = []
+                if houtPath not in houts: houts[houtPath] = []
 
                 for datasetGroup in procInfo['datasets']:
                     if datasetGroup not in info['dataset']: continue
@@ -84,9 +84,9 @@ for mode in modes:
                     if hout == None: continue
                     if nEvents != 0.: hout.Scale(xsec/nEvents)
 
-                    hists[houtPath].append(hout)
+                    houts[houtPath].append(hout)
 
-    for houtPath, hists in sorted(hists.iteritems(), key=lambda x: x[0]):
+    for houtPath, hists in sorted(houts.iteritems(), key=lambda x: x[0]):
         if len(hists) == 0: continue
         dout = fout.GetDirectory(os.path.dirname(houtPath))
         if dout == None: dout = makedirs(fout, os.path.dirname(houtPath))
