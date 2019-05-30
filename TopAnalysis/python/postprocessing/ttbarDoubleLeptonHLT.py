@@ -9,15 +9,8 @@ from TZWi.TopAnalysis.postprocessing.CombineHLT import CombineHLT
 hlt_MC2016 = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="RunIISummer16", doFilter=True)
 hlt_MC2017 = lambda : CombineHLT(fileName="ttbarDoubleLepton/2017.yaml", hltSet="RunIIFall17", doFilter=True)
 
-for dataset in ['SingleMuon', 'SingleElectron',
-                'DoubleMuon', 'DoubleEG', 'MuonEG']:
-    if dataset in ["SingleMuon" or "SingleElectron"]:
-        for channel in ['MuEl', 'MuMu', 'ElEl']:
-            for e in "BCDEFG":
-                vars()["hlt_Run2016%s_%s_%s" % (e, dataset,channel)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016BG.%s.%s" % (dataset,channel), doFilter=True)
-            vars()["hlt_Run2016H_%s_%s" % (dataset,channel)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016H.%s.%s" % (dataset,channel), doFilter=True)                
-
-    else:
+for dataset in ['DoubleMuon', 'DoubleEG', 'MuonEG']:
+    for channel in ['MuEl', 'MuMu', 'ElEl']:
         for e in "BCDEFG":
             vars()["hlt_Run2016%s_%s" % (e, dataset)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016BG.%s" % dataset, doFilter=True)
         vars()["hlt_Run2016H_%s" % dataset] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016H.%s" % dataset, doFilter=True)
@@ -26,3 +19,8 @@ for dataset in ['SingleMuon', 'SingleElectron',
     for e in "CDEF":
         vars()["hlt_Run2017%s_%s" % (e, dataset)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2017.yaml", hltSet="Run2017CF.%s" % dataset, doFilter=True)
 
+for dataset in ['SingleMuon', 'SingleElectron']:
+    for channel in ['MuEl', 'MuMu', 'ElEl']:
+        for e in "BCDEFG":
+            vars()["hlt_Run2016%s_%s_%s" % (e, dataset,channel)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016BG.%s.%s" % (dataset,channel), doFilter=True)
+        vars()["hlt_Run2016H_%s_%s" % (dataset,channel)] = lambda : CombineHLT(fileName="ttbarDoubleLepton/2016.yaml", hltSet="Run2016H.%s.%s" % (dataset,channel), doFilter=True)
