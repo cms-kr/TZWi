@@ -11,39 +11,38 @@ if __name__ == '__main__':
     pool = Pool(processes=min(cpu_count, 20))
 
     ## Load all information
-    info = {}
     histSetFile = "config/histogramming.yaml"
-    info.update(yaml.load(open(histSetFile)))
-    info.update(yaml.load(open("config/systematics.yaml")))
-    info.update(yaml.load(open("config/grouping.yaml")))
-    for f in glob("config/datasets/*.yaml"):
-        if 'dataset' not in info: info['dataset'] = {}
-        info['dataset'].update(yaml.load(open(f))['dataset'])
+    datasetConfig = {}
+    for f in glob("config/datasets/*.yaml"): datasetConfig.update(yaml.load(open(f))['dataset'])
+    groupConfig = yaml.load(open("config/grouping.yaml"))["processes"]
+    #systConfig = yaml.load(open("config/systematics.yaml"))["systematics"] ## FIXME: To be implemented later
 
-    aliasToProc = {}
-    for proc, aliases in info['processes'].iteritems():
-        for alias in aliases['datasets']: aliasToProc[alias.split('.')[1]] = proc
-    datasetToAlias = {}
-    for alias, datasets in info['dataset'].iteritems():
-        for dataset in datasets: datasetToAlias[dataset] = alias.split('.')[1]
+    ## Build CMS official dataset full name to process group mapping
+    dsetfullname2procs = {}
+    for proc in groupConfig:
+        for dataset in groupConfig[proc]['datasets']:
+            if dataset not in datasetConfig: continue
+            for dsetfullname in datasetConfig[dataset]:
+                if dsetfullname not in dsetfullname2procs: dsetfullname2procs[dsetfullname] = []
+                dsetfullname2procs[dsetfullname].append(proc)
 
     ress = []
     for din in glob("ntuple/*/*/*"):
         channel, dataset = din.split('/')[2:]
-
         dataset = '/'+dataset.replace('.', '/')
-        if dataset not in datasetToAlias: continue
-        alias = datasetToAlias[dataset]
-        if alias not in aliasToProc: continue
-        proc = aliasToProc[alias]
+        if dataset not in dsetfullname2procs: continue
 
-        dout = "raw_hist/%s/%s" % (channel, proc)
+        for proc in dsetfullname2procs[dataset]:
+            config = groupConfig[proc]
+            if 'channels' in config and channel not in config['channels']: continue
 
-        cut = info['processes'][proc]['cut'] if 'cut' in info['processes'][proc] else '1'
-        weight = info['processes'][proc]['weight'] if 'weight' in info['processes'][proc] else '1'
+            dout = "raw_hist/%s/%s" % (channel, proc)
 
-        #os.system("NPROC=$(nproc) tzwi-makehistograms %s %s %s %s" % (cut, weight, histSetFile, d))
-        res = pool.apply_async(os.system, ("tzwi-makehistograms '%s' '%s' %s %s %s" % (cut, weight, histSetFile, din, dout),))
-        ress.append(res)
+            cut = config['cut'] if 'cut' in config else '1'
+            weight = config['weight'] if 'weight' in config else '1'
+
+            #os.system("NPROC=$(nproc) tzwi-makehistograms %s %s %s %s" % (cut, weight, histSetFile, d))
+            res = pool.apply_async(os.system, ("tzwi-makehistograms '%s' '%s' %s %s %s" % (cut, weight, histSetFile, din, dout),))
+            ress.append(res)
 
     for r in ress: r.get()
