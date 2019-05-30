@@ -1,14 +1,19 @@
 processes:
     DataElEl:
         title: "Data"
+        channels: ["ElEl"]
         datasets:
             - Run2016.DoubleEG
+            - Run2016.SingleElectron
     DataMuMu:
         title: "Data"
+        channels: ["MuMu"]
         datasets:
             - Run2016.DoubleMuon
+            - Run2016.SingleMuon
     DataMuEl:
         title: "Data"
+        channels: ["MuEl"]
         datasets:
             - Run2016.MuonEG
 

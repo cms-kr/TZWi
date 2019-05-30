@@ -31,7 +31,7 @@ if 'NPROC' in os.environ:
     prf = TProof.Open("workers=%s" % nProc)
     chain.SetProof(True)
 
-print "Processing", ofName, "=>", odName
+print "Processing", ofName
 
 oFile = TFile(ofName, 'recreate')
 
