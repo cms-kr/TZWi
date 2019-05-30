@@ -42,10 +42,13 @@ for mode in modes:
     houts = {}
 
     ## Loop over steps x histograms
+    print "@@ Collecting source histograms...", mode
     for stepInfo in info['steps']:
+        print stepInfo['name'], "/",
         for hName in stepInfo['hists']:
             if hName not in info['hists']: continue
             hinPath = "%s/h%s" % (stepInfo['name'], hName)
+            print hName,
 
             ## open raw_hist root files
             for proc, procInfo in info['processes'].iteritems():
@@ -85,7 +88,9 @@ for mode in modes:
                     if nEvents != 0.: hout.Scale(xsec/nEvents)
 
                     houts[houtPath].append(hout)
+        print ""
 
+    print "Writing output..."
     for houtPath, hists in sorted(houts.iteritems(), key=lambda x: x[0]):
         if len(hists) == 0: continue
         dout = fout.GetDirectory(os.path.dirname(houtPath))
