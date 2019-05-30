@@ -1,31 +1,44 @@
 processes:
     DataElElEl:
         title: "Data"
+        channels: ["ElElEl"]
+        cut: "HLT"
         datasets:
-            - Run2016.DoubleEG
+            - Run2016.SingleMuon
             - Run2016.SingleElectron
+            - Run2016.DoubleMuon
+            - Run2016.DoubleEG
+            - Run2016.MuonEG
     DataMuMuMu:
         title: "Data"
+        channels: ["MuMuMu"]
+        cut: "HLT"
         datasets:
-            - Run2016.DoubleMuon
             - Run2016.SingleMuon
-            - Run2016.MuonEG
-    DataElElMu:
-        title: "Data"
-        datasets:
-            - Run2016.MuonEG
-            - Run2016.DoubleMuon
-            - Run2016.SingleMuon
-            - Run2016.DoubleEG
             - Run2016.SingleElectron
-    DataMuMuEl:
-        title: "Data"
-        datasets:
-            - Run2016.MuonEG
             - Run2016.DoubleMuon
-            - Run2016.SingleMuon
             - Run2016.DoubleEG
+            - Run2016.MuonEG
+    DataMuElEl:
+        title: "Data"
+        channels: ["MuElEl"]
+        cut: "HLT"
+        datasets:
+            - Run2016.SingleMuon
             - Run2016.SingleElectron
+            - Run2016.DoubleMuon
+            - Run2016.DoubleEG
+            - Run2016.MuonEG
+    DataElMuMu:
+        title: "Data"
+        channels: ["ElMuMu"]
+        cut: "HLT"
+        datasets:
+            - Run2016.SingleMuon
+            - Run2016.SingleElectron
+            - Run2016.DoubleMuon
+            - Run2016.DoubleEG
+            - Run2016.MuonEG
 
     DYJets:
         title: "DYJets"
