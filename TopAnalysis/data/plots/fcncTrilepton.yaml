@@ -32,12 +32,12 @@ histStyles: # Styling rules, later item overrides earlier ones
 
 stackorders: ## MC samples to stack
   - DYJets
-  - SingleTop
-  - SingleTopV
   - Tribosons
   - Dibosons
   - Wjets
-  - ttH
-  - ttV
   - ttOthers
   - ttJets
+  - ttV
+  - ttH
+  - SingleTop
+  - SingleTopV
