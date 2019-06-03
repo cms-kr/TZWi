@@ -24,7 +24,7 @@ ERA=$(echo $DATASET0 | cut -d. -f2 | cut -d- -f1 | sed -e 's;NanoAOD;;g')
 DATATYPE=$(basename $(dirname $FILELIST) | cut -d. -f1)
 YEAR=${DATATYPE:(-4)}
 if [ ${DATATYPE::3} == "Run" ]; then
-  HLTMODULE=${ERA::8}_$(echo $DATASET | cut -d/ -f2)
+  HLTMODULE=${ERA::8}_$(echo $DATASET | cut -d/ -f2)_${CHANNEL}
 else
   HLTMODULE=$(echo $DATATYPE | cut -d_ -f1)
 fi
@@ -33,7 +33,7 @@ FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | s
 
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.flags flags_${DATATYPE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${HLTMODULE}_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonHLT hlt_${HLTMODULE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLepton ttbar_${CHANNEL}_${YEAR}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.ttbarDoubleLeptonCutFlow cutFlow_${CHANNEL}"
 
