@@ -11,7 +11,7 @@ hlt_MC2016 = lambda : CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run
 for dataset in ['SingleMuon', 'SingleElectron',
                 'DoubleMuon', 'DoubleEG', 'MuonEG']:
     for e in "BCDE":
-        vars()['hlt_Run2016%s_%s' % (e, dataset)] = lambda : CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016BE.%s" % dataset, doFilter=True)
+        vars()['hlt_Run2016%s_%s' % (e, dataset)] = lambda x=dataset: CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016BE.%s" % x, doFilter=True)
     for e in "FG":
-        vars()['hlt_Run2016%s_%s' % (e, dataset)] = lambda : CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016FG.%s" % dataset, doFilter=True)
-    vars()['hlt_Run2016H_%s'  % dataset] = lambda : CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016H.%s"  % dataset, doFilter=True)
+        vars()['hlt_Run2016%s_%s' % (e, dataset)] = lambda x=dataset: CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016FG.%s" % x, doFilter=True)
+    vars()['hlt_Run2016H_%s'  % dataset] = lambda x=dataset: CombineHLT(fileName="fcncTriLepton/2016.yaml", hltSet="Run2016H.%s"  % x, doFilter=True)
