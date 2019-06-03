@@ -1,7 +1,7 @@
 processes:
     DataElElEl:
         title: "Data"
-        channels: ["ElElEl"]
+        modes: ["ElElEl"]
         cut: "HLT"
         datasets:
             - Run2016.SingleMuon
@@ -11,7 +11,7 @@ processes:
             - Run2016.MuonEG
     DataMuMuMu:
         title: "Data"
-        channels: ["MuMuMu"]
+        modes: ["MuMuMu"]
         cut: "HLT"
         datasets:
             - Run2016.SingleMuon
@@ -21,7 +21,7 @@ processes:
             - Run2016.MuonEG
     DataMuElEl:
         title: "Data"
-        channels: ["MuElEl"]
+        modes: ["MuElEl"]
         cut: "HLT"
         datasets:
             - Run2016.SingleMuon
@@ -31,7 +31,7 @@ processes:
             - Run2016.MuonEG
     DataElMuMu:
         title: "Data"
-        channels: ["ElMuMu"]
+        modes: ["ElMuMu"]
         cut: "HLT"
         datasets:
             - Run2016.SingleMuon
