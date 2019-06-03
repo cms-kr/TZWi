@@ -8,42 +8,42 @@ steps:
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
               "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
-              "Z_pt", "Z_mass",]
+              "Z_pt", "Z_mass", "W_MT",]
     - name: "S2"
       cuts: ["CutStep >= 2", "Z_mass > 20"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
               "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
-              "Z_pt", "Z_mass",
+              "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S3"
       cuts: ["CutStep >= 3", "Z_mass > 20"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
-              "Z_pt", "Z_mass",
+              "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S4"
       cuts: ["CutStep >= 4", "Z_mass > 20"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
-              "Z_pt", "Z_mass",
+              "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S5"
       cuts: ["CutStep >= 5", "Z_mass > 20"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
-              "Z_pt", "Z_mass",
+              "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S6"
       cuts: ["CutStep >= 6", "Z_mass > 20"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
-              "Z_pt", "Z_mass",
+              "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
 
@@ -184,3 +184,9 @@ hists:
             nbinsY: 10
             ymin: 0
             ymax: 10
+    W_MT:
+        title: "W_MT;Transeverse mass of W boson;Events"
+        bins:
+            nbinsX: 50
+            xmin: 0
+            xmax: 300
