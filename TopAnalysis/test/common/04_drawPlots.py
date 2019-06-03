@@ -176,13 +176,16 @@ for fName in glob("hist/*.root"):
                 color = None
                 for histStyle in info['histStyles']:
                     if 'title' in histStyle and histStyle['title'] != title: continue
-                    if 'color' in histStyle: color = histStyle['color']
+                    if 'color' in histStyle:
+                        color = histStyle['color']
+                        if color.startswith("#"): color = TColor.GetColor(color)
+                        else: color = eval(color)
                 h.SetLineColor(kBlack)
                 if not title.startswith("Data"):
                     if title in info['stackorders']:
-                        if color != None: h.SetFillColor(eval(color))
+                        if color != None: h.SetFillColor(color)
                     else:
-                        if color != None: h.SetLineColor(eval(color))
+                        if color != None: h.SetLineColor(color)
                         h.SetLineWidth(2)
 
                 if title.startswith("Data"): hRDs.append(h)

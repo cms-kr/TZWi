@@ -10,23 +10,23 @@ canvasStyles: ## Styling rules, later item overrides earlier ones
 
 histStyles: # Styling rules, later item overrides earlier ones
   - title: DYJets
-    color: "kBlue"
+    color: "#3068FB"
   - title: SingleTop
-    color: "kOrange"
+    color: "#F406EF"
   - title: Tribosons
     color: "kCyan+1"
   - title: Dibosons
     color: "kCyan"
   - title: Wjets
-    color: "kGreen"
+    color: "#31CB33"
   - title: ttH
     color: "kWhite"
   - title: ttV
-    color: "kMagenta"
+    color: "#7473FF"
   - title: ttOthers
-    color: "kRed"
+    color: "#FF696B"
   - title: ttJets
-    color: "kRed"
+    color: "#F60500"
 
 stackorders: ## MC samples to stack
   - DYJets
