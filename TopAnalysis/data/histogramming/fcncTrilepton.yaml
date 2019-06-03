@@ -72,7 +72,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "TTCR"
-      cuts: ["TMath::Abs(Z_mass-91.2)>7.5", "nGoodJet>=2", "nBjet==1"]
+      cuts: ["TMath::Abs(Z_mass-91.2)>7.5", "nGoodJet>=2", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
@@ -80,7 +80,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "TTSR"
-      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nBjet==1"]
+      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
