@@ -20,12 +20,6 @@ for f in glob("config/datasets/*.yaml"):
     if 'dataset' not in info: info['dataset'] = {}
     info['dataset'].update(yaml.load(open(f))['dataset'])
 
-## Collect files and their statistics
-fins = {}
-for f in glob("raw_hist/*/*/*.root"):
-    fin = TFile(f)
-    fins[f.split('/',1)[-1]] = fin
-
 if not os.path.exists(odName): os.makedirs(odName)
 
 def makedirs(d, dName):
@@ -40,6 +34,12 @@ for mode in modes:
     fout = TFile("%s/%s.root" % (odName, mode), "recreate")
     ## Plan how to merge histograms
     houts = {}
+
+    ## Collect files and their statistics
+    fins = {}
+    for f in glob("raw_hist/%s/*/*.root" % mode):
+        fin = TFile(f)
+        fins[f.split('/',1)[-1]] = fin
 
     ## Loop over steps x histograms
     print "@@ Collecting source histograms...", mode
@@ -104,4 +104,10 @@ for mode in modes:
         if hout == None: continue
         hout.SetName(os.path.basename(houtPath))
         hout.Write()
+    print "Closing..."
+    fout.Close()
+    for fin in fins.values(): fin.Close()
+    print "done."
+
+print "Finishing..."
 
