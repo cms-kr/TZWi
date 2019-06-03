@@ -187,6 +187,6 @@ hists:
     W_MT:
         title: "W_MT;Transeverse mass of W boson;Events"
         bins:
-            nbinsX: 50
+            nbinsX: 25
             xmin: 0
             xmax: 300
