@@ -64,6 +64,20 @@ def buildCanvas(prefix, hists, opt):
         hRatio.Reset()
         if None not in (hMC, hRD): hRatio.Divide(hMC, hRD, 1, 1, "B")
 
+    ## Error bands
+    grpMCErr = TGraphAsymmErrors()
+    grpRatioErr = TGraphAsymmErrors()
+    if hMC != None:
+        for b in range(hMC.GetNbinsX()):
+            grpMCErr.SetPoint(b, hMC.GetXaxis().GetBinCenter(b+1), hMC.GetBinContent(b+1))
+            grpRatioErr.SetPoint(b, hMC.GetXaxis().GetBinCenter(b+1), 1)
+            w = hMC.GetXaxis().GetBinWidth(b+1)
+            ey = hMC.GetBinError(b+1)
+            eyRatio = hMC.GetBinError(b+1)/hMC.GetBinContent(b+1) if hMC.GetBinContent(b+1) > 0 else 0
+
+            grpMCErr.SetPointError(b, w/2, w/2, ey, ey)
+            grpRatioErr.SetPointError(b, w/2, w/2, eyRatio, eyRatio)
+
     ## Set range
     maxY = max(hMC.GetMaximum() if hMC != None else 0,
                hRD.GetMaximum() if hRD != None else 0)
@@ -119,6 +133,11 @@ def buildCanvas(prefix, hists, opt):
         hRatio.GetYaxis().SetLabelSize(0.1)
         hRatio.GetYaxis().SetNdivisions(505)
 
+    grpMCErr.SetFillColor(kBlack)
+    grpMCErr.SetFillStyle(3356)
+    grpRatioErr.SetFillColor(kBlack)
+    grpRatioErr.SetFillStyle(3356)
+
     ## Draw
     c = TCanvas("c%s" % prefix.replace('/','_'), prefix, 500, 700)
     c.Divide(1,2)
@@ -131,6 +150,7 @@ def buildCanvas(prefix, hists, opt):
     if hToDraw != None:
         hToDraw.Draw("hist")
         hsMC.Draw("histsame")
+        grpMCErr.Draw("2")
         if hRD != None: hRD.Draw("sameLP")
         if hsNoStack != None: hsNoStack.Draw("same,nostack,hist")
         hToDraw.Draw("axissame")
@@ -140,7 +160,11 @@ def buildCanvas(prefix, hists, opt):
     pad2.SetPad(0, 0, 1, 2./7)
     pad2.SetBottomMargin(0.12)
 
-    if hRatio != None: hRatio.Draw("ep")
+    if hRatio != None:
+        hRatio.Draw("axis")
+        grpRatioErr.Draw("2")
+        hRatio.Draw("epsame")
+        hRatio.Draw("axissame")
 
     c.Print("plots/%s/%s/%s.png" % (mode, stepName, hName))
     return c, pad1, pad2, leg, hRD, hMC, hsMC, hsNoStack
@@ -176,13 +200,16 @@ for fName in glob("hist/*.root"):
                 color = None
                 for histStyle in info['histStyles']:
                     if 'title' in histStyle and histStyle['title'] != title: continue
-                    if 'color' in histStyle: color = histStyle['color']
+                    if 'color' in histStyle:
+                        color = histStyle['color']
+                        if color.startswith("#"): color = TColor.GetColor(color)
+                        else: color = eval(color)
                 h.SetLineColor(kBlack)
                 if not title.startswith("Data"):
                     if title in info['stackorders']:
-                        if color != None: h.SetFillColor(eval(color))
+                        if color != None: h.SetFillColor(color)
                     else:
-                        if color != None: h.SetLineColor(eval(color))
+                        if color != None: h.SetLineColor(color)
                         h.SetLineWidth(2)
 
                 if title.startswith("Data"): hRDs.append(h)
@@ -206,9 +233,22 @@ for fName in glob("hist/*.root"):
 
     files.append(f)
 
-with open("index.html", "w") as fout:
+with open("plots/index.html", "w") as fout:
     print>>fout, """<html><head><title>plots</title></head><body>"""
     for stepName in sorted(htmlElements.keys()):
+        print>>fout, """<h2><a href="%s.html">%s</a></h2>""" % (stepName, stepName)
+        items = {}
+        for x in htmlElements[stepName]:
+            mode, step, name = x.split('/')
+            if name not in items: items[name] = []
+            items[name].append(x)
+        for name in sorted(items.keys()):
+            for item in sorted(items[name]):
+                print>>fout, '<div style="display:inline-block;border:1px solid grey;"><span>{0}</span><br/><a href="{0}.png"><img style="width:300px" src="{0}.png"/></a></div>'.format(item)
+            print>>fout, '<br/>'
+    print>>fout, """</body></html>"""
+for stepName in sorted(htmlElements.keys()):
+    with open("plots/%s.html" % stepName, "w") as fout:
         print>>fout, """<h2>%s</h2>""" % stepName
         items = {}
         for x in htmlElements[stepName]:
@@ -217,6 +257,7 @@ with open("index.html", "w") as fout:
             items[name].append(x)
         for name in sorted(items.keys()):
             for item in sorted(items[name]):
-                print>>fout, '<div style="display:inline-block;border:1px solid grey;"><span>{0}</span><br/><a href="plots/{0}.png"><img style="width:300px" src="plots/{0}.png"/></a></div>'.format(item)
+                print>>fout, '<div style="display:inline-block;border:1px solid grey;"><span>{0}</span><br/><a href="{0}.png"><img style="width:300px" src="{0}.png"/></a></div>'.format(item)
             print>>fout, '<br/>'
-    print>>fout, """</body></html>"""
+        print>>fout, """</body></html>"""
+

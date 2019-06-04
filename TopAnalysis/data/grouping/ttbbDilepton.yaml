@@ -1,21 +1,23 @@
 processes:
     DataElEl:
         title: "Data"
-        channels: ["ElEl"]
+        modes: ["ElEl"]
         datasets:
             - Run2016.DoubleEG
             - Run2016.SingleElectron
     DataMuMu:
         title: "Data"
-        channels: ["MuMu"]
+        modes: ["MuMu"]
         datasets:
             - Run2016.DoubleMuon
             - Run2016.SingleMuon
     DataMuEl:
         title: "Data"
-        channels: ["MuEl"]
+        modes: ["MuEl"]
         datasets:
             - Run2016.MuonEG
+            - Run2016.SingleMuon
+            - Run2016.SingleElectron
 
     DYJets:
         title: "DYJets"

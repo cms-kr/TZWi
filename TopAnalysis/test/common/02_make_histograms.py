@@ -14,13 +14,13 @@ if __name__ == '__main__':
     histSetFile = "config/histogramming.yaml"
     datasetConfig = {}
     for f in glob("config/datasets/*.yaml"): datasetConfig.update(yaml.load(open(f))['dataset'])
-    groupConfig = yaml.load(open("config/grouping.yaml"))["processes"]
+    procInfo = yaml.load(open("config/grouping.yaml"))["processes"]
     #systConfig = yaml.load(open("config/systematics.yaml"))["systematics"] ## FIXME: To be implemented later
 
     ## Build CMS official dataset full name to process group mapping
     dsetfullname2procs = {}
-    for proc in groupConfig:
-        for dataset in groupConfig[proc]['datasets']:
+    for proc in procInfo:
+        for dataset in procInfo[proc]['datasets']:
             if dataset not in datasetConfig: continue
             for dsetfullname in datasetConfig[dataset]:
                 if dsetfullname not in dsetfullname2procs: dsetfullname2procs[dsetfullname] = []
@@ -28,15 +28,15 @@ if __name__ == '__main__':
 
     ress = []
     for din in glob("ntuple/*/*/*"):
-        channel, dataset = din.split('/')[2:]
+        mode, dataset = din.split('/')[2:]
         dataset = '/'+dataset.replace('.', '/')
         if dataset not in dsetfullname2procs: continue
 
         for proc in dsetfullname2procs[dataset]:
-            config = groupConfig[proc]
-            if 'channels' in config and channel not in config['channels']: continue
+            config = procInfo[proc]
+            if 'modes' in config and mode not in config['modes']: continue
 
-            dout = "raw_hist/%s/%s" % (channel, proc)
+            dout = "raw_hist/%s/%s" % (mode, proc)
 
             cut = config['cut'] if 'cut' in config else '1'
             weight = config['weight'] if 'weight' in config else '1'

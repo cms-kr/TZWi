@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os
 modes = ["ElEl", "MuEl", "MuMu"]
+baseDir = "NanoAOD/2016"
+
 nFilePerJob = int(os.environ["NFILE"]) if "NFILE" in os.environ else 5
 if not os.path.exists("submit"): os.mkdir("submit")
 
@@ -8,22 +10,25 @@ import yaml
 from glob import glob
 procInfo = yaml.load(open("config/grouping.yaml").read())["processes"]
 datasetInfo = {}
-for f in glob("NanoAOD/2016/*.yaml"):
+for f in glob("%s/*.yaml" % baseDir):
     for datasetGroup, dataset in yaml.load(open(f).read())['dataset'].iteritems():
         datasetInfo[datasetGroup] = dataset.keys()
 
-fLists = []
+toSubmit = {}
 for proc in procInfo:
     for datasetGroup in procInfo[proc]['datasets']:
         if datasetGroup not in datasetInfo: continue
 
         for dataset in datasetInfo[datasetGroup]:
-            fLists.extend(glob("NanoAOD/2016/*/%s/%s.txt" % (datasetGroup, dataset.replace('/','.')[1:])))
-fLists = list(set(fLists))
+            fLists = glob("%s/*/%s/%s.txt" % (baseDir, datasetGroup, dataset.replace('/','.')[1:]))
+            for fList in fLists:
+                if fList not in toSubmit: toSubmit[fList] = []
+                toSubmit[fList].extend(procInfo[proc]['modes'] if 'modes' in procInfo[proc] else modes)
+for v in toSubmit.values(): v = set(v)
 
 from math import ceil
-for mode in modes:
-    for fList in fLists:
+for fList, modes in toSubmit.iteritems():
+    for mode in modes:
         nFiles = len([x for x in open(fList).readlines() if len(x) != 0 and x[0] != '#'])
         nJobs = ceil(1.*nFiles/nFilePerJob)
 
