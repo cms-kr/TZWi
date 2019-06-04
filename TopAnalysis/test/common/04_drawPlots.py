@@ -233,9 +233,22 @@ for fName in glob("hist/*.root"):
 
     files.append(f)
 
-with open("index.html", "w") as fout:
+with open("plots/index.html", "w") as fout:
     print>>fout, """<html><head><title>plots</title></head><body>"""
     for stepName in sorted(htmlElements.keys()):
+        print>>fout, """<h2><a href="%s.html">%s</a></h2>""" % (stepName, stepName)
+        items = {}
+        for x in htmlElements[stepName]:
+            mode, step, name = x.split('/')
+            if name not in items: items[name] = []
+            items[name].append(x)
+        for name in sorted(items.keys()):
+            for item in sorted(items[name]):
+                print>>fout, '<div style="display:inline-block;border:1px solid grey;"><span>{0}</span><br/><a href="{0}.png"><img style="width:300px" src="{0}.png"/></a></div>'.format(item)
+            print>>fout, '<br/>'
+    print>>fout, """</body></html>"""
+for stepName in sorted(htmlElements.keys()):
+    with open("plots/%s.html" % stepName, "w") as fout:
         print>>fout, """<h2>%s</h2>""" % stepName
         items = {}
         for x in htmlElements[stepName]:
@@ -244,6 +257,7 @@ with open("index.html", "w") as fout:
             items[name].append(x)
         for name in sorted(items.keys()):
             for item in sorted(items[name]):
-                print>>fout, '<div style="display:inline-block;border:1px solid grey;"><span>{0}</span><br/><a href="plots/{0}.png"><img style="width:300px" src="plots/{0}.png"/></a></div>'.format(item)
+                print>>fout, '<div style="display:inline-block;border:1px solid grey;"><span>{0}</span><br/><a href="{0}.png"><img style="width:300px" src="{0}.png"/></a></div>'.format(item)
             print>>fout, '<br/>'
-    print>>fout, """</body></html>"""
+        print>>fout, """</body></html>"""
+

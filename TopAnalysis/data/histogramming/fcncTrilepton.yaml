@@ -47,6 +47,48 @@ steps:
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
 
+    - name: "WZCR"
+      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=1", "nBjet==0"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "MET_pt", "MET_phi",]
+
+    - name: "STCR"
+      cuts: ["TMath::Abs(Z_mass-91.2)>7.5", "nGoodJet==1", "nBjet==1"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "MET_pt", "MET_phi",]
+
+    - name: "STSR"
+      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet==1", "nBjet==1"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "MET_pt", "MET_phi",]
+
+    - name: "TTCR"
+      cuts: ["TMath::Abs(Z_mass-91.2)>7.5", "nGoodJet>=2", "nBjet>=1"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "MET_pt", "MET_phi",]
+
+    - name: "TTSR"
+      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nBjet>=1"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "MET_pt", "MET_phi",]
+
+
+
 hists:
     nPV_noWeight:
         title: "nPV_noWeight;Vertex multiplicity;Events (unweighted)"
