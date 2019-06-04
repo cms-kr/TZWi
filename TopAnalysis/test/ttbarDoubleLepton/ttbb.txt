@@ -1,0 +1,84 @@
+imax *
+jmax *
+kmax *
+
+shapes * * csvNbjets2VisNestTot_nuisance.root $CHANNEL_$PROCESS $CHANNEL_$PROCESS_$SYSTEMATIC
+shapes data_obs * csvNbjets2VisNestTot_nuisance.root $CHANNEL_data_obs 
+
+bin MuEl ElEl MuMu
+observation 9332 2298 4235 
+bin MuEl MuEl MuEl MuEl MuEl MuEl MuEl MuEl MuEl MuEl ElEl ElEl ElEl ElEl ElEl ElEl ElEl ElEl ElEl ElEl MuMu MuMu MuMu MuMu MuMu MuMu MuMu MuMu MuMu MuMu
+process ttbb ttbj ttcclf ttcclf2 ttothers dy vv vvv ttv st ttbb ttbj ttcclf ttcclf2 ttothers dy vv vvv ttv st ttbb ttbj ttcclf ttcclf2 ttothers dy vv vvv ttv st
+process -4 -3 -2 -1 0 1 2 3 4 5 -4 -3 -2 -1 0 1 2 3 4 5 -4 -3 -2 -1 0 1 2 3 4 5
+rate 6028.959750 20027.256195 27230.718714 3048.433713 883.662590 6.652215 0.748382 0.107776 42.932607 290.293222 1435.013222 4866.489758 5924.366372 717.707915 207.380639 38.699829 0.388424 0.101556 14.275505 70.062420 2614.912532 9078.629431 12487.109043 1382.091840 392.267773 26.494547 1.965034 0.177860 25.069092 133.749992
+ 
+#theoretical
+FSR shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+ISR shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+UE shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+erdon shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+qcderdon shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+gluonmove shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+hdamp shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+topPt shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+MuR shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+MuF shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+PDF shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+PDFAlphaS shape2N 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - - 1 1 1 1 1 - - - - -
+
+theory group = topPt FSR ISR UE hdamp qcderdon erdon gluonmove MuF MuR PDF PDFAlphaS  
+
+#experimental
+BtagLF shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+BtagHF shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+BtagHFStats1 shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+BtagHFStats2 shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+BtagLFStats1 shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+BtagLFStats2 shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+BtagCQErr1 shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+BtagCQErr2 shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+btag group = BtagLF BtagHF BtagHFStats1 BtagHFStats2 BtagLFStats1 BtagLFStats2 BtagCQErr1 BtagCQErr2
+
+Trigger shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+JER shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+PU shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+#MuScale shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+#ElScale shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+MuEff shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ElEff shape2N 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+dy lnN - - - - - 1.3 - - - - - - - - - 1.3 - - - - - - - - - 1.3 - - - - 
+vv lnN - - - - - - 1.3 - - - - - - - - - 1.3 - - - - - - - - - 1.3 - - - 
+vvv lnN - - - - - - - 1.3 - - - - - - - - - 1.3 - - - - - - - - - 1.3 - - 
+ttv lnN - - - - - - - - 1.3 - - - - - - - - - 1.3 - - - - - - - - - 1.3 - 
+st lnN - - - - - - - - - 1.3 - - - - - - - - - 1.3 - - - - - - - - - 1.3
+Lumi lnN 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025 1.025
+JESAbsoluteStat shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESAbsoluteScale shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESAbsoluteMPFBias shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESFragmentation shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESSinglePionECAL shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESSinglePionHCAL shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESFlavorQCD shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESTimePtEta shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeJEREC1 shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeJEREC2 shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeJERHF shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativePtBB shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativePtEC1 shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativePtEC2 shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativePtHF shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeBal shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeFSR shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeStatFSR shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeStatEC shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESRelativeStatHF shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESPileUpDataMC shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESPileUpPtRef shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESPileUpPtBB shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESPileUpPtEC1 shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESPileUpPtEC2 shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+JESPileUpPtHF shape2N  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+jes group = JESAbsoluteStat JESAbsoluteScale JESAbsoluteMPFBias JESFragmentation JESSinglePionECAL JESSinglePionHCAL JESFlavorQCD JESTimePtEta JESRelativeJEREC1 JESRelativeJEREC2 JESRelativeJERHF JESRelativePtBB JESRelativePtEC1 JESRelativePtEC2 JESRelativePtHF JESRelativeBal JESRelativeFSR JESPileUpDataMC JESPileUpPtRef JESPileUpPtBB JESPileUpPtEC1 JESPileUpPtEC2 JESPileUpPtHF 
+* autoMCStats 0
