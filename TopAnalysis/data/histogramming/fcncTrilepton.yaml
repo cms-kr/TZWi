@@ -2,7 +2,7 @@
 
 steps:
     - name: "S1"
-      cuts: ["CutStep >= 1", "Z_mass > 20"]
+      cuts: ["CutStep >= 1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
@@ -10,7 +10,7 @@ steps:
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "Z_pt", "Z_mass", "W_MT",]
     - name: "S2"
-      cuts: ["CutStep >= 2", "Z_mass > 20"]
+      cuts: ["CutStep >= 2"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
@@ -19,20 +19,20 @@ steps:
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S3"
-      cuts: ["CutStep >= 3", "Z_mass > 20"]
+      cuts: ["CutStep >= 3"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
-    - name: "S4"
-      cuts: ["CutStep >= 4", "Z_mass > 20"]
+    - name: "S4" #Added cut : 1<=nGoodJet<=3
+      cuts: ["CutStep >= 4"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
-    - name: "S5"
+    - name: "S5" #S4 && W_MT <= 300 && nBjet > 0
       cuts: ["CutStep >= 5", "Z_mass > 20"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
@@ -48,7 +48,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "WZCR"
-      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=1", "nBjet==0"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=1", "nGoodJet<=3", "nBjet==0"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
@@ -56,7 +56,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "STCR"
-      cuts: ["TMath::Abs(Z_mass-91.2)>7.5", "nGoodJet==1", "nBjet==1"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet==1", "nBjet==1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
@@ -64,7 +64,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "STSR"
-      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet==1", "nBjet==1"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet==1", "nBjet==1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
@@ -72,7 +72,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "TTCR"
-      cuts: ["TMath::Abs(Z_mass-91.2)>7.5", "nGoodJet>=2", "nBjet>=1"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
@@ -80,7 +80,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "TTSR"
-      cuts: ["TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nBjet>=1"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
