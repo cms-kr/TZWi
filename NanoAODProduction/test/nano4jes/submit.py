@@ -13,5 +13,4 @@ for fList in glob("%s/MC.RunIISummer16.central/*/*.txt" % baseDir)\
     jobName = "%s" % os.path.basename(fList)[:-4]
     cmd = "cd submit; create-batch bash ../run.sh %s ../%s --jobName %s -T --nJobs %d" % (jesType, fList, jobName, nFiles)
     cmd += " --transferDest %s/%s" % (outBase, jobName)
-    #os.system(cmd)
-    print cmd
+    os.system(cmd)
