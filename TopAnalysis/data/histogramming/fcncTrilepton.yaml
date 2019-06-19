@@ -51,6 +51,7 @@ steps:
       cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=1", "nGoodJet<=3", "nBjet==0"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR", 
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
@@ -59,6 +60,7 @@ steps:
       cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet==1", "nBjet==1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
@@ -67,6 +69,7 @@ steps:
       cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet==1", "nBjet==1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
@@ -75,6 +78,7 @@ steps:
       cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
@@ -83,6 +87,7 @@ steps:
       cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
@@ -232,3 +237,27 @@ hists:
             nbinsX: 50
             xmin: 0
             xmax: 300
+    LeptonTotal_mass:
+        title: "LeptonTotal_mass;Total invariant mass of leptons;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 1000
+    LeptonTotal_pt:
+        title: "LeptonTotal_pt;Total lepton H_{T} of leptons;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 1000
+    LeptonWandZ_deltaPhi:
+        title: "LeptonWandZ_deltaPhi;#delta #phi(Z,l_{W});Events"
+        bins:
+            nbinsX: 20
+            xmin: -4
+            xmax: 4
+    LeptonWandZ_deltaR:
+        title: "LeptonWandZ_deltaR;#delta R(Z,l_{W});Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 6
