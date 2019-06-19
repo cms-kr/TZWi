@@ -71,9 +71,12 @@ void FCNCTriLeptonCppWorker::resetValues() {
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = out_Lepton3_pdgId = 0;
   out_GoodLeptonCode = out_nVetoLepton = 0;
+  out_LeptonTotal_mass = 0;
   out_Z_charge = 0;
   out_MET_pt = out_MET_phi = 0;
   out_W_MT = 0;
+  out_LeptonWandZ_deltaPhi = 0;
+  out_LeptonWandZ_deltaR = 0;
   out_nGoodJet = out_nBjet = 0;
   for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
   out_GoodJet_CSVv2.clear();
@@ -274,6 +277,10 @@ bool FCNCTriLeptonCppWorker::analyze() {
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
   lepton2P4.SetPtEtaPhiM(out_Lepton2_p4[0], out_Lepton2_p4[1], out_Lepton2_p4[2], out_Lepton2_p4[3]);
   lepton3P4.SetPtEtaPhiM(out_Lepton3_p4[0], out_Lepton3_p4[1], out_Lepton3_p4[2], out_Lepton3_p4[3]);
+
+  TLorentzVector leptonTotP4;
+  leptonTotP4 = lepton1P4+lepton2P4+lepton3P4;
+  out_LeptonTotal_mass = leptonTotP4.M();
   // Done for the leptons
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
@@ -305,6 +312,8 @@ bool FCNCTriLeptonCppWorker::analyze() {
       default:
         out_Z_charge = 0;
     }
+  out_LeptonWandZ_deltaPhi = lepton1P4.DeltaPhi(zP4);
+  out_LeptonWandZ_deltaR = lepton1P4.DeltaR(zP4);
   }
 
   // Transeverse mass of the W boson

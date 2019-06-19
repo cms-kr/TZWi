@@ -50,6 +50,10 @@ public:
   float get_Lepton3_mass() const { return out_Lepton3_p4[3]; }
   int get_Lepton3_pdgId() const { return out_Lepton3_pdgId; }
 
+  float get_LeptonTotal_mass() const { return out_LeptonTotal_mass; }
+  float get_LeptonWandZ_deltaPhi() const { return out_LeptonWandZ_deltaPhi; }
+  float get_LeptonWandZ_deltaR() const { return out_LeptonWandZ_deltaR; }
+
   float get_Z_pt()   const { return out_Z_p4[0]; }
   float get_Z_eta()  const { return out_Z_p4[1]; }
   float get_Z_phi()  const { return out_Z_p4[2]; }
@@ -116,9 +120,12 @@ private:
   bool _doCppOutput = false;
 
   float out_Lepton1_p4[4], out_Lepton2_p4[4], out_Lepton3_p4[4];
+  float out_LeptonTotal_mass;
+  float out_LeptonWandZ_deltaPhi;
+  float out_LeptonWandZ_deltaR;
   int out_Lepton1_pdgId, out_Lepton2_pdgId, out_Lepton3_pdgId;
+
   float out_Z_p4[4];
-  
   int out_Z_charge;
 
   float out_MET_pt, out_MET_phi;
