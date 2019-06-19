@@ -51,6 +51,7 @@ public:
   int get_Lepton3_pdgId() const { return out_Lepton3_pdgId; }
 
   float get_LeptonTotal_mass() const { return out_LeptonTotal_mass; }
+  float get_LeptonTotal_pt() const { return out_LeptonTotal_pt; }
   float get_LeptonWandZ_deltaPhi() const { return out_LeptonWandZ_deltaPhi; }
   float get_LeptonWandZ_deltaR() const { return out_LeptonWandZ_deltaR; }
 
@@ -121,6 +122,7 @@ private:
 
   float out_Lepton1_p4[4], out_Lepton2_p4[4], out_Lepton3_p4[4];
   float out_LeptonTotal_mass;
+  float out_LeptonTotal_pt;
   float out_LeptonWandZ_deltaPhi;
   float out_LeptonWandZ_deltaR;
   int out_Lepton1_pdgId, out_Lepton2_pdgId, out_Lepton3_pdgId;

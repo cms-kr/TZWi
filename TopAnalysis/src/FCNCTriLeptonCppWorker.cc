@@ -71,7 +71,7 @@ void FCNCTriLeptonCppWorker::resetValues() {
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = out_Lepton3_pdgId = 0;
   out_GoodLeptonCode = out_nVetoLepton = 0;
-  out_LeptonTotal_mass = 0;
+  out_LeptonTotal_mass = out_LeptonTotal_pt = 0;
   out_Z_charge = 0;
   out_MET_pt = out_MET_phi = 0;
   out_W_MT = 0;
@@ -281,6 +281,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   TLorentzVector leptonTotP4;
   leptonTotP4 = lepton1P4+lepton2P4+lepton3P4;
   out_LeptonTotal_mass = leptonTotP4.M();
+  out_LeptonTotal_pt = leptonTotP4.Pt();
   // Done for the leptons
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)

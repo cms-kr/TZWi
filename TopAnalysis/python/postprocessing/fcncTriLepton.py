@@ -38,6 +38,7 @@ class FCNCTriLepton(Module, object):
         self.out.branch("Lepton2_pdgId", "I")
         self.out.branch("Lepton3_pdgId", "I")
         self.out.branch("LeptonTotal_mass", "F")
+        self.out.branch("LeptonTotal_pt", "F")
         self.out.branch("LeptonWandZ_deltaPhi", "F")
         self.out.branch("LeptonWandZ_deltaR", "F")
         self.out.branch("Z_charge", "I")
@@ -99,7 +100,7 @@ class FCNCTriLepton(Module, object):
                 setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
         for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "Lepton2_pdgId", "Lepton3_pdgId",
-                        "LeptonTotal_mass", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
+                        "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
                         "nVetoLepton", "GoodLeptonCode", "Z_charge", "W_MT",
                         #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
                         "GoodJet_index", "GoodJet_CSVv2",
