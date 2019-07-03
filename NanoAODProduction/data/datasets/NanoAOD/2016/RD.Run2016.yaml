@@ -62,8 +62,8 @@ dataset:
         /SingleElectron/Run2016B_ver2-Nano14Dec2018_ver2-v1/NANOAOD:
         - /store/data/Run2016B_ver2/SingleElectron/NANOAOD/Nano14Dec2018_ver2-v1/280000
         - /store/data/Run2016B_ver2/SingleElectron/NANOAOD/Nano14Dec2018_ver2-v1/20000
-        - /store/data/Run2016B_ver2/SingleElectron/NANOAOD/Nano14Dec2018_ver2-v1/90000
         - /store/data/Run2016B_ver2/SingleElectron/NANOAOD/Nano14Dec2018_ver2-v1/10000
+        - /store/data/Run2016B_ver2/SingleElectron/NANOAOD/Nano14Dec2018_ver2-v1/90000
         /SingleElectron/Run2016C-Nano14Dec2018-v1/NANOAOD:
         - /store/data/Run2016C/SingleElectron/NANOAOD/Nano14Dec2018-v1/90000
         - /store/data/Run2016C/SingleElectron/NANOAOD/Nano14Dec2018-v1/00000
