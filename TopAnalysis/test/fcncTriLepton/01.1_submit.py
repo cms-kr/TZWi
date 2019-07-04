@@ -15,6 +15,7 @@ for f in glob("%s/*.yaml" % baseDir):
         datasetInfo[datasetGroup] = dataset.keys()
 
 fLists = []
+toSubmit = {}
 for proc in procInfo:
     for datasetGroup in procInfo[proc]['datasets']:
         if datasetGroup not in datasetInfo: continue
