@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import yaml
 import sys, os
+import subprocess
 from glob import glob
 from multiprocessing import Pool, cpu_count
 
@@ -26,6 +27,9 @@ if __name__ == '__main__':
                 if dsetfullname not in dsetfullname2procs: dsetfullname2procs[dsetfullname] = []
                 dsetfullname2procs[dsetfullname].append(proc)
 
+    if os.path.exists("raw_hist"):
+      path = "raw_hist"
+      subprocess.call(["rm", "-rf", path])
     ress = []
     for din in glob("ntuple/*/*/*"):
         mode, dataset = din.split('/')[2:]

@@ -8,4 +8,5 @@ keep LHEPdfWeight
 keep LHEScaleWeight
 keep PSWeight
 keep genTtbarId
+keep luminosityBlock
 
