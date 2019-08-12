@@ -24,8 +24,7 @@ class FCNCTriLeptonCutFlow(Module, object):
     def analyze(self, event):
         cutStep = 0
         while True:
-            #if abs(event._tree.b_out_GoodLeptonCode) != 111: break
-            if abs(event._tree.b_out_GoodLeptonCode) < 101: break
+            if abs(event._tree.b_out_GoodLeptonCode) != 111: break
             cutStep += 1
             if event._tree.b_out_GoodLeptonCode < 0: break
             cutStep += 1

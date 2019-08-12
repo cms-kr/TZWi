@@ -319,8 +319,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Done for the leptons
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
-  // Save the Z mass that event has at least two leptons
-  if ( std::abs(out_GoodLeptonCode) >= 101 ) {
+  if ( std::abs(out_GoodLeptonCode) >= 111 ) {
     const TLorentzVector zP4 = lepton2P4+lepton3P4;
     out_Z_p4[0] = zP4.Pt();
     out_Z_p4[1] = zP4.Eta();
