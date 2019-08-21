@@ -237,13 +237,30 @@ bool FCNCTriLeptonCppWorker::analyze() {
     // Rearrange leptons to form charge configurations like +(+-)
     // -> swap lepton1 and lepton2 if +(--) or -(++) => -(+-) / +(-+)
     // -> flip out_GoodLeptonCode sign if +(++) or -(--)
-    if ( out_GoodLeptonCode == 111 and out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) {
+    if ( out_GoodLeptonCode == 111 and out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) { //?(++) or ?(--)
       if ( out_Lepton1_pdgId*out_Lepton2_pdgId > 0 ) { // +(++) or -(--) case.
         out_GoodLeptonCode *= -1;
+        //Rearrange leptons for reconstruction Z boson (We want to reco. Z boson by lep2 and 3 that mass has the closet value to the Z mass)
+        if ( abs(out_Lepton1_p4[3]-91.2) < abs(out_Lepton2_p4[3]-91.2) ) {
+          if ( abs(out_Lepton2_p4[3]-91.2) < abs(out_Lepton3_p4[3]-91.2) ) {
+            std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
+            for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
+          }
+          else {
+            std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
+            for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
+          }
+        }
       }
-      else {
-        std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
-        for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
+      else { //+(--) or -(++)
+        if ( abs(out_Lepton2_p4[3]-91.2) > abs(out_Lepton3_p4[3]-91.2) ) {
+          std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId); //-(+-) or +(-+) => At here, we need to compare mass of lepton which has same sign
+          for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
+        }
+        else {
+          std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
+          for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
+        }
       }
     }
   }
@@ -265,10 +282,27 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( out_GoodLeptonCode == 111 and out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) {
       if ( out_Lepton1_pdgId*out_Lepton2_pdgId > 0 ) { // +(++) or -(--) case.
         out_GoodLeptonCode *= -1;
+        //Rearrange leptons for reconstruction Z boson (We want to reco. Z boson by lep2 and 3 that mass has the closet value to the Z mass)
+        if ( abs(out_Lepton1_p4[3]-91.2) < abs(out_Lepton2_p4[3]-91.2) ) {
+          if ( abs(out_Lepton2_p4[3]-91.2) < abs(out_Lepton3_p4[3]-91.2) ) {
+            std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
+            for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
+          }
+          else {
+            std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
+            for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
+          }
+        }
       }
-      else {
-        std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
-        for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
+      else { //+(--) or -(++) => At here, we need to compare mass of lepton which has same sign
+        if ( abs(out_Lepton2_p4[3]-91.2) < abs(out_Lepton3_p4[3]-91.2) ) {
+          std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
+          for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
+        }
+        else {
+          std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
+          for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
+        }
       }
     }
   }
