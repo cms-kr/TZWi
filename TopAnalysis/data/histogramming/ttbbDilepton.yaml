@@ -77,7 +77,7 @@ hists:
     Lepton1_eta:
         title: "Lepton1_eta;Leading lepton #eta;Events"
         bins:
-            nbinsX: 100
+            nbinsX: 10
             xmin: -3.0
             xmax:  3.0
     Lepton1_phi:
@@ -96,7 +96,7 @@ hists:
     Lepton2_eta:
         title: "Lepton2_eta;2nd leading lepton #eta;Events"
         bins:
-            nbinsX: 100
+            nbinsX: 10
             xmin: -3.0
             xmax:  3.0
     Lepton2_phi:
