@@ -21,7 +21,9 @@ steps:
     - name: "S3"
       cuts: ["CutStep >= 3"]
       hists: ["nPV", "nPV_noWeight",
-              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
+              "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
+              "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
@@ -48,48 +50,48 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "WZCR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=1", "nGoodJet<=3", "nBjet==0"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nBjet==0"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR", 
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
               "MET_pt", "MET_phi",]
 
     - name: "STCR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet==1", "nBjet==1"]
+      cuts: ["CutStep >= 3", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet==1", "nBjet==1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
               "MET_pt", "MET_phi",]
 
     - name: "STSR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet==1", "nBjet==1"]
+      cuts: ["CutStep >= 3", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet==1", "nBjet==1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
               "MET_pt", "MET_phi",]
 
     - name: "TTCR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet>=2", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
               "MET_pt", "MET_phi",]
 
     - name: "TTSR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
+      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
               "MET_pt", "MET_phi",]
 
 
@@ -231,6 +233,12 @@ hists:
             nbinsY: 10
             ymin: 0
             ymax: 10
+    GoodJet_CSVv2:
+        title: "GoodJet_CSVv2;FCNC jet CSVv2"
+        bins:
+            nbinsX: 15
+            xmin: 0
+            xmax: 0.6
     W_MT:
         title: "W_MT;Transeverse mass of W boson;Events"
         bins:
