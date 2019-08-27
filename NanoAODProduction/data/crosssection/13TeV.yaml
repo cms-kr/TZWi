@@ -26,7 +26,6 @@ crosssection:
   TTWJetsToLNu: 0.2043
 
   TTTT: 0.009103
-
   ZZ       : 16.523
   ZZTo4L   :  1.212
   ZZTo2L2Nu:  0.564
@@ -76,9 +75,23 @@ crosssection:
   QCD_Pt-170to300_EMEnriched :    18810
   QCD_Pt-300toInf_EMEnriched :     1350
 
+  ST_FCNC-TLL_zut: 0.0136
+  ST_FCNC-TLL_zct: 0.00406
+  TT_FCNC-T2ZJ_zut: 0.0108
+  TT_FCNC-T2ZJ_zct: 0.00484
+  TT_FCNC-aT2ZJ_zut: 0.0108
+  TT_FCNC-aT2ZJ_zct: 0.00484
+
   ST_TH_1L3B_Hut      : 13.84
   ST_TH_1L3B_Hct      :  1.9
   TT_TH_1L3B_aTLep_Hut: 23.25
   TT_TH_1L3B_TLep_Hut : 23.25
   TT_TH_1L3B_aTLep_Hct: 23.25
   TT_TH_1L3B_TLep_Hct : 23.25
+
+  ST_FCNC-TH_hut              : 0.0286
+  ST_FCNC-TH_hct              : 0.00398
+  TT_FCNC-TtoHJ_aTleptonic_hut: 0.0943
+  TT_FCNC-TtoHJ_aTleptonic_hct: 0.0943
+  TT_FCNC-aTtoHJ_Tleptonic_hut: 0.0943
+  TT_FCNC-aTtoHJ_Tleptonic_hct: 0.0943
