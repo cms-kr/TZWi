@@ -21,7 +21,7 @@ typedef TTbarDoubleLeptonCppWorker::TRAI TRAI;
 typedef TTbarDoubleLeptonCppWorker::TRAB TRAB;
 
 void TTbarDoubleLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                                              TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr) {
+                                              TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr, TRAB isPFcand) {
   in_Electrons_p4[0] = pt;
   in_Electrons_p4[1] = eta;
   in_Electrons_p4[2] = phi;
@@ -31,6 +31,7 @@ void TTbarDoubleLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF 
   in_Electrons_id = id;
   in_Electrons_dEtaSC = dEtaSC;
   in_Electrons_eCorr = eCorr;
+  in_Electrons_isPFcand = isPFcand;
 }
 
 void TTbarDoubleLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
@@ -79,8 +80,8 @@ bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
   const double pt = in_Muons_p4[0]->At(i);
   const double eta = in_Muons_p4[1]->At(i);
   if ( pt < minLepton2Pt_ or std::abs(eta) > maxLepton2Eta_ ) return false;
-  //if ( in_Muons_isTight->At(i) == 0 ) return false;
-  if ( ! (in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0)) ) return false;
+  if ( in_Muons_isTight->At(i) == 0 ) return false;
+  //if ( ! (in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0)) ) return false;
   if ( in_Muons_relIso->At(i) > maxMuonRelIso_ ) return false;
 
   return true;
@@ -89,8 +90,10 @@ bool TTbarDoubleLeptonCppWorker::isGoodMuon(const unsigned i) const {
 bool TTbarDoubleLeptonCppWorker::isGoodElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
+  const double SCeta = eta + in_Electrons_dEtaSC->At(i);
   if ( pt < minLepton2Pt_ or std::abs(eta) > maxLepton2Eta_ ) return false;
-  if ( in_Electrons_id->At(i) <= 3 ) return false;
+  if ( std::abs(SCeta) > 1.442 and std::abs(SCeta) < 1.566 ) return false;
+  if ( in_Electrons_isPFcand->At(i) == 0 or in_Electrons_id->At(i) != 4 ) return false;
   //if ( in_Electrons_relIso->At(i) < 0.15 ) return false; // Note: commented out since already applied in Cut based ID
 
   return true;
