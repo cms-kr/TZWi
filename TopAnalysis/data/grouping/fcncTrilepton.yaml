@@ -71,30 +71,48 @@ processes:
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
         cut: "HLT"
         datasets: [MC2016.TT.powheg]
-#    STZct:
-#        title: "STZct"
-#        longTitle: "t#bar{t}b#bar{b}"
-#        weight: "genWeight*puWeight*BtagWeight"
-#        datasets: [MC2016.ST_FCNC-TLL_zct]
-#        cut: ""
-#    STZut:
-#        title: "STZut"
-#        longTitle: "t#bar{t}b#bar{b}"
-#        weight: "genWeight*puWeight*BtagWeight"
-#        datasets: [MC2016.ST_FCNC-TLL_zut]
-#        cut: ""
-#    TTZct:
-#        title: "TTZct"
-#        longTitle: "t#bar{t}b#bar{b}"
-#        weight: "genWeight*puWeight*BtagWeight"
-#        datasets: [MC2016.TT_FCNC-T2ZJ_zct, MC2016.TT_FCNC-aT2ZJ_zct]
-#        cut: ""
-#    TTZut:
-#        title: "TTZut"
-#        longTitle: "t#bar{t}b#bar{b}"
-#        weight: "genWeight*puWeight*BtagWeight"
-#        datasets: [MC2016.TT_FCNC-T2ZJ_zut, MC2016.TT_FCNC-aT2ZJ_zut]
-#        cut: ""
+    STZct:
+        title: "STZct"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2016.ST_FCNC-TLL_zct]
+        cut: "HLT"
+    STZut:
+        title: "STZut"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2016.ST_FCNC-TLL_zut]
+        cut: "HLT"
+    TTZct:
+        title: "TTZct"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2016.TT_FCNC-T2ZJ_zct, MC2016.TT_FCNC-aT2ZJ_zct]
+        cut: "HLT"
+    TTZut:
+        title: "TTZut"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2016.TT_FCNC-T2ZJ_zut, MC2016.TT_FCNC-aT2ZJ_zut]
+        cut: "HLT"
+######checking for tqH signal
+#    STHut:
+#        title: "STHut"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2016.ST_FCNC-TH_hut]
+#        cut: "HLT"
+#    STHct:
+#        title: "STHct"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2016.ST_FCNC-TH_hct]
+#        cut: "HLT"
+#    TTHut:
+#        title: "TTHut"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2016.TT_FCNC-TtoHJ_aTleptonic_hut]
+#        cut: "HLT"
+#    TTHct:
+#        title: "TTHct"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2016.TT_FCNC-TtoHJ_aTleptonic_hct]
+#        cut: "HLT"
+#######
     Dibosons:
         title: "Dibosons"
         weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"

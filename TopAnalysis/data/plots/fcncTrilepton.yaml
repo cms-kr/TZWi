@@ -1,4 +1,4 @@
-lumi: [5.814,2.615,4.281,4.035,3.119,7.658,8.773]
+lumi: [5.711,2.573,4.242,4.025,3.105,7.576,8.651]
 
 canvasStyles: ## Styling rules, later item overrides earlier ones
   - substr: '' # null string matches to everything
@@ -16,7 +16,7 @@ histStyles: # Styling rules, later item overrides earlier ones
   - title: SingleTopV
     color: "kMagenta+2"
   - title: Tribosons
-    color: "kWhite"
+    color: "kGray"
   - title: Dibosons
     color: "kWhite"
   - title: Wjets
@@ -29,6 +29,16 @@ histStyles: # Styling rules, later item overrides earlier ones
     color: "kRed"
   - title: ttJets
     color: "kRed"
+#######
+  - title: STZut
+    color: "kGreen-7"
+  - title: STZct
+    color: "kBlue"
+  - title: TTZut
+    color: "kGreen+3"
+  - title: TTZct
+    color: "kBlue+2"
+########
 
 stackorders: ## MC samples to stack
   - DYJets
