@@ -1,77 +1,83 @@
 dataset:
     Run2017.DoubleEG:
-        /DoubleEG/Run2017B-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017B/DoubleEG/NANOAOD/Nano14Dec2018-v1/10000
-        /DoubleEG/Run2017C-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017C/DoubleEG/NANOAOD/Nano14Dec2018-v1/90000
-        - /store/data/Run2017C/DoubleEG/NANOAOD/Nano14Dec2018-v1/280000
-        /DoubleEG/Run2017D-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017D/DoubleEG/NANOAOD/Nano14Dec2018-v1/00000
-        /DoubleEG/Run2017E-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017E/DoubleEG/NANOAOD/Nano14Dec2018-v1/00000
-        /DoubleEG/Run2017F-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017F/DoubleEG/NANOAOD/Nano14Dec2018-v1/00000
-        - /store/data/Run2017F/DoubleEG/NANOAOD/Nano14Dec2018-v1/810000
+        /DoubleEG/Run2017B-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017B/DoubleEG/NANOAOD/Nano1June2019-v1/40000
+        /DoubleEG/Run2017C-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017C/DoubleEG/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017C/DoubleEG/NANOAOD/Nano1June2019-v1/30000
+        - /store/data/Run2017C/DoubleEG/NANOAOD/Nano1June2019-v1/70000
+        /DoubleEG/Run2017D-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017D/DoubleEG/NANOAOD/Nano1June2019-v1/40000
+        /DoubleEG/Run2017E-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017E/DoubleEG/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017E/DoubleEG/NANOAOD/Nano1June2019-v1/70000
+        /DoubleEG/Run2017F-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017F/DoubleEG/NANOAOD/Nano1June2019-v1/30000
     Run2017.DoubleMuon:
-        /DoubleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017B/DoubleMuon/NANOAOD/Nano14Dec2018-v1/280000
-        /DoubleMuon/Run2017C-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017C/DoubleMuon/NANOAOD/Nano14Dec2018-v1/90000
-        /DoubleMuon/Run2017D-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017D/DoubleMuon/NANOAOD/Nano14Dec2018-v1/20000
-        /DoubleMuon/Run2017E-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017E/DoubleMuon/NANOAOD/Nano14Dec2018-v1/10000
-        /DoubleMuon/Run2017F-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017F/DoubleMuon/NANOAOD/Nano14Dec2018-v1/90000
+        /DoubleMuon/Run2017B-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017B/DoubleMuon/NANOAOD/Nano1June2019-v1/70000
+        /DoubleMuon/Run2017C-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017C/DoubleMuon/NANOAOD/Nano1June2019-v1/70000
+        /DoubleMuon/Run2017D-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017D/DoubleMuon/NANOAOD/Nano1June2019-v1/30000
+        /DoubleMuon/Run2017E-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017E/DoubleMuon/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017E/DoubleMuon/NANOAOD/Nano1June2019-v1/30000
+        /DoubleMuon/Run2017F-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017F/DoubleMuon/NANOAOD/Nano1June2019-v1/30000
+        - /store/data/Run2017F/DoubleMuon/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017F/DoubleMuon/NANOAOD/Nano1June2019-v1/1110000
     Run2017.MuonEG:
-        /MuonEG/Run2017B-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017B/MuonEG/NANOAOD/Nano14Dec2018-v1/00000
-        - /store/data/Run2017B/MuonEG/NANOAOD/Nano14Dec2018-v1/110000
-        /MuonEG/Run2017C-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017C/MuonEG/NANOAOD/Nano14Dec2018-v1/00000
-        - /store/data/Run2017C/MuonEG/NANOAOD/Nano14Dec2018-v1/210000
-        /MuonEG/Run2017D-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017D/MuonEG/NANOAOD/Nano14Dec2018-v1/280000
-        /MuonEG/Run2017E-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017E/MuonEG/NANOAOD/Nano14Dec2018-v1/00000
-        /MuonEG/Run2017F-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017F/MuonEG/NANOAOD/Nano14Dec2018-v1/110000
-        - /store/data/Run2017F/MuonEG/NANOAOD/Nano14Dec2018-v1/280000
+        /MuonEG/Run2017B-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017B/MuonEG/NANOAOD/Nano1June2019-v1/70000
+        /MuonEG/Run2017C-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017C/MuonEG/NANOAOD/Nano1June2019-v1/30000
+        /MuonEG/Run2017D-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017D/MuonEG/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017D/MuonEG/NANOAOD/Nano1June2019-v1/610000
+        /MuonEG/Run2017E-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017E/MuonEG/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017E/MuonEG/NANOAOD/Nano1June2019-v1/1110000
+        /MuonEG/Run2017F-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017F/MuonEG/NANOAOD/Nano1June2019-v1/30000
+        - /store/data/Run2017F/MuonEG/NANOAOD/Nano1June2019-v1/710000
     Run2017.SingleElectron:
-        /SingleElectron/Run2017B-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017B/SingleElectron/NANOAOD/Nano14Dec2018-v1/20000
-        /SingleElectron/Run2017C-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017C/SingleElectron/NANOAOD/Nano14Dec2018-v1/90000
-        /SingleElectron/Run2017D-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017D/SingleElectron/NANOAOD/Nano14Dec2018-v1/90000
-        - /store/data/Run2017D/SingleElectron/NANOAOD/Nano14Dec2018-v1/20000
-        /SingleElectron/Run2017E-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017E/SingleElectron/NANOAOD/Nano14Dec2018-v1/280000
-        - /store/data/Run2017E/SingleElectron/NANOAOD/Nano14Dec2018-v1/20000
-        /SingleElectron/Run2017F-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017F/SingleElectron/NANOAOD/Nano14Dec2018-v1/90000
+        /SingleElectron/Run2017B-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017B/SingleElectron/NANOAOD/Nano1June2019-v1/30000
+        /SingleElectron/Run2017C-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017C/SingleElectron/NANOAOD/Nano1June2019-v1/30000
+        - /store/data/Run2017C/SingleElectron/NANOAOD/Nano1June2019-v1/710000
+        /SingleElectron/Run2017D-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017D/SingleElectron/NANOAOD/Nano1June2019-v1/70000
+        /SingleElectron/Run2017E-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017E/SingleElectron/NANOAOD/Nano1June2019-v1/70000
+        /SingleElectron/Run2017F-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017F/SingleElectron/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017F/SingleElectron/NANOAOD/Nano1June2019-v1/70000
     Run2017.SingleMuon:
-        /SingleMuon/Run2017B-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017B/SingleMuon/NANOAOD/Nano14Dec2018-v1/10000
-        - /store/data/Run2017B/SingleMuon/NANOAOD/Nano14Dec2018-v1/90000
-        /SingleMuon/Run2017C-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017C/SingleMuon/NANOAOD/Nano14Dec2018-v1/10000
-        /SingleMuon/Run2017D-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017D/SingleMuon/NANOAOD/Nano14Dec2018-v1/80000
-        /SingleMuon/Run2017E-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017E/SingleMuon/NANOAOD/Nano14Dec2018-v1/10000
-        /SingleMuon/Run2017F-Nano14Dec2018-v1/NANOAOD:
-        - /store/data/Run2017F/SingleMuon/NANOAOD/Nano14Dec2018-v1/20000
-        - /store/data/Run2017F/SingleMuon/NANOAOD/Nano14Dec2018-v1/280000
+        /SingleMuon/Run2017B-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017B/SingleMuon/NANOAOD/Nano1June2019-v1/30000
+        - /store/data/Run2017B/SingleMuon/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017B/SingleMuon/NANOAOD/Nano1June2019-v1/110000
+        /SingleMuon/Run2017C-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017C/SingleMuon/NANOAOD/Nano1June2019-v1/30000
+        /SingleMuon/Run2017D-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017D/SingleMuon/NANOAOD/Nano1June2019-v1/40000
+        /SingleMuon/Run2017E-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017E/SingleMuon/NANOAOD/Nano1June2019-v1/40000
+        /SingleMuon/Run2017F-Nano1June2019-v1/NANOAOD:
+        - /store/data/Run2017F/SingleMuon/NANOAOD/Nano1June2019-v1/40000
+        - /store/data/Run2017F/SingleMuon/NANOAOD/Nano1June2019-v1/30000
+        - /store/data/Run2017F/SingleMuon/NANOAOD/Nano1June2019-v1/710000
 luminosity:
-    Run2017B-Nano14Dec2018-v1: 4.77
-    Run2017C-Nano14Dec2018-v1: 9.58
-    Run2017D-Nano14Dec2018-v1: 4.22
-    Run2017E-Nano14Dec2018-v1: 9.26
-    Run2017F-Nano14Dec2018-v1: 13.46
+    Run2017B-Nano1June2019-v1: 4.77
+    Run2017C-Nano1June2019-v1: 9.58
+    Run2017D-Nano1June2019-v1: 4.22
+    Run2017E-Nano1June2019-v1: 9.26
+    Run2017F-Nano1June2019-v1: 13.46
 runrange:
-    Run2017B-Nano14Dec2018-v1: 297046-299329
-    Run2017C-Nano14Dec2018-v1: 299368-302029
-    Run2017D-Nano14Dec2018-v1: 302030-303434
-    Run2017E-Nano14Dec2018-v1: 303824-304797
-    Run2017F-Nano14Dec2018-v1: 305040-306462
+    Run2017B-Nano1June2019-v1: 297046-299329
+    Run2017C-Nano1June2019-v1: 299368-302029
+    Run2017D-Nano1June2019-v1: 302030-303434
+    Run2017E-Nano1June2019-v1: 303824-304797
+    Run2017F-Nano1June2019-v1: 305040-306462
