@@ -41,7 +41,7 @@ FILENAMES=$(cat $FILELIST | xargs -n$MAXFILES | sed -n "$(($JOBNUMBER+1)) p" | s
 ARGS=""
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.flags flags_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT hlt_${HLTMODULE}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}_${YEAR}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
 
 #CMD="nano_postproc.py --friend"
@@ -49,7 +49,8 @@ ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CH
 BRANCHSEL="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/branchsel.txt"
 CMD="nano_postproc.py --bo $BRANCHSEL"
 
-OUTPATH=ntuple/reco/$CHANNEL/$DATASET0
+#OUTPATH=ntuple/reco/$CHANNEL/$DATASET0
+OUTPATH=ntuple_$YEAR/reco/$CHANNEL/$DATASET0
 [ ! -d $OUTPATH ] && mkdir -p $OUTPATH
 if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="-I PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule countHistogramsModule $ARGS"
