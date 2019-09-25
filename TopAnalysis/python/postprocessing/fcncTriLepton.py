@@ -112,7 +112,12 @@ class FCNCTriLepton(Module, object):
 
         return True
 
-fcnc_MuMuMu = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16")
-fcnc_ElElEl = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16")
-fcnc_ElMuMu = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Sum16")
-fcnc_MuElEl = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Sum16")
+fcnc_MuMuMu_2016 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16")
+fcnc_ElElEl_2016 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16")
+fcnc_ElMuMu_2016 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Sum16")
+fcnc_MuElEl_2016 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Sum16")
+
+fcnc_MuMuMu_2017 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Fall17_V1")
+fcnc_ElElEl_2017 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Fall17_V1")
+fcnc_ElMuMu_2017 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Fall17_V1")
+fcnc_MuElEl_2017 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Fall17_V1")

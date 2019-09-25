@@ -19,6 +19,7 @@ for dataset in ['SingleMuon', 'SingleElectron',
 
 ###2017
 setFile = "fcncTriLepton/2017.yaml"
+hlt_MC2017 = lambda f=setFile: CombineHLT(fileName=f, hltSet="RunIIFall17")
 for dataset in ['SingleMuon', 'SingleElectron',
                 'DoubleMuon', 'DoubleEG', 'MuonEG']:
     vars()['hlt_Run2017B_%s'  % dataset] = lambda x=dataset, f=setFile: CombineHLT(fileName=f, hltSet="Run2017B.%s"  % x, doFilter=True)
