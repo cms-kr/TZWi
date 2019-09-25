@@ -55,7 +55,7 @@ if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.btagWeightProducer btagWeight"
 else
     if [ $DATATYPE == "Run2016" ]; then
-        JSONFILE="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/lumi/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
+        JSONFILE="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/lumi/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON_Fixed.txt"
         ARGS="-J $JSONFILE $ARGS"
     elif [ $DATATYPE == "Run2017" ]; then
         JSONFILE="$CMSSW_BASE/src/TZWi/NanoAODProduction/data/lumi/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"
