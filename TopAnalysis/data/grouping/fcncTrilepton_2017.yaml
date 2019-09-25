@@ -1,0 +1,144 @@
+processes:
+    DataElElEl:
+        title: "Data"
+        modes: ["ElElEl"]
+        cut: "HLT"
+        datasets:
+            #- Run2017.SingleMuon
+            - Run2017.SingleElectron
+            #- Run2017.DoubleMuon
+            - Run2017.DoubleEG
+            #- Run2017.MuonEG
+    DataMuMuMu:
+        title: "Data"
+        modes: ["MuMuMu"]
+        cut: "HLT"
+        datasets:
+            - Run2017.SingleMuon
+            #- Run2017.SingleElectron
+            - Run2017.DoubleMuon
+            #- Run2017.DoubleEG
+            #- Run2017.MuonEG
+    DataMuElEl:
+        title: "Data"
+        modes: ["MuElEl"]
+        cut: "HLT"
+        datasets:
+            - Run2017.SingleMuon
+            - Run2017.SingleElectron
+            #- Run2017.DoubleMuon
+            - Run2017.DoubleEG
+            - Run2017.MuonEG
+    DataElMuMu:
+        title: "Data"
+        modes: ["ElMuMu"]
+        cut: "HLT"
+        datasets:
+            - Run2017.SingleMuon
+            - Run2017.SingleElectron
+            - Run2017.DoubleMuon
+            #- Run2017.DoubleEG
+            - Run2017.MuonEG
+
+    DYJets:
+        title: "DYJets"
+        longTitle: "Z/#gamma^{*}+Jets#rightarrow l^{+}l^{-}"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets:
+            - MC2017.DYJetsToLL_M-10to50
+            - MC2017.DYJetsToLL_M-50
+    WJets:
+        title: "Wjets"
+        longTitle: "W+jets"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets: [MC2017.WJets]
+    SingleTop:
+        title: "SingleTop"
+        longTitle: "Single top"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets:
+            - MC2017.ST_s_4f_lepton
+            - MC2017.ST_t
+            - MC2017.ST_tW
+            - MC2017.STbar_t
+            - MC2017.STbar_tW
+    TTJets:
+        title: "ttJets"
+        longTitle: "t#bar{t}"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets: [MC2017.TTTo2L2Nu, MC2017.TTToHadronic, MC2017.TTToSemilepton]
+    STZct:
+        title: "STZct"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2017.ST_FCNC-TLL_zct]
+        cut: "HLT"
+    STZut:
+        title: "STZut"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2017.ST_FCNC-TLL_zut]
+        cut: "HLT"
+    TTZct:
+        title: "TTZct"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2017.TT_FCNC-T2ZJ_zct, MC2017.TT_FCNC-aT2ZJ_zct]
+        cut: "HLT"
+    TTZut:
+        title: "TTZut"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        datasets: [MC2017.TT_FCNC-T2ZJ_zut, MC2017.TT_FCNC-aT2ZJ_zut]
+        cut: "HLT"
+######checking for tqH signal
+#    STHut:
+#        title: "STHut"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2017.ST_FCNC-TH_hut]
+#        cut: "HLT"
+#    STHct:
+#        title: "STHct"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2017.ST_FCNC-TH_hct]
+#        cut: "HLT"
+#    TTHut:
+#        title: "TTHut"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2017.TT_FCNC-TtoHJ_aTleptonic_hut]
+#        cut: "HLT"
+#    TTHct:
+#        title: "TTHct"
+#        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+#        datasets: [MC2017.TT_FCNC-TtoHJ_aTleptonic_hct]
+#        cut: "HLT"
+#######
+    Dibosons:
+        title: "Dibosons"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets: [MC2017.WW, MC2017.WZ, MC2017.ZZTo2L2Nu, MC2017.ZZ]
+    Tribosons:
+        title: "Tribosons"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets: [MC2017.WWW, MC2017.WWZ, MC2017.WZZ, MC2017.ZZZ]
+
+    SingleTopV:
+        title: "SingleTopV"
+        longTitle: "SingleTop+V"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets: [MC2017.tZq_ll]
+    TTV:
+        title: "ttV"
+        longTitle: "t#bar{t}+V"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets: [MC2017.TTWJetsToLNu, MC2017.TTWJetsToQQ, MC2017.TTZToLLNuNu, MC2017.TTZToQQ]
+    TTH:
+        title: "ttH"
+        longTitle: "t#bar{t}+Higgs"
+        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight"
+        cut: "HLT"
+        datasets: [MC2017.ttHToNonbb, MC2017.ttHTobb]
