@@ -4,21 +4,15 @@ processes:
         modes: ["ElElEl"]
         cut: "HLT"
         datasets:
-            #- Run2017.SingleMuon
             - Run2017.SingleElectron
-            #- Run2017.DoubleMuon
             - Run2017.DoubleEG
-            #- Run2017.MuonEG
     DataMuMuMu:
         title: "Data"
         modes: ["MuMuMu"]
         cut: "HLT"
         datasets:
             - Run2017.SingleMuon
-            #- Run2017.SingleElectron
             - Run2017.DoubleMuon
-            #- Run2017.DoubleEG
-            #- Run2017.MuonEG
     DataMuElEl:
         title: "Data"
         modes: ["MuElEl"]
@@ -26,7 +20,6 @@ processes:
         datasets:
             - Run2017.SingleMuon
             - Run2017.SingleElectron
-            #- Run2017.DoubleMuon
             - Run2017.DoubleEG
             - Run2017.MuonEG
     DataElMuMu:
@@ -37,7 +30,6 @@ processes:
             - Run2017.SingleMuon
             - Run2017.SingleElectron
             - Run2017.DoubleMuon
-            #- Run2017.DoubleEG
             - Run2017.MuonEG
 
     DYJets:
