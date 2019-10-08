@@ -29,7 +29,7 @@ class FCNCTriLepton(Module, object):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z"]:
+        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "LeadingElectron", "LeadingMuon"]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 self.out.branch("%s_%s" % (objName, varName), "F")
         self.out.branch("MET_pt", "F")
@@ -95,7 +95,7 @@ class FCNCTriLepton(Module, object):
             self.initReaders(event._tree)
         self.worker.analyze()
 
-        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "GoodJet"]:
+        for objName in ["Lepton1", "Lepton2", "Lepton3", "Z", "GoodJet", "LeadingElectron", "LeadingMuon"]:
             for varName in ["pt", "eta", "phi", "mass"]:
                 setattr(event._tree, "b_out_%s_%s" % (objName, varName), getattr(self.worker, 'get_%s_%s' % (objName, varName))())
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))

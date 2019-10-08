@@ -32,6 +32,16 @@ public:
   void resetValues();
   bool analyze();
 
+  float get_LeadingMuon_pt() const { return out_LeadingMuon_p4[0]; }
+  float get_LeadingMuon_eta() const { return out_LeadingMuon_p4[1]; }
+  float get_LeadingMuon_phi() const { return out_LeadingMuon_p4[2]; }
+  float get_LeadingMuon_mass() const { return out_LeadingMuon_p4[3]; }
+
+  float get_LeadingElectron_pt() const { return out_LeadingElectron_p4[0]; }
+  float get_LeadingElectron_eta() const { return out_LeadingElectron_p4[1]; }
+  float get_LeadingElectron_phi() const { return out_LeadingElectron_p4[2]; }
+  float get_LeadingElectron_mass() const { return out_LeadingElectron_p4[3]; }
+
   float get_Lepton1_pt()   const { return out_Lepton1_p4[0]; }
   float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
   float get_Lepton1_phi()  const { return out_Lepton1_p4[2]; }
@@ -78,10 +88,11 @@ public:
   unsigned get_nBjet()   const { return out_nBjet; }
 
 private:
-  const double minMuonPt_ = 30, maxMuonEta_ = 2.5; //Signal & veto reco. cuts are same
-  const double minElectronPt_ = 35, maxElectronEta_ = 2.1; //Signal & veto reco. cuts are same
+  const double minMuonPt_ = 20, maxMuonEta_ = 2.4; //Signal & veto reco. cuts are same
+  const double minElectronPt_ = 20, maxElectronEta_ = 2.4; //Signal & veto reco. cuts are same
   const double minJetPt_ = 30, maxJetEta_ = 2.4;
   const double minBjetBDiscr_ = 0.5426; // FIXME: give updated number (here, use Loose Working Point)
+  //const double minBjetBDiscr_ = 0.5803; // FIXME: 2017, Loose Working Point (Midium: 0.8838, Tight: 0.9693)
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 
@@ -120,6 +131,7 @@ private:
 private:
   bool _doCppOutput = false;
 
+  float out_LeadingMuon_p4[4], out_LeadingElectron_p4[4];
   float out_Lepton1_p4[4], out_Lepton2_p4[4], out_Lepton3_p4[4];
   float out_LeptonTotal_mass;
   float out_LeptonTotal_pt;
