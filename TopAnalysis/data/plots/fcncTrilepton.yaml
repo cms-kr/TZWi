@@ -1,4 +1,5 @@
-lumi: [5.711,2.573,4.242,4.025,3.105,7.576,8.651]
+lumi: [5.711,2.573,4.242,4.025,3.105,7.576,8.651] #2016
+#lumi: [4.77, 9.58, 4.22, 9.26, 13.46] #2017
 
 canvasStyles: ## Styling rules, later item overrides earlier ones
   - substr: '' # null string matches to everything
