@@ -299,24 +299,28 @@ bool FCNCTriLeptonCppWorker::analyze() {
     // -> swap lepton1 and lepton2 if +(--) or -(++) => -(+-) / +(-+)
     // -> flip out_GoodLeptonCode sign if +(++) or -(--)
     if ( out_GoodLeptonCode == 111 and out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) { //?(++) or ?(--)
+      TLorentzVector lepton1P4_t, lepton2P4_t, lepton3P4_t;
+      lepton1P4_t.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
+      lepton2P4_t.SetPtEtaPhiM(out_Lepton2_p4[0], out_Lepton2_p4[1], out_Lepton2_p4[2], out_Lepton2_p4[3]);
+      lepton3P4_t.SetPtEtaPhiM(out_Lepton3_p4[0], out_Lepton3_p4[1], out_Lepton3_p4[2], out_Lepton3_p4[3]);
       if ( out_Lepton1_pdgId*out_Lepton2_pdgId > 0 ) { // +(++) or -(--) case.
         out_GoodLeptonCode *= -1;
         //Rearrange leptons for reconstruction Z boson (We want to reco. Z boson by lep2 and 3 that mass has the closet value to the Z mass)
-        if ( abs(out_Lepton1_p4[3]+out_Lepton2_p4[3]-91.2) < abs(out_Lepton1_p4[3]+out_Lepton3_p4[3]-91.2) ) {
-	    if ( abs(out_Lepton1_p4[3]+out_Lepton2_p4[3]-91.2) < abs(out_Lepton2_p4[3]+out_Lepton3_p4[3]-91.2) ) {
+        if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
+	    if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
 		std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
 		for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
 	    }
 	}
 	else {
-	    if ( abs(out_Lepton1_p4[3]+out_Lepton3_p4[3]-91.2) < abs(out_Lepton2_p4[3]+out_Lepton3_p4[3]-91.2) ) {
+	    if ( abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
 		std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
         	for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
 	    }
 	}
       }
       else { //+(--) or -(++) => At here, we need to compare mass of lepton which has same sign
-	  if ( abs(out_Lepton2_p4[3]-91.2) > abs(out_Lepton3_p4[3]-91.2) ) {
+	  if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) > abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
             std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId); //-(+-) or +(-+)
             for ( unsigned i=0; i<4; ++i ) {
 		std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
@@ -333,6 +337,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 	    }
 	  }
       }
+      lepton1P4_t.clear(); lepton2P4_t.clear(); lepton3P4_t.clear();
     }
   }
   else if ( actualMode == MODE::MuMuMu ) {
@@ -360,24 +365,28 @@ bool FCNCTriLeptonCppWorker::analyze() {
     // -> swap lepton1 and lepton2 if +(--) or -(++) => -(+-) / +(-+)
     // -> flip out_GoodLeptonCode sign if +(++) or -(--)
     if ( out_GoodLeptonCode == 111 and out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) {
+      TLorentzVector lepton1P4_t, lepton2P4_t, lepton3P4_t;
+      lepton1P4_t.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
+      lepton2P4_t.SetPtEtaPhiM(out_Lepton2_p4[0], out_Lepton2_p4[1], out_Lepton2_p4[2], out_Lepton2_p4[3]);
+      lepton3P4_t.SetPtEtaPhiM(out_Lepton3_p4[0], out_Lepton3_p4[1], out_Lepton3_p4[2], out_Lepton3_p4[3]);
       if ( out_Lepton1_pdgId*out_Lepton2_pdgId > 0 ) { // +(++) or -(--) case.
         out_GoodLeptonCode *= -1;
 	//Rearrange leptons for reconstruction Z boson (We want to reco. Z boson by lep2 and 3 that mass has the closet value to the Z mass)
-	if ( abs(out_Lepton1_p4[3]+out_Lepton2_p4[3]-91.2) < abs(out_Lepton1_p4[3]+out_Lepton3_p4[3]-91.2) ) {
-	    if ( abs(out_Lepton1_p4[3]+out_Lepton2_p4[3]-91.2) < abs(out_Lepton2_p4[3]+out_Lepton3_p4[3]-91.2) ) {
+	if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
+	    if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
 		std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
 		for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
 	    }
 	}
 	else {
-            if ( abs(out_Lepton1_p4[3]+out_Lepton3_p4[3]-91.2) < abs(out_Lepton2_p4[3]+out_Lepton3_p4[3]-91.2) ) {
+            if ( abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
                 std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
                 for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
             }
         }	
       }
       else { //+(--) or -(++) => At here, we need to compare mass of lepton which has same sign
-	  if ( abs(out_Lepton2_p4[3]-91.2) < abs(out_Lepton3_p4[3]-91.2) ) {
+	  if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
             std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
             for ( unsigned i=0; i<4; ++i ) {
 		std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
@@ -394,10 +403,11 @@ bool FCNCTriLeptonCppWorker::analyze() {
 	    }
 	  }
       }
+      lepton1P4_t.clear(); lepton2P4_t.clear(); lepton3P4_t.clear();
     }
   }
 
-  TLorentzVector lepton1P4, lepton2P4, lepton3P4; //Lepton1 has the largest pt among the three leptons.
+  TLorentzVector lepton1P4, lepton2P4, lepton3P4;
   lepton1P4.SetPtEtaPhiM(out_Lepton1_p4[0], out_Lepton1_p4[1], out_Lepton1_p4[2], out_Lepton1_p4[3]);
   lepton2P4.SetPtEtaPhiM(out_Lepton2_p4[0], out_Lepton2_p4[1], out_Lepton2_p4[2], out_Lepton2_p4[3]);
   lepton3P4.SetPtEtaPhiM(out_Lepton3_p4[0], out_Lepton3_p4[1], out_Lepton3_p4[2], out_Lepton3_p4[3]);
