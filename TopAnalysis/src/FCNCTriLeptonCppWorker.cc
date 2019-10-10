@@ -108,9 +108,9 @@ bool FCNCTriLeptonCppWorker::isVetoMuon(const unsigned i) const {
 bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
-  const double SCeta = eta + in_Electrons_dEtaSC->At(i);
+  const double scEta = eta + in_Electrons_dEtaSC->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
-  if ( std::abs(SCeta) > 1.4442 and std::abs(SCeta) < 1.566 ) return false;
+  if ( std::abs(scEta) > 1.4442 and std::abs(scEta) < 1.566 ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
   if ( in_Electrons_id->At(i) != 4 ) return false;
 
@@ -120,9 +120,9 @@ bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
 bool FCNCTriLeptonCppWorker::isVetoElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
-  const double SCeta = eta + in_Electrons_dEtaSC->At(i);
+  const double scEta = eta + in_Electrons_dEtaSC->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
-  if ( std::abs(SCeta) > 1.4442 and std::abs(SCeta) < 1.566 ) return false;
+  if ( std::abs(scEta) > 1.4442 and std::abs(scEta) < 1.566 ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
   if ( in_Electrons_id->At(i) == 0 ) return false;
 
@@ -240,23 +240,17 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodMuons     < 1 ) out_GoodLeptonCode -=  10;
     if ( nGoodElectrons < 1 ) out_GoodLeptonCode -= 100;
     for ( unsigned i=0; i<4; ++i ) {
-	if ( nGoodMuons     >= 1 && in_Muons_p4[0]->At(muonIdxs[0]) > LeadingLep_pt ) {
-	    out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
-	    if ( nGoodMuons     >= 2 && in_Muons_p4[0]->At(muonIdxs[1]) > RestLep_pt )
-		out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
-	    if ( nGoodElectrons >= 1 && in_Electrons_p4[0]->At(electronIdxs[0]) > RestLep_pt )
-		out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
-	}
+	if ( nGoodMuons     >= 1 ) out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
+	if ( nGoodMuons     >= 2 ) out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
+	if ( nGoodElectrons >= 1 ) out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
     }
-    if ( nGoodMuons     >= 1 && in_Muons_p4[0]->At(muonIdxs[0]) > LeadingLep_pt ) {
-	out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
-	if ( nGoodMuons     >= 2 && in_Muons_p4[0]->At(muonIdxs[1]) > RestLep_pt )
-	    out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
-	if ( nGoodElectrons >= 1 && in_Electrons_p4[0]->At(electronIdxs[0]) > RestLep_pt )
-	    out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-    }
+    if ( nGoodMuons     >= 1 ) out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+    if ( nGoodMuons     >= 2 ) out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
+    if ( nGoodElectrons >= 1 ) out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    
     // Check the sign of Z-candidate. Flip the sign for the same-signed lepton pair
     if ( out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) out_GoodLeptonCode *= -1;
+
     // Find the larget pt of lepton for lepton selection
     max_pt = out_Lepton2_p4[0];
     rest_pt = out_Lepton3_p4[0];
@@ -282,21 +276,25 @@ bool FCNCTriLeptonCppWorker::analyze() {
     for ( unsigned i=0; i<4; ++i ) {
 	if ( nGoodElectrons >= 1 && in_Electrons_p4[0]->At(electronIdxs[0]) > LeadingLep_pt ) {
 	    out_Lepton1_p4[i] = in_Electrons_p4[i]->At(electronIdxs[0]);
-	    if ( nGoodElectrons >= 2 && in_Electrons_p4[0]->At(electronIdxs[1]) > RestLep_pt )
+	    if ( nGoodElectrons >= 2 && in_Electrons_p4[0]->At(electronIdxs[1]) > RestLep_pt ) {
 		out_Lepton2_p4[i] = in_Electrons_p4[i]->At(electronIdxs[1]);
+	    }
 	    else resetValues();
-	    if ( nGoodElectrons >= 3 && in_Electrons_p4[0]->At(electronIdxs[2]) > RestLep_pt )
+	    if ( nGoodElectrons >= 3 && in_Electrons_p4[0]->At(electronIdxs[2]) > RestLep_pt ) {
 		out_Lepton3_p4[i] = in_Electrons_p4[i]->At(electronIdxs[2]);
+	    }
 	    else resetValues();
 	}
 	else resetValues();
     }
     if ( nGoodElectrons >= 1 && in_Electrons_p4[0]->At(electronIdxs[0]) > LeadingLep_pt ) {
 	out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-	if ( nGoodElectrons >= 2 && in_Electrons_p4[0]->At(electronIdxs[1]) > RestLep_pt )
+	if ( nGoodElectrons >= 2 && in_Electrons_p4[0]->At(electronIdxs[1]) > RestLep_pt ) {
 	    out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
-	if ( nGoodElectrons >= 3 && in_Electrons_p4[0]->At(electronIdxs[2]) > RestLep_pt )
+	}
+	if ( nGoodElectrons >= 3 && in_Electrons_p4[0]->At(electronIdxs[2]) > RestLep_pt ) {
 	    out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
+	}
     }
     // Rearrange leptons to form charge configurations like +(+-)
     // -> swap lepton1 and lepton2 if +(--) or -(++) => -(+-) / +(-+)
@@ -350,11 +348,13 @@ bool FCNCTriLeptonCppWorker::analyze() {
     for ( unsigned i=0; i<4; ++i ) {
 	if ( nGoodMuons >= 1 && in_Muons_p4[0]->At(muonIdxs[0]) > LeadingLep_pt ) {
 	    out_Lepton1_p4[i] = in_Muons_p4[i]->At(muonIdxs[0]);
-	    if ( nGoodMuons >= 2 && in_Muons_p4[0]->At(muonIdxs[1]) > RestLep_pt )
+	    if ( nGoodMuons >= 2 && in_Muons_p4[0]->At(muonIdxs[1]) > RestLep_pt ) {
 		out_Lepton2_p4[i] = in_Muons_p4[i]->At(muonIdxs[1]);
+	    }
 	    else resetValues();
-	    if ( nGoodMuons >= 3 && in_Muons_p4[0]->At(muonIdxs[2]) > RestLep_pt )
+	    if ( nGoodMuons >= 3 && in_Muons_p4[0]->At(muonIdxs[2]) > RestLep_pt ) {
 		out_Lepton3_p4[i] = in_Muons_p4[i]->At(muonIdxs[2]);
+	    }
 	    else resetValues();
 	}
 	else resetValues();
