@@ -306,21 +306,21 @@ bool FCNCTriLeptonCppWorker::analyze() {
       if ( out_Lepton1_pdgId*out_Lepton2_pdgId > 0 ) { // +(++) or -(--) case.
         out_GoodLeptonCode *= -1;
         //Rearrange leptons for reconstruction Z boson (We want to reco. Z boson by lep2 and 3 that mass has the closet value to the Z mass)
-        if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
-	    if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
+        if ( abs((lepton1P4_t+lepton2P4_t).M()-91.2) < abs((lepton1P4_t+lepton3P4_t).M()-91.2) ) {
+	    if ( abs((lepton1P4_t+lepton2P4_t).M()-91.2) < abs((lepton2P4_t+lepton3P4_t).M()-91.2) ) {
 		std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
 		for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
 	    }
 	}
 	else {
-	    if ( abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
+	    if ( abs((lepton1P4_t+lepton3P4_t).M()-91.2) < abs((lepton2P4_t+lepton3P4_t).M()-91.2) ) {
 		std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
         	for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
 	    }
 	}
       }
       else { //+(--) or -(++) => At here, we need to compare mass of lepton which has same sign
-	  if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) > abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
+	  if ( abs((lepton1P4_t+lepton2P4_t).M()-91.2) > abs((lepton1P4_t+lepton3P4_t).M()-91.2) ) {
             std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId); //-(+-) or +(-+)
             for ( unsigned i=0; i<4; ++i ) {
 		std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
@@ -372,21 +372,21 @@ bool FCNCTriLeptonCppWorker::analyze() {
       if ( out_Lepton1_pdgId*out_Lepton2_pdgId > 0 ) { // +(++) or -(--) case.
         out_GoodLeptonCode *= -1;
 	//Rearrange leptons for reconstruction Z boson (We want to reco. Z boson by lep2 and 3 that mass has the closet value to the Z mass)
-	if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
-	    if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
+	if ( abs((lepton1P4_t+lepton2P4_t).M()-91.2) < abs((lepton1P4_t+lepton3P4_t).M()-91.2) ) {
+	    if ( abs((lepton1P4_t+lepton2P4_t).M()-91.2) < abs((lepton2P4_t+lepton3P4_t).M()-91.2) ) {
 		std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
 		for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
 	    }
 	}
 	else {
-            if ( abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) < abs((lepton2P4_t+lepton3P4_t).Pt()-91.2) ) {
+            if ( abs((lepton1P4_t+lepton3P4_t).M()-91.2) < abs((lepton2P4_t+lepton3P4_t).M()-91.2) ) {
                 std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
                 for ( unsigned i=0; i<4; ++i ) std::swap(out_Lepton1_p4[i], out_Lepton2_p4[i]);
             }
         }	
       }
       else { //+(--) or -(++) => At here, we need to compare mass of lepton which has same sign
-	  if ( abs((lepton1P4_t+lepton2P4_t).Pt()-91.2) < abs((lepton1P4_t+lepton3P4_t).Pt()-91.2) ) {
+	  if ( abs((lepton1P4_t+lepton2P4_t).M()-91.2) < abs((lepton1P4_t+lepton3P4_t).M()-91.2) ) {
             std::swap(out_Lepton1_pdgId, out_Lepton3_pdgId);
             for ( unsigned i=0; i<4; ++i ) {
 		std::swap(out_Lepton1_p4[i], out_Lepton3_p4[i]);
