@@ -108,8 +108,9 @@ bool FCNCTriLeptonCppWorker::isVetoMuon(const unsigned i) const {
 bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
+  const double SCeta = eta + in_Electrons_dEtaSC->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
-  if ( std::abs(eta) > 1.4442 and std::abs(eta) < 1.566 ) return false;
+  if ( std::abs(SCeta) > 1.4442 and std::abs(SCeta) < 1.566 ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
   if ( in_Electrons_id->At(i) != 4 ) return false;
 
@@ -119,7 +120,9 @@ bool FCNCTriLeptonCppWorker::isGoodElectron(const unsigned i) const {
 bool FCNCTriLeptonCppWorker::isVetoElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
+  const double SCeta = eta + in_Electrons_dEtaSC->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
+  if ( std::abs(SCeta) > 1.4442 and std::abs(SCeta) < 1.566 ) return false;
   //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
   if ( in_Electrons_id->At(i) == 0 ) return false;
 
