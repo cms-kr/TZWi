@@ -337,7 +337,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 	    }
 	  }
       }
-      lepton1P4_t.clear(); lepton2P4_t.clear(); lepton3P4_t.clear();
+      lepton1P4_t.Clear(); lepton2P4_t.Clear(); lepton3P4_t.Clear();
     }
   }
   else if ( actualMode == MODE::MuMuMu ) {
@@ -403,7 +403,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 	    }
 	  }
       }
-      lepton1P4_t.clear(); lepton2P4_t.clear(); lepton3P4_t.clear();
+      lepton1P4_t.Clear(); lepton2P4_t.Clear(); lepton3P4_t.Clear();
     }
   }
 
