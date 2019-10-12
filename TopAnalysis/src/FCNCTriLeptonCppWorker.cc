@@ -143,6 +143,13 @@ TLorentzVector FCNCTriLeptonCppWorker::buildP4(const TRAF p4Arr[], const unsigne
   return p4;
 }
 
+void FCNCTriLeptonCppWorker::setOutputP4(float outP4[], const TLorentzVector& p4) {
+  outP4[0] = p4.Pt();
+  outP4[1] = p4.Eta();
+  outP4[2] = p4.Phi();
+  outP4[3] = p4.M();
+}
+
 double FCNCTriLeptonCppWorker::computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const {
   //MET_px = MET_pt*cos(phi) & MET_py = MET_pt*sin(phi)
   const double met_px = met_pt*cos(met_phi);
@@ -305,6 +312,9 @@ bool FCNCTriLeptonCppWorker::analyze() {
       std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
     }
   }
+  if ( out_GoodLeptonCode >= 100 ) setOutputP4(out_Lepton1_p4, lepton1P4);
+  if ( out_GoodLeptonCode >= 110 ) setOutputP4(out_Lepton2_p4, lepton2P4);
+  if ( out_GoodLeptonCode >= 111 ) setOutputP4(out_Lepton3_p4, lepton3P4);
 
   // Check the sign of Z-candidate. Flip the sign for the same-signed lepton pair
   if ( out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) out_GoodLeptonCode *= -1;

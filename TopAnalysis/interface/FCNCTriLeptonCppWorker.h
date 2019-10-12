@@ -107,6 +107,7 @@ private:
 private:
   double computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const;
   TLorentzVector buildP4(const TRAF p4Arr[], const unsigned index) const;
+  void setOutputP4(float outP4[], const TLorentzVector& p4);
 
 private:
   TTreeReaderValue<float> *in_MET_pt = nullptr, *in_MET_phi = nullptr;
