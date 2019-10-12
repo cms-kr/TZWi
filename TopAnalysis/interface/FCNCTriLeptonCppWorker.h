@@ -96,6 +96,8 @@ private:
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 
+  const double minPtLepton1_ = 25, minPtLepton2_ = 20; // Lepton pT selection for the event selection
+
   bool isGoodMuon(const unsigned i) const;
   bool isVetoMuon(const unsigned i) const;
   bool isGoodElectron(const unsigned i) const;
@@ -103,8 +105,8 @@ private:
   bool isGoodJet(const unsigned i) const;
 
 private:
-  TLorentzVector buildP4(const TRAF p4Arr[], unsigned i) const;
   double computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const;
+  TLorentzVector buildP4(const TRAF p4Arr[], const unsigned index) const;
 
 private:
   TTreeReaderValue<float> *in_MET_pt = nullptr, *in_MET_phi = nullptr;
