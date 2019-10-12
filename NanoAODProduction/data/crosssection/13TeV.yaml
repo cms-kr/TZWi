@@ -12,6 +12,7 @@ crosssection:
   TTTo2L2Nu     :  88.29
   TTToSemilepton: 365.34
   TTToFullHadron: 377.96
+  TTToHadronic  : 377.96
 
   ST_s_4f_lepton:   3.36
   ST_s          :  11.36

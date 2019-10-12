@@ -19,38 +19,42 @@ steps:
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
               "MET_pt", "MET_phi",]
     - name: "S3"
-      cuts: ["CutStep >= 3"]
+      cuts: ["CutStep >= 3", "LeadingElectron_pt>20 || LeadingMuon_pt>20", "GoodLeptonCode==111"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton1_eta", "Lepton1_phi",
               "Lepton2_pt", "Lepton2_eta", "Lepton2_phi",
               "Lepton3_pt", "Lepton3_eta", "Lepton3_phi",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
-              "MET_pt", "MET_phi",]
+              "MET_pt", "MET_phi",
+              "LeadingElectron_pt", "LeadingElectron_eta", "LeadingMuon_pt", "LeadingMuon_eta",]
     - name: "S4" #Added cut : 1<=nGoodJet<=3
-      cuts: ["CutStep >= 4"]
+      cuts: ["CutStep >= 4", "LeadingElectron_pt>20 || LeadingMuon_pt>20", "GoodLeptonCode==111"] 
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
-              "MET_pt", "MET_phi",]
+              "MET_pt", "MET_phi",
+              "LeadingElectron_pt", "LeadingElectron_eta", "LeadingMuon_pt", "LeadingMuon_eta",]
     - name: "S5" #S4 && W_MT <= 300 && nBjet > 0
-      cuts: ["CutStep >= 5", "Z_mass > 20"]
+      cuts: ["CutStep >= 5", "Z_mass > 20", "LeadingElectron_pt>20 || LeadingMuon_pt>20", "GoodLeptonCode==111"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
-              "MET_pt", "MET_phi",]
+              "MET_pt", "MET_phi",
+              "LeadingElectron_pt", "LeadingElectron_eta", "LeadingMuon_pt", "LeadingMuon_eta",]
     - name: "S6"
-      cuts: ["CutStep >= 6", "Z_mass > 20"]
+      cuts: ["CutStep >= 6", "Z_mass > 20", "LeadingElectron_pt>20 || LeadingMuon_pt>20", "GoodLeptonCode==111"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Z_pt", "Z_mass", "W_MT",
               "nGoodJet", "nBjet", "nGoodJet_nBjet",
-              "MET_pt", "MET_phi",]
+              "MET_pt", "MET_phi",
+              "LeadingElectron_pt", "LeadingElectron_eta", "LeadingMuon_pt", "LeadingMuon_eta",]
 
     - name: "WZCR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nBjet==0"]
+      cuts: ["CutStep >= 3", "nGoodJet>=1", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nBjet==0"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR", 
@@ -76,8 +80,17 @@ steps:
               "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
               "MET_pt", "MET_phi",]
 
+    - name: "TTCR_allZ"
+      cuts: ["CutStep >= 3", "W_MT <= 300", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "MET_pt", "MET_phi",]
+
     - name: "TTCR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet>=2", "nBjet>=1"]
+      cuts: ["CutStep >= 3", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>20", "TMath::Abs(Z_mass-91.2)<60", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
@@ -86,7 +99,7 @@ steps:
               "MET_pt", "MET_phi",]
 
     - name: "TTSR"
-      cuts: ["CutStep >= 4", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nBjet>=1"]
+      cuts: ["CutStep >= 3", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "LeptonTotal_mass", "LeptonTotal_pt", "LeptonWandZ_deltaPhi", "LeptonWandZ_deltaR",
@@ -191,9 +204,9 @@ hists:
     Z_mass:
         title: "Z_mass;Z mass (GeV);Events"
         bins:
-            nbinsX: 10
-            xmin: 70
-            xmax: 110
+            nbinsX: 15
+            xmin: 30
+            xmax: 150
 
     MET_pt:
         title: "MET;Missing transverse momentum (GeV);Events"
@@ -242,7 +255,7 @@ hists:
     W_MT:
         title: "W_MT;Transeverse mass of W boson;Events"
         bins:
-            nbinsX: 50
+            nbinsX: 20
             xmin: 0
             xmax: 300
     LeptonTotal_mass:
@@ -269,3 +282,27 @@ hists:
             nbinsX: 20
             xmin: 0
             xmax: 6
+    LeadingElectron_pt:
+        title: "LeadingElectron_pt;P_{t} of Leading e;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 200
+    LeadingElectron_eta:
+        title: "LeadingElectron_eta;#eta of Leading e;Events"
+        bins:
+            nbinsX: 20
+            xmin: -3.0
+            xmax: 5.0
+    LeadingMuon_pt:
+        title: "LeadingMuon_pt;P_{t} of Leading #mu;Events"
+        bins:
+            nbinsX: 20
+            xmin: 0
+            xmax: 200
+    LeadingMuon_eta:
+        title: "LeadingMuon_eta;#eta of Leading #mu;Events"
+        bins:
+            nbinsX: 20
+            xmin: -3.0
+            xmax: 5.0

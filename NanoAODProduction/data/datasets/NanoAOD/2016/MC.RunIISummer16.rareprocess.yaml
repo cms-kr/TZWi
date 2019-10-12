@@ -34,12 +34,6 @@ dataset:
     MC2016.TT_FCNC-aT2ZJ_zct:
         ? /TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zct-MadGraph5-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM
         :   - /store/mc/RunIISummer16NanoAODv5/TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zct-MadGraph5-pythia8/NANOAODSIM/PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/100000
-    MC2016.TT_FCNC-aT2ZJ_zct:
-        ? /TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zct-MadGraph5-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM
-        :   - /store/mc/RunIISummer16NanoAODv5/TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zct-MadGraph5-pythia8/NANOAODSIM/PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/100000
-    MC2016.TT_FCNC-aT2ZJ_zct:
-        ? /TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zct-MadGraph5-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM
-        :   - /store/mc/RunIISummer16NanoAODv5/TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zct-MadGraph5-pythia8/NANOAODSIM/PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/100000
     MC2016.TT_FCNC-aT2ZJ_zut:
         ? /TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zut-MadGraph5-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM
         :   - /store/mc/RunIISummer16NanoAODv5/TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zut-MadGraph5-pythia8/NANOAODSIM/PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/250000

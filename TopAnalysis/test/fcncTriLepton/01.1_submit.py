@@ -2,9 +2,10 @@
 import os
 modes = ["ElElEl", "MuElEl", "ElMuMu", "MuMuMu"]
 baseDir = "NanoAOD/2016"
+#baseDir = "NanoAOD/2017"
 
 nFilePerJob = int(os.environ["NFILE"]) if "NFILE" in os.environ else 5
-if not os.path.exists("submit"): os.mkdir("submit")
+if not os.path.exists("submit_2016"): os.mkdir("submit_2016")
 
 import yaml
 from glob import glob
@@ -34,6 +35,6 @@ for fList, modes in toSubmit.iteritems():
         nJobs = ceil(1.*nFiles/nFilePerJob)
 
         jobName = "%s.%s" % (mode, os.path.basename(fList)[:-4])
-        cmd = "cd submit; create-batch bash ../01_prod_ntuple.sh %s ../%s %d --jobName %s -T --nJobs %d" % (mode, fList, nFilePerJob, jobName, nJobs)
+        cmd = "cd submit_2016; create-batch bash ../01_prod_ntuple.sh %s ../%s %d --jobName %s -T --nJobs %d" % (mode, fList, nFilePerJob, jobName, nJobs)
         os.system(cmd)
 
