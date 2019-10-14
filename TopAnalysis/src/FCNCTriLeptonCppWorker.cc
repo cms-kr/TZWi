@@ -70,13 +70,12 @@ void FCNCTriLeptonCppWorker::resetValues() {
     out_Z_p4[i] = 0;
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = out_Lepton3_pdgId = 0;
-  out_GoodLeptonCode = out_nVetoLepton = 0;
-  out_LeptonTotal_mass = out_LeptonTotal_pt = 0;
+  out_TriLepton_mass = out_TriLepton_pt = 0;
+  out_TriLepton_WZdPhi = out_TriLepton_WZdR = 0;
   out_Z_charge = 0;
   out_MET_pt = out_MET_phi = 0;
   out_W_MT = 0;
-  out_LeptonWandZ_deltaPhi = 0;
-  out_LeptonWandZ_deltaR = 0;
+  out_GoodLeptonCode = out_nVetoLepton = 0;
   out_nGoodJet = out_nBjet = 0;
   for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
   out_GoodJet_CSVv2.clear();
@@ -277,8 +276,8 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   TLorentzVector leptonTotP4;
   leptonTotP4 = lepton1P4+lepton2P4+lepton3P4;
-  out_LeptonTotal_mass = leptonTotP4.M();
-  out_LeptonTotal_pt = leptonTotP4.Pt();
+  out_TriLepton_mass = leptonTotP4.M();
+  out_TriLepton_pt = leptonTotP4.Pt();
 
   // Rearrange lepton1,lepton2,lepton3 to fit to our purpose
   if ( out_GoodLeptonCode >= 111 and
@@ -323,7 +322,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Done for the leptons
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
-  if ( std::abs(out_GoodLeptonCode) >= 111 ) {
+  if ( std::abs(out_GoodLeptonCode) % 100 == 11 ) {
     const TLorentzVector zP4 = lepton2P4+lepton3P4;
     out_Z_p4[0] = zP4.Pt();
     out_Z_p4[1] = zP4.Eta();
@@ -351,8 +350,8 @@ bool FCNCTriLeptonCppWorker::analyze() {
       default:
         out_Z_charge = 0;
     }
-    out_LeptonWandZ_deltaPhi = lepton1P4.DeltaPhi(zP4);
-    out_LeptonWandZ_deltaR = lepton1P4.DeltaR(zP4);
+    out_TriLepton_WZdPhi = lepton1P4.DeltaPhi(zP4);
+    out_TriLepton_WZdR   = lepton1P4.DeltaR(zP4);
   }
 
   // Transeverse mass of the W boson
