@@ -175,11 +175,13 @@ bool FCNCTriLeptonCppWorker::analyze() {
   unsigned nVetoMuons = 0, nVetoElectrons = 0;
   for ( unsigned i=0, n=in_Muons_p4[0]->GetSize(); i<n; ++i ) {
     if ( isGoodMuon(i) ) muonIdxs.push_back(i);
-    if ( isVetoMuon(i) ) ++nVetoMuons;
+    //if ( isVetoMuon(i) ) ++nVetoMuons;
+    if ( isGoodMuon(i) ) ++nVetoMuons; // NTU's simplified analysis
   }
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
     if ( isGoodElectron(i) ) electronIdxs.push_back(i);
-    if ( isVetoElectron(i) ) ++nVetoElectrons;
+    //if ( isVetoElectron(i) ) ++nVetoElectrons;
+    if ( isGoodElectron(i) ) ++nVetoElectrons; // NTU's simplified analysis
   }
   std::sort(muonIdxs.begin(), muonIdxs.end(), [&](const int i, const int j){
             return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
