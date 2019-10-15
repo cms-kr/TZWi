@@ -12,7 +12,7 @@
 class FCNCTriLeptonCppWorker {
 //190306 KST 15:49 : just copy frome TTbarDouble~.h, changed class name
 public:
-  enum class MODE {None=0, MuElEl=131111, ElMuMu=111313, ElElEl=111111, MuMuMu=131313} mode_ = MODE::None;
+  enum class MODE {None=0, MuElEl=131111, ElMuMu=111313, ElElEl=111111, MuMuMu=131313, NPLMuElEl=9131111, NPLElMuMu=9111313, NPLElElEl=9111111, NPLMuMuMu=9131313} mode_ = MODE::None;
 
   typedef TTreeReaderArray<float>* TRAF;
   typedef TTreeReaderArray<int>* TRAI;
@@ -22,7 +22,7 @@ public:
   ~FCNCTriLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
+                TRAF relIso, TRAB isLoose, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                     TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
@@ -31,6 +31,16 @@ public:
 
   void resetValues();
   bool analyze();
+
+  float get_LeadingMuon_pt() const { return out_LeadingMuon_p4[0]; }
+  float get_LeadingMuon_eta() const { return out_LeadingMuon_p4[1]; }
+  float get_LeadingMuon_phi() const { return out_LeadingMuon_p4[2]; }
+  float get_LeadingMuon_mass() const { return out_LeadingMuon_p4[3]; }
+
+  float get_LeadingElectron_pt() const { return out_LeadingElectron_p4[0]; }
+  float get_LeadingElectron_eta() const { return out_LeadingElectron_p4[1]; }
+  float get_LeadingElectron_phi() const { return out_LeadingElectron_p4[2]; }
+  float get_LeadingElectron_mass() const { return out_LeadingElectron_p4[3]; }
 
   float get_LeadingLepton_pt() const { return std::max(std::max(get_Lepton1_pt(), get_Lepton2_pt()), get_Lepton3_pt()); }
 
@@ -54,8 +64,9 @@ public:
 
   float get_TriLepton_mass()   const { return out_TriLepton_mass; }
   float get_TriLepton_pt()     const { return out_TriLepton_pt; }
-  float get_TriLepton_WZdPhi() const { return out_TriLepton_WZdPhi; }
-  float get_TriLepton_WZdR()   const { return out_TriLepton_WZdR; }
+  //Wlepton -> lepton that coming from W boson
+  float get_TriLepton_WleptonZdPhi() const { return out_TriLepton_WleptonZdPhi; }
+  float get_TriLepton_WleptonZdR()   const { return out_TriLepton_WleptonZdR; }
 
   float get_Z_pt()   const { return out_Z_p4[0]; }
   float get_Z_eta()  const { return out_Z_p4[1]; }
@@ -126,10 +137,12 @@ private:
 private:
   bool _doCppOutput = false;
 
+  float out_LeadingMuon_p4[4], out_LeadingElectron_p4[4];
   float out_Lepton1_p4[4], out_Lepton2_p4[4], out_Lepton3_p4[4];
   int out_Lepton1_pdgId, out_Lepton2_pdgId, out_Lepton3_pdgId;
+  float out_LeadingLepton_pt;
   float out_TriLepton_mass, out_TriLepton_pt;
-  float out_TriLepton_WZdPhi, out_TriLepton_WZdR;
+  float out_TriLepton_WleptonZdPhi, out_TriLepton_WleptonZdR;
 
   float out_Z_p4[4];
   int out_Z_charge;
