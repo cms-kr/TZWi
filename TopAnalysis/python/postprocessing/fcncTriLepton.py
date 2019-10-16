@@ -64,13 +64,13 @@ class FCNCTriLepton(Module, object):
         objName = "Electron"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso03_all", self.eleIdName, "deltaEtaSC", "eCorr",]:
+                        "pfRelIso03_all", self.eleIdName, "deltaEtaSC", "eCorr", "vidNestedWPBitmapSum16",]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Muon"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso04_all", "looseId", "tightId", "isGlobal", "isPFcand", "isTracker"]:
+                        "pfRelIso04_all", "tightId", "isGlobal", "isPFcand", "isTracker"]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Jet"
@@ -82,9 +82,9 @@ class FCNCTriLepton(Module, object):
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
         self.worker.setElectrons(self.b_Electron_pt, self.b_Electron_eta, self.b_Electron_phi, self.b_Electron_mass, self.b_Electron_charge,
                                  self.b_Electron_pfRelIso03_all, getattr(self, 'b_Electron_%s' % self.eleIdName),
-                                 self.b_Electron_deltaEtaSC, self.b_Electron_eCorr)
+                                 self.b_Electron_deltaEtaSC, self.b_Electron_eCorr, self.b_Electron_vidNestedWPBitmapSum16)
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
-                             self.b_Muon_pfRelIso04_all, self.b_Muon_looseId, self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
+                             self.b_Muon_pfRelIso04_all, self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
         self.worker.setJets(self.b_Jet_pt, self.b_Jet_eta, self.b_Jet_phi, self.b_Jet_mass,
                             self.b_Jet_jetId, self.b_Jet_btagCSVV2)
         self._ttreereaderversion = tree._ttreereaderversion
