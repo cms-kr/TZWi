@@ -10,7 +10,7 @@ class FCNCTriLepton(Module, object):
         #super(FCNCTriLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
         self.eleIdName = kwargs.get("eleId") if "eleId" in kwargs else "cutBased"
-        ##eleVidMap="vidNestedWPBitmapSum16"
+        ##eleVidMap="vidNestedWPBitmapSum16" or "vidNestedWPBitmap"
         #self.eleVidMap = kwargs.get("eleVidMap") if "eleVidMap" in kwargs else "vid"
 
         if "/FCNCTriLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():

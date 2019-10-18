@@ -24,7 +24,7 @@ public:
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                 TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker);
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                    TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr, TRAI vidNestedWPBitmapSum16);
+                    TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr, TRAI vidBitmap);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
                TRAI id, TRAF CSVv2);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
@@ -42,7 +42,7 @@ public:
   float get_LeadingElectron_phi() const { return out_LeadingElectron_p4[2]; }
   float get_LeadingElectron_mass() const { return out_LeadingElectron_p4[3]; }
 
-  float get_LeadingLepton_pt() const { return std::max(std::max(get_Lepton1_pt(), get_Lepton2_pt()), get_Lepton3_pt()); }
+  float get_LeadingLepton_pt() const { return std::max(out_LeadingMuon_p4[0],out_LeadingElectron_p4[0]); }
 
   float get_Lepton1_pt()   const { return out_Lepton1_p4[0]; }
   float get_Lepton1_eta()  const { return out_Lepton1_p4[1]; }
@@ -131,7 +131,7 @@ private:
   TRAI in_Electrons_id = nullptr;
   TRAF in_Electrons_dEtaSC = nullptr;
   TRAF in_Electrons_eCorr = nullptr;
-  TRAI in_Electrons_vidNestedWPBitmapSum16 = nullptr;
+  TRAI in_Electrons_vidBitmap = nullptr;
 
   TRAF in_Jet_p4[4];
   TRAI in_Jet_id = nullptr;
