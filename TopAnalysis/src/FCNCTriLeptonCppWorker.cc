@@ -27,7 +27,7 @@ typedef FCNCTriLeptonCppWorker::TRAI TRAI;
 typedef FCNCTriLeptonCppWorker::TRAB TRAB;
 
 void FCNCTriLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                                              TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr) {
+                                          TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr, TRAI vidNestedWPBitmapSum16) {
   in_Electrons_p4[0] = pt;
   in_Electrons_p4[1] = eta;
   in_Electrons_p4[2] = phi;
@@ -37,17 +37,17 @@ void FCNCTriLeptonCppWorker::setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass
   in_Electrons_id = id;
   in_Electrons_dEtaSC = dEtaSC;
   in_Electrons_eCorr = eCorr;
+  in_Electrons_vidNestedWPBitmapSum16 = vidNestedWPBitmapSum16;
 }
 
 void FCNCTriLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
-                                      TRAF relIso, TRAB isLoose, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker) {
+                                      TRAF relIso, TRAB isTight, TRAB isGlobal, TRAB isPFcand, TRAB isTracker) {
   in_Muons_p4[0] = pt;
   in_Muons_p4[1] = eta;
   in_Muons_p4[2] = phi;
   in_Muons_p4[3] = mass;
   in_Muons_charge = charge;
   in_Muons_relIso = relIso;
-  in_Muons_isLoose = isLoose;
   in_Muons_isTight = isTight;
   in_Muons_isGlobal = isGlobal;
   in_Muons_isPFcand = isPFcand;
@@ -113,7 +113,7 @@ bool FCNCTriLeptonCppWorker::isNPMuon(const unsigned i) const {
   const double pt = in_Muons_p4[0]->At(i);
   const double eta = in_Muons_p4[1]->At(i);
   if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
-  if ( in_Muons_isLoose->At(i) == 0 ) return false;
+  if ( ! ( in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0) ) ) return false;
   if ( in_Muons_relIso->At(i) < maxMuonRelIso_ ) return false;
 
   return true; 
@@ -143,15 +143,16 @@ bool FCNCTriLeptonCppWorker::isVetoElectron(const unsigned i) const {
 
   return true;
 }
-//nonprompt electrons
+//nonprompt electrons: 191018 for now pending about NP electron
 bool FCNCTriLeptonCppWorker::isNPElectron(const unsigned i) const {
   const double pt = in_Electrons_p4[0]->At(i);
   const double eta = in_Electrons_p4[1]->At(i);
   const double scEta = eta + in_Electrons_dEtaSC->At(i);
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   if ( std::abs(scEta) > 1.4442 and std::abs(scEta) < 1.566 ) return false;
-  //nanoAOD object -> Electron_cutBased_Sum16 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
-  if ( in_Electrons_id->At(i) != 2 ) return false;
+  //nanoAOD object -> Electron_vidNestedWPBitmapSum16 (total 10 cuts in here by bitmap, each cut has 3 bit)
+  const char vidNestedWPBitmapSum16 = in_Electrons_vidNestedWPBitmapSum16->At(i);
+  //if ( ! ( vidNestedWPBitmapSum16 > ... ) ) return false;
   //Isolation criteria from signal electrons are inverted in NPL
   if ( std::abs(eta) <= 1.479 ) { if ( in_Electrons_relIso->At(i) < 0.0588 ) return false; }
   if ( std::abs(eta) > 1.479 ) { if ( in_Electrons_relIso->At(i) < 0.0571 ) return false; }
@@ -317,7 +318,24 @@ bool FCNCTriLeptonCppWorker::analyze() {
       out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
     }
   }
-  else if ( actualMode == MODE::ElElEl or actualMode == MODE::NPLElElEl) {
+  else if ( actualMode == MODE::ElElEl ) {
+    if ( nGoodElectrons >= 1 ) {
+      out_GoodLeptonCode += 100;
+      lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
+      out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+    }
+    if ( nGoodElectrons >= 2 ) {
+      out_GoodLeptonCode += 10;
+      lepton2P4 = buildP4(in_Electrons_p4, electronIdxs[1]);
+      out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    }
+    if ( nGoodElectrons >= 3 ) {
+      out_GoodLeptonCode += 1;
+      lepton3P4 = buildP4(in_Electrons_p4, electronIdxs[2]);
+      out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
+    }
+  }
+  else if ( actualMode == MODE::NPLElElEl ) {
     if ( nGoodElectrons >= 1 ) {
       out_GoodLeptonCode += 100;
       lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
@@ -395,6 +413,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
     }
     // Assume: NPL is comming from W boson
     // Find the most closest NPL pt to the PL(lepton1) pt
+    // 191018 for now, pending about NPL mode : this algo. should be changed.
     TLorentzVector NPleptonP4;
     float LeptonPtDiff = 0; float LeptonPtDiffMin = 99999;
     if ( actualMode == MODE::NPLMuMuMu ) {
