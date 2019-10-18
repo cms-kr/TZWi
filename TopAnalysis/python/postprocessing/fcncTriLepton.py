@@ -10,6 +10,8 @@ class FCNCTriLepton(Module, object):
         #super(FCNCTriLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
         self.eleIdName = kwargs.get("eleId") if "eleId" in kwargs else "cutBased"
+        ##eleVidMap="vidNestedWPBitmapSum16"
+        #self.eleVidMap = kwargs.get("eleVidMap") if "eleVidMap" in kwargs else "vid"
 
         if "/FCNCTriLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ FCNCTriLepton worker module"
@@ -37,7 +39,7 @@ class FCNCTriLepton(Module, object):
         self.out.branch("Lepton1_pdgId", "I")
         self.out.branch("Lepton2_pdgId", "I")
         self.out.branch("Lepton3_pdgId", "I")
-	self.out.branch("LeadingLepton_pt", "F")
+        self.out.branch("LeadingLepton_pt", "F")
         self.out.branch("TriLepton_mass", "F")
         self.out.branch("TriLepton_pt", "F")
         self.out.branch("TriLepton_WleptonZdPhi", "F")
@@ -117,16 +119,16 @@ fcnc_MuMuMu_2016 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16")
 fcnc_ElElEl_2016 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16")
 fcnc_ElMuMu_2016 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Sum16")
 fcnc_MuElEl_2016 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Sum16")
-fcnc_NPLMuMuMu_2016 = lambda : FCNCTriLepton(mode="NPLMuMuMu", eleId="cutBased_Sum16")
-fcnc_NPLElElEl_2016 = lambda : FCNCTriLepton(mode="NPLElElEl", eleId="cutBased_Sum16")
-fcnc_NPLElMuMu_2016 = lambda : FCNCTriLepton(mode="NPLElMuMu", eleId="cutBased_Sum16")
-fcnc_NPLMuElEl_2016 = lambda : FCNCTriLepton(mode="NPLMuElEl", eleId="cutBased_Sum16")
+#fcnc_NPLMuMuMu_2016 = lambda : FCNCTriLepton(mode="NPLMuMuMu", eleId="cutBased_Sum16", eleVidMap="vidNestedWPBitmapSum16")
+#fcnc_NPLElElEl_2016 = lambda : FCNCTriLepton(mode="NPLElElEl", eleId="cutBased_Sum16")
+#fcnc_NPLElMuMu_2016 = lambda : FCNCTriLepton(mode="NPLElMuMu", eleId="cutBased_Sum16")
+#fcnc_NPLMuElEl_2016 = lambda : FCNCTriLepton(mode="NPLMuElEl", eleId="cutBased_Sum16")
 
 fcnc_MuMuMu_2017 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Fall17_V1")
 fcnc_ElElEl_2017 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Fall17_V1")
 fcnc_ElMuMu_2017 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Fall17_V1")
 fcnc_MuElEl_2017 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Fall17_V1")
-fcnc_NPLMuMuMu_2017 = lambda : FCNCTriLepton(mode="NPLMuMuMu", eleId="cutBased_Fall17_V1")
-fcnc_NPLElElEl_2017 = lambda : FCNCTriLepton(mode="NPLElElEl", eleId="cutBased_Fall17_V1")
-fcnc_NPLElMuMu_2017 = lambda : FCNCTriLepton(mode="NPLElMuMu", eleId="cutBased_Fall17_V1")
-fcnc_NPLMuElEl_2017 = lambda : FCNCTriLepton(mode="NPLMuElEl", eleId="cutBased_Fall17_V1")
+#fcnc_NPLMuMuMu_2017 = lambda : FCNCTriLepton(mode="NPLMuMuMu", eleId="cutBased_Fall17_V1")
+#fcnc_NPLElElEl_2017 = lambda : FCNCTriLepton(mode="NPLElElEl", eleId="cutBased_Fall17_V1")
+#fcnc_NPLElMuMu_2017 = lambda : FCNCTriLepton(mode="NPLElMuMu", eleId="cutBased_Fall17_V1")
+#fcnc_NPLMuElEl_2017 = lambda : FCNCTriLepton(mode="NPLMuElEl", eleId="cutBased_Fall17_V1")
