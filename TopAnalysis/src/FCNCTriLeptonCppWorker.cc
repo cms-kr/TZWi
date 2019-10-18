@@ -151,7 +151,7 @@ bool FCNCTriLeptonCppWorker::isNPElectron(const unsigned i) const {
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   if ( std::abs(scEta) > 1.4442 and std::abs(scEta) < 1.566 ) return false;
   //nanoAOD object -> Electron_vidNestedWPBitmapSum16 (total 10 cuts in here by bitmap, each cut has 3 bit)
-  const char vidNestedWPBitmapSum16 = in_Electrons_vidNestedWPBitmapSum16->At(i);
+  //int vidNestedWPBitmapSum16 = in_Electrons_vidNestedWPBitmapSum16->At(i);
   //if ( ! ( vidNestedWPBitmapSum16 > ... ) ) return false;
   //Isolation criteria from signal electrons are inverted in NPL
   if ( std::abs(eta) <= 1.479 ) { if ( in_Electrons_relIso->At(i) < 0.0588 ) return false; }
@@ -374,7 +374,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
   leptonTotP4 = lepton1P4+lepton2P4+lepton3P4;
   out_TriLepton_mass = leptonTotP4.M();
   out_TriLepton_pt = leptonTotP4.Pt();
-  int case = 0;
 
   // Rearrange lepton1,lepton2,lepton3 to fit to our purpose
   if ( out_GoodLeptonCode >= 111 and
@@ -403,13 +402,11 @@ bool FCNCTriLeptonCppWorker::analyze() {
       out_Lepton3_pdgId = out_Lepton2_pdgId;
       out_Lepton2_pdgId = out_Lepton1_pdgId;
       out_Lepton1_pdgId = tmpPdgId;
-      case = 1;
     }
     else if ( dm31 < dm12 and dm31 < dm23 ) {
       const TLorentzVector tmpP4 = lepton3P4; // (1,2,3) -> (2,1,3)
       std::swap(lepton1P4, lepton2P4);
       std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
-      case = 2;
     }
     // Assume: NPL is comming from W boson
     // Find the most closest NPL pt to the PL(lepton1) pt
@@ -417,23 +414,23 @@ bool FCNCTriLeptonCppWorker::analyze() {
     TLorentzVector NPleptonP4;
     float LeptonPtDiff = 0; float LeptonPtDiffMin = 99999;
     if ( actualMode == MODE::NPLMuMuMu ) {
-      for ( unsigned i=0; i<nNPMuons; ++i ) {
+      for ( int i=0; i<nNPMuons; ++i ) {
 	NPleptonP4 = buildP4(in_Muons_p4, NPmuonIdxs[i]);
 	LeptonPtDiff = NPleptonP4.Pt()-lepton1P4.Pt();
 	if ( abs(LeptonPtDiff) < abs(LeptonPtDiffMin) ) {
 	  LeptonPtDiffMin = LeptonPtDiff;
-	  lepton1P4.buildP4(in_Muons_p4, NPmuonIdxs[i]);
+	  lepton1P4 = buildP4(in_Muons_p4, NPmuonIdxs[i]);
 	  out_Lepton1_pdgId = -13*in_Muons_charge->At(NPmuonIdxs[i]);
 	}
       }
     }
     if ( actualMode == MODE::NPLElElEl ) {
-      for ( unsigned i=0; i<nNPElectrons; ++i ) {
+      for ( int i=0; i<nNPElectrons; ++i ) {
 	NPleptonP4 = buildP4(in_Electrons_p4, NPelectronIdxs[i]);
 	LeptonPtDiff = NPleptonP4.Pt()-lepton1P4.Pt();
 	if ( abs(LeptonPtDiff) < abs(LeptonPtDiffMin) ) {
 	  LeptonPtDiffMin = LeptonPtDiff;
-	  lepton1P4.buildP4(in_Electrons_p4, NPelectronIdxs[i]);
+	  lepton1P4 = buildP4(in_Electrons_p4, NPelectronIdxs[i]);
 	  out_Lepton1_pdgId = -13*in_Electrons_charge->At(NPelectronIdxs[i]);
 	}
       }
