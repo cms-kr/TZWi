@@ -12,13 +12,14 @@
 class FCNCTriLeptonCppWorker {
 //190306 KST 15:49 : just copy frome TTbarDouble~.h, changed class name
 public:
-  enum class MODE {None=0, MuElEl=131111, ElMuMu=111313, ElElEl=111111, MuMuMu=131313, NPLMuElEl=9131111, NPLElMuMu=9111313, NPLElElEl=9111111, NPLMuMuMu=9131313} mode_ = MODE::None;
+  enum class MODE {None=0, MuElEl=131111, ElMuMu=111313, ElElEl=111111, MuMuMu=131313} mode_ = MODE::None;
+  const bool doNonPromptLepton_;
 
   typedef TTreeReaderArray<float>* TRAF;
   typedef TTreeReaderArray<int>* TRAI;
   typedef TTreeReaderArray<bool>* TRAB;
 
-  FCNCTriLeptonCppWorker(const std::string modeName);
+  FCNCTriLeptonCppWorker(const std::string modeName, const bool doNonPromptLepton=false);
   ~FCNCTriLeptonCppWorker() = default;
 
   void setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
@@ -88,7 +89,7 @@ public:
   std::vector<float> get_GoodJet_mass() const { return out_GoodJet_p4[3]; }
   std::vector<float> get_GoodJet_CSVv2() const { return out_GoodJet_CSVv2; }
   std::vector<unsigned short> get_GoodJet_index() const { return out_GoodJet_index; }
-  unsigned get_nBjet()   const { return out_nBjet; }
+  unsigned get_nBjet() const { return out_nBjet; }
 
 private:
   const double minMuonPt_ = 20, maxMuonEta_ = 2.4; //Signal & veto reco. cuts are same
@@ -111,8 +112,9 @@ private:
 
 private:
   double computeMT(const TLorentzVector& lepP4, const double met_pt, const double met_phi) const;
-  TLorentzVector buildP4(const TRAF p4Arr[], const unsigned index) const;
-  void setOutputP4(float outP4[], const TLorentzVector& p4);
+  inline TLorentzVector buildP4(const TRAF p4Arr[], const unsigned index) const;
+  inline void setOutputP4(float outP4[], const float inP4[]);
+  inline void setOutputP4(float outP4[], const TLorentzVector& p4);
 
 private:
   TTreeReaderValue<float> *in_MET_pt = nullptr, *in_MET_phi = nullptr;
