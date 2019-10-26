@@ -10,8 +10,8 @@ class FCNCTriLepton(Module, object):
         #super(FCNCTriLepton, self).__init__(*args, **kwargs)
         self.mode = kwargs.get("mode")
         self.eleIdName = kwargs.get("eleId") if "eleId" in kwargs else "cutBased"
-        ##eleVidMap="vidNestedWPBitmapSum16" or "vidNestedWPBitmap"
-        #self.eleVidMap = kwargs.get("eleVidMap") if "eleVidMap" in kwargs else "vid"
+        self.eleVidMap = kwargs.get("eleVidMap") if "eleVidMap" in kwargs else "vidNestedWPBitmap" + self.eleIdName.split('_',1)[-1]
+        self.doNonPromptLepton = kwargs.get("doNonPromptLepton") if "doNonPromptLepton" in kwargs else False
 
         if "/FCNCTriLeptonCppWorker_cc.so" not in  ROOT.gSystem.GetLibraries():
             print "Load C++ FCNCTriLepton worker module"
@@ -25,7 +25,7 @@ class FCNCTriLepton(Module, object):
                 ROOT.gROOT.ProcessLine(".L %s/interface/FCNCTriLeptonCppWorker.h" % base)
         pass
     def beginJob(self):
-        self.worker = ROOT.FCNCTriLeptonCppWorker(self.mode)
+        self.worker = ROOT.FCNCTriLeptonCppWorker(self.mode, self.doNonPromptLepton)
         pass
     def endJob(self):
         pass
@@ -66,7 +66,7 @@ class FCNCTriLepton(Module, object):
         objName = "Electron"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass", "charge",
-                        "pfRelIso03_all", self.eleIdName, "deltaEtaSC", "eCorr", "vidNestedWPBitmapSum16",]:
+                        "pfRelIso03_all", self.eleIdName, "deltaEtaSC", "eCorr", self.eleVidMap,]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         objName = "Muon"
@@ -84,7 +84,7 @@ class FCNCTriLepton(Module, object):
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
         self.worker.setElectrons(self.b_Electron_pt, self.b_Electron_eta, self.b_Electron_phi, self.b_Electron_mass, self.b_Electron_charge,
                                  self.b_Electron_pfRelIso03_all, getattr(self, 'b_Electron_%s' % self.eleIdName),
-                                 self.b_Electron_deltaEtaSC, self.b_Electron_eCorr, self.b_Electron_vidNestedWPBitmapSum16)
+                                 self.b_Electron_deltaEtaSC, self.b_Electron_eCorr, self.b_Electron_vidMap)
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
                              self.b_Muon_pfRelIso04_all, self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
         self.worker.setJets(self.b_Jet_pt, self.b_Jet_eta, self.b_Jet_phi, self.b_Jet_mass,
@@ -119,16 +119,16 @@ fcnc_MuMuMu_2016 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16")
 fcnc_ElElEl_2016 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16")
 fcnc_ElMuMu_2016 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Sum16")
 fcnc_MuElEl_2016 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Sum16")
-#fcnc_NPLMuMuMu_2016 = lambda : FCNCTriLepton(mode="NPLMuMuMu", eleId="cutBased_Sum16", eleVidMap="vidNestedWPBitmapSum16")
-#fcnc_NPLElElEl_2016 = lambda : FCNCTriLepton(mode="NPLElElEl", eleId="cutBased_Sum16")
-#fcnc_NPLElMuMu_2016 = lambda : FCNCTriLepton(mode="NPLElMuMu", eleId="cutBased_Sum16")
-#fcnc_NPLMuElEl_2016 = lambda : FCNCTriLepton(mode="NPLMuElEl", eleId="cutBased_Sum16")
+fcnc_NPLMuMuMu_2016 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Sum16", doNonPromptLepton=True)
+fcnc_NPLElElEl_2016 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Sum16", doNonPromptLepton=True)
+fcnc_NPLElMuMu_2016 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Sum16", doNonPromptLepton=True)
+fcnc_NPLMuElEl_2016 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Sum16", doNonPromptLepton=True)
 
 fcnc_MuMuMu_2017 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Fall17_V1")
 fcnc_ElElEl_2017 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Fall17_V1")
 fcnc_ElMuMu_2017 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Fall17_V1")
 fcnc_MuElEl_2017 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Fall17_V1")
-#fcnc_NPLMuMuMu_2017 = lambda : FCNCTriLepton(mode="NPLMuMuMu", eleId="cutBased_Fall17_V1")
-#fcnc_NPLElElEl_2017 = lambda : FCNCTriLepton(mode="NPLElElEl", eleId="cutBased_Fall17_V1")
-#fcnc_NPLElMuMu_2017 = lambda : FCNCTriLepton(mode="NPLElMuMu", eleId="cutBased_Fall17_V1")
-#fcnc_NPLMuElEl_2017 = lambda : FCNCTriLepton(mode="NPLMuElEl", eleId="cutBased_Fall17_V1")
+fcnc_NPLMuMuMu_2017 = lambda : FCNCTriLepton(mode="MuMuMu", eleId="cutBased_Fall17_V1", doNonPromptLepton=True)
+fcnc_NPLElElEl_2017 = lambda : FCNCTriLepton(mode="ElElEl", eleId="cutBased_Fall17_V1", doNonPromptLepton=True)
+fcnc_NPLElMuMu_2017 = lambda : FCNCTriLepton(mode="ElMuMu", eleId="cutBased_Fall17_V1", doNonPromptLepton=True)
+fcnc_NPLMuElEl_2017 = lambda : FCNCTriLepton(mode="MuElEl", eleId="cutBased_Fall17_V1", doNonPromptLepton=True)
