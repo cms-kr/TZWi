@@ -150,10 +150,13 @@ bool FCNCTriLeptonCppWorker::isNPElectron(const unsigned i) const {
   //nanoAOD object -> Electron_vidNestedWPBitmapSum16 (total 10 cuts in here by bitmap, each cut has 3 bit)
   const unsigned vidBitmap = in_Electrons_vidBitmap->At(i);
   for ( unsigned i=0; i<10; ++i ) {
-    const unsigned vidBit = (vidBitmap & (0x7<<(3*i))) >> (3*i); // 0x7 = 111 in the binary representation
-    const bool isTightOnThisBit = vidBit >= 4; // 3 bits to store cuts. 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
-    //if ( i != 2 and !isTightOnThisBit or i == 5 and  isTightOnThisBit ) return false;
-    if ( (i == 2) == (isTightOnThisBit) ) return false;
+    // 0x7 = 111 in the binary representation
+    // after the bitwise operations, 3 bits to store cuts. 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
+    const unsigned vidBit = (vidBitmap & (0x7<<(3*i))) >> (3*i);
+
+    if      ( i == 2 ) { if ( vidBit >= 4 ) return false; } // invert isolation
+    else if ( i == 3 ) { if ( vidBit <  4 ) return false; } // require tight 1/E-1/p cut
+    else if ( vidBit < 2 ) return false;
   }
 
   return true;
