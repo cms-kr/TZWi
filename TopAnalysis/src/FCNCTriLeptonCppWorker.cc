@@ -6,16 +6,13 @@
 //
 using namespace std;
 
-FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName)
+FCNCTriLeptonCppWorker::FCNCTriLeptonCppWorker(const std::string modeName, const bool doNonPromptLepton):
+  doNonPromptLepton_(doNonPromptLepton)
 {
   if ( modeName == "MuElEl" ) mode_ = MODE::MuElEl;
   else if ( modeName == "ElMuMu" ) mode_ = MODE::ElMuMu;
   else if ( modeName == "ElElEl" ) mode_ = MODE::ElElEl;
   else if ( modeName == "MuMuMu" ) mode_ = MODE::MuMuMu;
-  else if ( modeName == "NPLMuElEl" ) mode_ = MODE::NPLMuElEl;
-  else if ( modeName == "NPLElMuMu" ) mode_ = MODE::NPLElMuMu;
-  else if ( modeName == "NPLElElEl" ) mode_ = MODE::NPLElElEl;
-  else if ( modeName == "NPLMuMuMu" ) mode_ = MODE::NPLMuMuMu;
   else {
     cerr << "Mode name \"" << modeName << "\" is not available. " << endl;
     mode_ = MODE::None;//This should be changed kind of 'return false...'(do not run this worker)
@@ -151,10 +148,18 @@ bool FCNCTriLeptonCppWorker::isNPElectron(const unsigned i) const {
   if ( pt < minElectronPt_ or std::abs(eta) > maxElectronEta_ ) return false;
   if ( std::abs(scEta) > 1.4442 and std::abs(scEta) < 1.566 ) return false;
   //nanoAOD object -> Electron_vidNestedWPBitmapSum16 (total 10 cuts in here by bitmap, each cut has 3 bit)
-  //int vidNestedWPBitmapSum16 = in_Electrons_vidNestedWPBitmapSum16->At(i);
-  //if ( ! ( vidNestedWPBitmapSum16 > ... ) ) return false;
+  const unsigned vidBitmap = in_Electrons_vidBitmap->At(i);
+  for ( unsigned i=0; i<10; ++i ) {
+    // 0x7 = 111 in the binary representation
+    // after the bitwise operations, 3 bits to store cuts. 0:fail, 1:veto, 2:loose, 3:medium, 4:tight
+    const unsigned vidBit = (vidBitmap & (0x7<<(3*i))) >> (3*i);
 
-    return true;
+    if      ( i == 2 ) { if ( vidBit >= 4 ) return false; } // invert isolation
+    else if ( i == 3 ) { if ( vidBit <  4 ) return false; } // require tight 1/E-1/p cut
+    else if ( vidBit < 2 ) return false;
+  }
+
+  return true;
 }
 
 bool FCNCTriLeptonCppWorker::isGoodJet(const unsigned i) const {
@@ -170,6 +175,10 @@ TLorentzVector FCNCTriLeptonCppWorker::buildP4(const TRAF p4Arr[], const unsigne
   TLorentzVector p4;
   p4.SetPtEtaPhiM(p4Arr[0]->At(i), p4Arr[1]->At(i), p4Arr[2]->At(i), p4Arr[3]->At(i));
   return p4;
+}
+
+void FCNCTriLeptonCppWorker::setOutputP4(float outP4[], const float inP4[]) {
+  for ( unsigned i=0; i<4; ++i ) outP4[i] = inP4[i];
 }
 
 void FCNCTriLeptonCppWorker::setOutputP4(float outP4[], const TLorentzVector& p4) {
@@ -199,38 +208,116 @@ bool FCNCTriLeptonCppWorker::analyze() {
   out_MET_phi = **in_MET_phi;
 
   // Select leptons
-  std::vector<int> muonIdxs;
-  std::vector<int> electronIdxs;
-  std::vector<int> npMuonIdxs;
-  std::vector<int> npElectronIdxs;
+  std::vector<unsigned> muonIdxs;
+  std::vector<unsigned> electronIdxs;
+  int npMuonIdx = -1, npElectronIdx = -1;
+  double npMuonPt = 0, npElectronPt = 0;
   unsigned nVetoMuons = 0, nVetoElectrons = 0;
   for ( unsigned i=0, n=in_Muons_p4[0]->GetSize(); i<n; ++i ) {
     if ( isGoodMuon(i) ) muonIdxs.push_back(i);
     //if ( isVetoMuon(i) ) ++nVetoMuons;
     if ( isGoodMuon(i) ) ++nVetoMuons; // NTU's simplified analysis
-    if ( isNPMuon(i) ) npMuonIdxs.push_back(i);
+    const double pt = in_Muons_p4[0]->At(i);
+    if ( doNonPromptLepton_ and isNPMuon(i) and npMuonPt < pt ) {
+      npMuonIdx = i;
+      npMuonPt = pt;
+    }
   }
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
     if ( isGoodElectron(i) ) electronIdxs.push_back(i);
     //if ( isVetoElectron(i) ) ++nVetoElectrons;
     if ( isGoodElectron(i) ) ++nVetoElectrons; // NTU's simplified analysis
-    if ( isNPElectron(i) ) npElectronIdxs.push_back(i);
+    const double pt = in_Electrons_p4[0]->At(i);
+    if ( doNonPromptLepton_ and isNPElectron(i) and npElectronPt < pt ) {
+      npElectronIdx = i;
+      npElectronPt = pt;
+    }
   }
+
   std::sort(muonIdxs.begin(), muonIdxs.end(), [&](const int i, const int j){
             return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
   std::sort(electronIdxs.begin(), electronIdxs.end(), [&](const int i, const int j){
             return in_Electrons_p4[0]->At(i) > in_Electrons_p4[0]->At(j);});
-  std::sort(npMuonIdxs.begin(), npMuonIdxs.end(), [&](const int i, const int j){
-            return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
-  std::sort(npElectronIdxs.begin(), npElectronIdxs.end(), [&](const int i, const int j){
-            return in_Electrons_p4[0]->At(i) > in_Electrons_p4[0]->At(j);});
 
   const int nGoodMuons = muonIdxs.size();
   const int nGoodElectrons = electronIdxs.size();
-  const int nNPMuons = npMuonIdxs.size();
-  const int nNPElectrons = npElectronIdxs.size();
   nVetoMuons -= nGoodMuons;
   nVetoElectrons -= nGoodElectrons;
+  out_nVetoLepton = nVetoMuons + nVetoElectrons;
+  TLorentzVector lepton1P4, lepton2P4, lepton3P4;
+
+  // Select event by decay mode
+  auto actualMode = mode_;
+  if ( actualMode == MODE::MuElEl ) {
+    if ( actualMode == MODE::MuElEl and nGoodMuons >= 1 ) {
+      lepton1P4 = buildP4(in_Muons_p4, muonIdxs[0]);
+      out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+      setOutputP4(out_LeadingMuon_p4, lepton1P4);
+    }
+    if ( nGoodElectrons >= 1 ) {
+      lepton2P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
+      out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+      setOutputP4(out_LeadingElectron_p4, lepton2P4);
+    }
+    if ( nGoodElectrons >= 2 ) {
+      lepton3P4 = buildP4(in_Electrons_p4, electronIdxs[1]);
+      out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    }
+  }
+  else if ( actualMode == MODE::ElMuMu ) {
+    if ( actualMode == MODE::ElMuMu and nGoodElectrons >= 1 ) {
+      lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
+      out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+      setOutputP4(out_LeadingElectron_p4, lepton1P4);
+    }
+    if ( nGoodMuons     >= 1 ) {
+      lepton2P4 = buildP4(in_Muons_p4, muonIdxs[0]);
+      out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+      setOutputP4(out_LeadingMuon_p4, lepton2P4);
+    }
+    if ( nGoodMuons     >= 2 ) {
+      lepton3P4 = buildP4(in_Muons_p4, muonIdxs[1]);
+      out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
+    }
+  }
+  else if ( actualMode == MODE::ElElEl ) {
+    if ( nGoodElectrons >= 1 ) {
+      lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
+      out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
+      setOutputP4(out_LeadingElectron_p4, lepton1P4);
+    }
+    if ( nGoodElectrons >= 2 ) {
+      lepton2P4 = buildP4(in_Electrons_p4, electronIdxs[1]);
+      out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
+    }
+    if ( nGoodElectrons >= 3 ) {
+      lepton3P4 = buildP4(in_Electrons_p4, electronIdxs[2]);
+      out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
+    }
+  }
+
+  // For the NPL selection: use one lepton with inverted isolation for the 3rd lepton
+  if ( doNonPromptLepton_ ) {
+    // Treat 3rd lepton as veto lepton, which is isolated
+    if ( std::abs(out_Lepton3_pdgId) == 13 ) ++nVetoMuons;
+    else if ( std::abs(out_Lepton3_pdgId) == 11 ) ++nVetoElectrons;
+
+    if ( npMuonIdx >= 0 and std::abs(out_Lepton3_pdgId) != 11 ) {
+      lepton3P4 = buildP4(in_Muons_p4, npMuonIdx);
+      out_Lepton3_pdgId = -13*in_Muons_charge->At(npMuonIdx);
+    }
+    else if ( npElectronIdx >= 0 and std::abs(out_Lepton3_pdgId) != 13 ) {
+      lepton3P4 = buildP4(in_Electrons_p4, npElectronIdx);
+      out_Lepton3_pdgId = -11*in_Electrons_charge->At(npElectronIdx);
+    }
+    else {
+      lepton3P4 = TLorentzVector();
+      out_Lepton3_pdgId = 0;
+    }
+  }
+
+  // Done for the leptons
+
   out_GoodLeptonCode = 0; // GoodLepton "code". 
   //leading lepton> 25GeV, 2nd,3rd lepton> 20GeV (in GoodMu, Ele object: just >20GeV cut applied)
   // 111: all matched with the desired channel/mode
@@ -240,108 +327,9 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // 100: missing two same flavour leptons for muee/emumu
   // 001: missing two of three leptons for eee/mumumu, two different flav leptons for muee/emumu
   // 000: no leptons found in this event
-  out_nVetoLepton = nVetoMuons + nVetoElectrons;
-  TLorentzVector lepton1P4, lepton2P4, lepton3P4;
-
-  // Select event by decay mode
-  auto actualMode = mode_;
-  if ( actualMode == MODE::MuElEl or actualMode == MODE::NPLMuElEl ) {
-    if ( actualMode == MODE::MuElEl and nGoodMuons >= 1 ) {
-      out_GoodLeptonCode += 100;
-      lepton1P4 = buildP4(in_Muons_p4, muonIdxs[0]);
-      out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
-    }
-    if ( actualMode == MODE::NPLMuElEl and nGoodMuons >=1 ) {
-    //NPL : third lepton is assumed from W and only this lepton has different cut compare to signal
-      out_GoodLeptonCode += 100;
-      lepton1P4 = buildP4(in_Muons_p4, npMuonIdxs[0]);
-      out_Lepton1_pdgId = -13*in_Muons_charge->At(npMuonIdxs[0]);
-    }
-    if ( nGoodElectrons >= 1 ) {
-      out_GoodLeptonCode += 10;
-      lepton2P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
-      out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-    }
-    if ( nGoodElectrons >= 2 ) {
-      out_GoodLeptonCode += 1;
-      lepton3P4 = buildP4(in_Electrons_p4, electronIdxs[1]);
-      out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
-    }
-  }
-  else if ( actualMode == MODE::ElMuMu or actualMode == MODE::NPLElMuMu ) {
-    if ( actualMode == MODE::ElMuMu and nGoodElectrons >= 1 ) {
-      out_GoodLeptonCode += 100;
-      lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
-      out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-    }
-    //NPL : third lepton is assumed from W and only this lepton has different cut compare to signal
-    if ( actualMode == MODE::NPLElMuMu and nGoodElectrons >= 1 ) {
-      out_GoodLeptonCode += 100;
-      lepton1P4 = buildP4(in_Electrons_p4, npElectronIdxs[0]);
-      out_Lepton1_pdgId = -11*in_Electrons_charge->At(npElectronIdxs[0]);
-    }
-    if ( nGoodMuons     >= 1 ) {
-      out_GoodLeptonCode += 10;
-      lepton2P4 = buildP4(in_Muons_p4, muonIdxs[0]);
-      out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
-    }
-    if ( nGoodMuons     >= 2 ) {
-      out_GoodLeptonCode += 1;
-      lepton3P4 = buildP4(in_Muons_p4, muonIdxs[1]);
-      out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
-    }
-  }
-  else if ( actualMode == MODE::ElElEl ) {
-    if ( nGoodElectrons >= 1 ) {
-      out_GoodLeptonCode += 100;
-      lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
-      out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-    }
-    if ( nGoodElectrons >= 2 ) {
-      out_GoodLeptonCode += 10;
-      lepton2P4 = buildP4(in_Electrons_p4, electronIdxs[1]);
-      out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
-    }
-    if ( nGoodElectrons >= 3 ) {
-      out_GoodLeptonCode += 1;
-      lepton3P4 = buildP4(in_Electrons_p4, electronIdxs[2]);
-      out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
-    }
-  }
-  else if ( actualMode == MODE::NPLElElEl ) {
-    if ( nGoodElectrons >= 1 ) {
-      out_GoodLeptonCode += 100;
-      lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
-      out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
-    }
-    if ( nGoodElectrons >= 2 ) {
-      out_GoodLeptonCode += 10;
-      lepton2P4 = buildP4(in_Electrons_p4, electronIdxs[1]);
-      out_Lepton2_pdgId = -11*in_Electrons_charge->At(electronIdxs[1]);
-    }
-    if ( nGoodElectrons >= 3 ) {
-      out_GoodLeptonCode += 1;
-      lepton3P4 = buildP4(in_Electrons_p4, electronIdxs[2]);
-      out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
-    }
-  }
-  else if ( actualMode == MODE::MuMuMu or actualMode == MODE::NPLMuMuMu) {
-    if ( nGoodMuons >= 1 ) {
-      out_GoodLeptonCode += 100;
-      lepton1P4 = buildP4(in_Muons_p4, muonIdxs[0]);
-      out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
-    }
-    if ( nGoodMuons >= 2 ) {
-      out_GoodLeptonCode += 10;
-      lepton2P4 = buildP4(in_Muons_p4, muonIdxs[1]);
-      out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
-    }
-    if ( nGoodMuons >= 3 ) {
-      out_GoodLeptonCode += 1;
-      lepton3P4 = buildP4(in_Muons_p4, muonIdxs[2]);
-      out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[2]);
-    }
-  }
+  if ( out_Lepton1_pdgId ) out_GoodLeptonCode += 100;
+  if ( out_Lepton2_pdgId ) out_GoodLeptonCode +=  10;
+  if ( out_Lepton3_pdgId ) out_GoodLeptonCode +=   1;
 
   TLorentzVector leptonTotP4;
   leptonTotP4 = lepton1P4+lepton2P4+lepton3P4;
@@ -350,7 +338,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Rearrange lepton1,lepton2,lepton3 to fit to our purpose
   if ( out_GoodLeptonCode >= 111 and
-       (actualMode == MODE::MuMuMu or actualMode == MODE::ElElEl or actualMode == MODE::NPLMuMuMu or actualMode == MODE::NPLElElEl) ) {
+       (actualMode == MODE::MuMuMu or actualMode == MODE::ElElEl ) ) {
 /*
     // Algorithm1: arrange by charge
     // Rearrange leptons to form charge configurations like +(+-)
@@ -381,33 +369,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
       std::swap(lepton1P4, lepton2P4);
       std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
     }
-    // Assume: NPL is comming from W boson
-    // Find the most closest NPL pt to the PL(lepton1) pt
-    // 191018 for now, pending about NPL mode : this algo. should be changed.
-    TLorentzVector NPleptonP4;
-    float LeptonPtDiff = 0; float LeptonPtDiffMin = 99999;
-    if ( actualMode == MODE::NPLMuMuMu ) {
-      for ( int i=0; i<nNPMuons; ++i ) {
-	NPleptonP4 = buildP4(in_Muons_p4, npMuonIdxs[i]);
-	LeptonPtDiff = NPleptonP4.Pt()-lepton1P4.Pt();
-	if ( abs(LeptonPtDiff) < abs(LeptonPtDiffMin) ) {
-	  LeptonPtDiffMin = LeptonPtDiff;
-	  lepton1P4 = buildP4(in_Muons_p4, npMuonIdxs[i]);
-	  out_Lepton1_pdgId = -13*in_Muons_charge->At(npMuonIdxs[i]);
-	}
-      }
-    }
-    if ( actualMode == MODE::NPLElElEl ) {
-      for ( int i=0; i<nNPElectrons; ++i ) {
-	NPleptonP4 = buildP4(in_Electrons_p4, npElectronIdxs[i]);
-	LeptonPtDiff = NPleptonP4.Pt()-lepton1P4.Pt();
-	if ( abs(LeptonPtDiff) < abs(LeptonPtDiffMin) ) {
-	  LeptonPtDiffMin = LeptonPtDiff;
-	  lepton1P4 = buildP4(in_Electrons_p4, npElectronIdxs[i]);
-	  out_Lepton1_pdgId = -13*in_Electrons_charge->At(npElectronIdxs[i]);
-	}
-      }
-    }
   }
   if ( out_GoodLeptonCode >= 100 ) setOutputP4(out_Lepton1_p4, lepton1P4);
   if ( out_GoodLeptonCode >= 110 ) setOutputP4(out_Lepton2_p4, lepton2P4);
@@ -415,32 +376,6 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Check the sign of Z-candidate. Flip the sign for the same-signed lepton pair
   if ( out_Lepton2_pdgId*out_Lepton3_pdgId > 0 ) out_GoodLeptonCode *= -1;
-  //Save the leading Electron or Muon that depend on channel
-  if ( out_GoodLeptonCode >= 111 ) {
-    if ( actualMode == MODE::MuElEl ) {
-      for ( unsigned i=0; i<4; ++i ) { 
-        out_LeadingElectron_p4[i] = out_Lepton2_p4[i]; out_LeadingMuon_p4[i] = out_Lepton1_p4[i];
-      }
-    }
-    else if ( actualMode == MODE::ElMuMu ) {
-      for ( unsigned i=0; i<4; ++i ) { 
-        out_LeadingMuon_p4[i] = out_Lepton2_p4[i]; out_LeadingElectron_p4[i] = out_Lepton1_p4[i];
-      }
-    }
-    else if ( actualMode == MODE::ElElEl ) {
-      for ( unsigned i=0; i<4; ++i ) {
-        out_LeadingElectron_p4[i] = out_Lepton2_p4[i];
-        out_LeadingMuon_p4[i] = 0;
-      }
-    }
-    else if ( actualMode == MODE::MuMuMu ) {
-      for ( unsigned i=0; i<4; ++i ) {
-        out_LeadingMuon_p4[i] = out_Lepton2_p4[i];
-        out_LeadingElectron_p4[i] = 0;
-      }
-    }
-  }
-  // Done for the leptons
 
   // Build Z candidate (save non-zero charge of Z bosons together for bkg. estimation)
   if ( std::abs(out_GoodLeptonCode) % 100 == 11 ) {
@@ -449,28 +384,13 @@ bool FCNCTriLeptonCppWorker::analyze() {
     out_Z_p4[1] = zP4.Eta();
     out_Z_p4[2] = zP4.Phi();
     out_Z_p4[3] = zP4.M();
-    switch ( out_Lepton2_pdgId+out_Lepton3_pdgId ) {
-      case -13-13:
-      case -11-11:
-      case -13-11:
-        out_Z_charge = +2;
-        break;
-      case  13+13:
-      case  11+11:
-      case  11+13:
-        out_Z_charge = -2;
-        break;
-      case 11:
-      case 13:
-        out_Z_charge = -1;
-        break;
-      case -11:
-      case -13:
-        out_Z_charge = +1;
-        break;
-      default:
-        out_Z_charge = 0;
-    }
+
+    const int sumId = out_Lepton2_pdgId+out_Lepton3_pdgId;
+    if      ( sumId <= (-11-11) ) out_Z_charge = +2;
+    else if ( sumId >= (+11+11) ) out_Z_charge = -2;
+    else if ( sumId <= -11 ) out_Z_charge = +1;
+    else if ( sumId >= +11 ) out_Z_charge = -1;
+
     out_TriLepton_WleptonZdPhi = lepton1P4.DeltaPhi(zP4);
     out_TriLepton_WleptonZdR   = lepton1P4.DeltaR(zP4);
   }
