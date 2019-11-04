@@ -29,6 +29,36 @@ processes:
             #- Run2016.SingleMuon
             #- Run2016.SingleElectron
             - Run2016.DoubleMuon
+    DataNPLElElEl:
+        title: "Data"
+        modes: ["NPLElElEl"]
+        cut: "HLT"
+        datasets:
+            #- Run2016.SingleElectron
+            - Run2016.DoubleEG
+    DataNPLMuMuMu:
+        title: "Data"
+        modes: ["NPLMuMuMu"]
+        cut: "HLT"
+        datasets:
+            #- Run2016.SingleMuon
+            - Run2016.DoubleMuon
+    DataNPLMuElEl:
+        title: "Data"
+        modes: ["NPLMuElEl"]
+        cut: "HLT"
+        datasets:
+            #- Run2016.SingleMuon
+            #- Run2016.SingleElectron
+            - Run2016.DoubleEG
+    DataNPLElMuMu:
+        title: "Data"
+        modes: ["NPLElMuMu"]
+        cut: "HLT"
+        datasets:
+            #- Run2016.SingleMuon
+            #- Run2016.SingleElectron
+            - Run2016.DoubleMuon
 
     DYJets:
         title: "DYJets"
