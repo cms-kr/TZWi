@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
-#modes = ["ElElEl", "MuElEl", "ElMuMu", "MuMuMu"]
-modes = ["NPLElElEl", "NPLMuElEl", "NPLElMuMu", "NPLMuMuMu"]
+modes = ["ElElEl", "MuElEl", "ElMuMu", "MuMuMu", "NPLElElEl", "NPLMuElEl", "NPLElMuMu", "NPLMuMuMu"]
 baseDir = "NanoAOD/2016"
 #baseDir = "NanoAOD/2017"
 
