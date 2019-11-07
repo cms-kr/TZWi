@@ -110,7 +110,7 @@ bool FCNCTriLeptonCppWorker::isNPMuon(const unsigned i) const {
   const double pt = in_Muons_p4[0]->At(i);
   const double eta = in_Muons_p4[1]->At(i);
   if ( pt < minMuonPt_ or std::abs(eta) > maxMuonEta_ ) return false;
-  if ( ! ( in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 and in_Muons_isTracker->At(i) != 0) ) ) return false;
+  if ( ! ( in_Muons_isPFcand->At(i) != 0 and (in_Muons_isGlobal->At(i) != 0 or in_Muons_isTracker->At(i) != 0) ) ) return false;
   if ( in_Muons_relIso->At(i) < maxMuonRelIso_ ) return false;
 
   return true; 
@@ -298,16 +298,16 @@ bool FCNCTriLeptonCppWorker::analyze() {
   else if ( actualMode == MODE::MuMuMu ) {
     if ( nGoodMuons >= 1 ) {
       lepton1P4 = buildP4(in_Muons_p4, muonIdxs[0]);
-      out_Lepton1_pdgId = -11*in_Muons_charge->At(muonIdxs[0]);
+      out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
       setOutputP4(out_LeadingMuon_p4, lepton1P4);
     }
     if ( nGoodMuons >= 2 ) {
       lepton2P4 = buildP4(in_Muons_p4, muonIdxs[1]);
-      out_Lepton2_pdgId = -11*in_Muons_charge->At(muonIdxs[1]);
+      out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
     }
     if ( nGoodMuons >= 3 ) {
       lepton3P4 = buildP4(in_Muons_p4, muonIdxs[2]);
-      out_Lepton3_pdgId = -11*in_Muons_charge->At(muonIdxs[2]);
+      out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[2]);
     }
   }
 
