@@ -315,7 +315,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   if ( doNonPromptLepton_ ) {
     // We should save one NPL that will be contained empty space
     // There could be 3 cases -> xoo, oxo, oox (x: empty, o: PL is filled)
-    if ( lepton1P4 == 0 && lepton2P4 != 0 && lepton3P4 !=0 ) {
+    if ( lepton1P4.Pt() == 0 && lepton2P4.Pt() != 0 && lepton3P4.Pt() !=0 ) {
       if ( actualMode == MODE::MuElEl or actualMode == MODE::MuMuMu ) {
         if ( npMuonIdx >= 0 ) {
           lepton1P4 = buildP4(in_Muons_p4, npMuonIdx);
@@ -329,7 +329,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
         }
       }
     }
-    else if ( lepton2P4 == 0 && lepton1P4 != 0 && lepton3P4 !=0 ) {
+    else if ( lepton2P4.Pt() == 0 && lepton1P4.Pt() != 0 && lepton3P4.Pt() !=0 ) {
       if ( actualMode == MODE::ElMuMu or actualMode == MODE::MuMuMu ) {
         if ( npMuonIdx >= 0 ) {
           lepton2P4 = buildP4(in_Muons_p4, npMuonIdx);
@@ -343,7 +343,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
         }
       }
     }
-    else if ( lepton3P4 == 0 && lepton1P4 != 0 && lepton2P4 !=0 ) {
+    else if ( lepton3P4.Pt() == 0 && lepton1P4.Pt() != 0 && lepton2P4.Pt() !=0 ) {
       if ( actualMode == MODE::ElMuMu or actualMode == MODE::MuMuMu ) {
         if ( npMuonIdx >= 0 ) {
           lepton3P4 = buildP4(in_Muons_p4, npMuonIdx);
