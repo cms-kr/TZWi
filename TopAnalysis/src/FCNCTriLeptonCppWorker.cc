@@ -249,7 +249,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Select event by decay mode
   auto actualMode = mode_;
   if ( actualMode == MODE::MuElEl ) {
-    if ( actualMode == MODE::MuElEl and nGoodMuons >= 1 ) {
+    if ( nGoodMuons >= 1 ) {
       lepton1P4 = buildP4(in_Muons_p4, muonIdxs[0]);
       out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
       setOutputP4(out_LeadingMuon_p4, lepton1P4);
@@ -265,7 +265,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
     }
   }
   else if ( actualMode == MODE::ElMuMu ) {
-    if ( actualMode == MODE::ElMuMu and nGoodElectrons >= 1 ) {
+    if ( nGoodElectrons >= 1 ) {
       lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
       out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
       setOutputP4(out_LeadingElectron_p4, lepton1P4);
@@ -313,21 +313,52 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // For the NPL selection: use one lepton with inverted isolation for the 3rd lepton
   if ( doNonPromptLepton_ ) {
-    // Treat 3rd lepton as veto lepton, which is isolated
-    if ( std::abs(out_Lepton3_pdgId) == 13 ) ++nVetoMuons;
-    else if ( std::abs(out_Lepton3_pdgId) == 11 ) ++nVetoElectrons;
-
-    if ( npMuonIdx >= 0 and std::abs(out_Lepton3_pdgId) != 11 ) {
-      lepton3P4 = buildP4(in_Muons_p4, npMuonIdx);
-      out_Lepton3_pdgId = -13*in_Muons_charge->At(npMuonIdx);
+    // We should save one NPL that will be contained empty space
+    // There could be 3 cases -> xoo, oxo, oox (x: empty, o: PL is filled)
+    if ( lepton1P4 == 0 && lepton2P4 != 0 && lepton3P4 !=0 ) {
+      if ( actualMode == MODE::MuElEl or actualMode == MODE::MuMuMu ) {
+        if ( npMuonIdx >= 0 ) {
+          lepton1P4 = buildP4(in_Muons_p4, npMuonIdx);
+          out_Lepton1_pdgId = -13*in_Muons_charge->At(npMuonIdx);
+        }
+      }
+      else if ( actualMode == MODE::ElMuMu or actualMode == MODE::ElElEl ) {
+        if ( npElectronIdx >= 0 ) {
+          lepton1P4 = buildP4(in_Electrons_p4, npElectronIdx);
+          out_Lepton1_pdgId = -11*in_Electrons_charge->At(npElectronIdx);
+        }
+      }
     }
-    else if ( npElectronIdx >= 0 and std::abs(out_Lepton3_pdgId) != 13 ) {
-      lepton3P4 = buildP4(in_Electrons_p4, npElectronIdx);
-      out_Lepton3_pdgId = -11*in_Electrons_charge->At(npElectronIdx);
+    else if ( lepton2P4 == 0 && lepton1P4 != 0 && lepton3P4 !=0 ) {
+      if ( actualMode == MODE::ElMuMu or actualMode == MODE::MuMuMu ) {
+        if ( npMuonIdx >= 0 ) {
+          lepton2P4 = buildP4(in_Muons_p4, npMuonIdx);
+          out_Lepton2_pdgId = -13*in_Muons_charge->At(npMuonIdx);
+        }
+      }
+      else if ( actualMode == MODE::MuElEl or actualMode == MODE::ElElEl ) {
+        if ( npElectronIdx >= 0 ) {
+          lepton2P4 = buildP4(in_Electrons_p4, npElectronIdx);
+          out_Lepton2_pdgId = -11*in_Electrons_charge->At(npElectronIdx);
+        }
+      }
+    }
+    else if ( lepton3P4 == 0 && lepton1P4 != 0 && lepton2P4 !=0 ) {
+      if ( actualMode == MODE::ElMuMu or actualMode == MODE::MuMuMu ) {
+        if ( npMuonIdx >= 0 ) {
+          lepton3P4 = buildP4(in_Muons_p4, npMuonIdx);
+          out_Lepton3_pdgId = -13*in_Muons_charge->At(npMuonIdx);
+        }
+      }
+      else if ( actualMode == MODE::MuElEl or actualMode == MODE::ElElEl ) {
+        if ( npElectronIdx >= 0 ) {
+          lepton3P4 = buildP4(in_Electrons_p4, npElectronIdx);
+          out_Lepton3_pdgId = -11*in_Electrons_charge->At(npElectronIdx);
+        }
+      }
     }
     else {
-      lepton3P4 = TLorentzVector();
-      out_Lepton3_pdgId = 0;
+      ++out_nVetoLepton;
     }
   }
 
