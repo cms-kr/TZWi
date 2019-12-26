@@ -16,10 +16,16 @@ histStyles: # Styling rules, later item overrides earlier ones
     color: "kMagenta+1"
   - title: SingleTopV
     color: "kMagenta+2"
-  - title: Tribosons
-    color: "kGray"
-  - title: Dibosons
-    color: "kWhite"
+#  - title: Tribosons
+#    color: "kGray"
+#  - title: Dibosons
+#    color: "kWhite"
+  - title: ZZ
+    color: "kCyan-1"
+  - title: WZ
+    color: "kAzure+6"
+  - title: WW
+    color: "kBlue-6"
   - title: Wjets
     color: "kGreen+1"
   - title: ttH
@@ -47,8 +53,11 @@ stackorders: ## MC samples to stack
   - ttJets
   - ttH
   - ttV
-  - Tribosons
-  - Dibosons
+  #- Tribosons
+  #- Dibosons
+  - WW
+  - WZ
+  - ZZ
   - SingleTop
   - SingleTopV
   - DYJets
