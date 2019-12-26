@@ -19,11 +19,11 @@ crosssection:
   ST_t          : 136.02
   ST_tW         :  35.85
   STbar_t       :  80.95
-  STbar_tW      :  38.85
+  STbar_tW      :  35.85
 
   TTZToQQ     : 0.5297
   TTZToLLNuNu : 0.2529
-  TTWJetsToQQ : 0.4026
+  TTWJetsToQQ : 0.4062
   TTWJetsToLNu: 0.2043
 
   TTTT: 0.009103
