@@ -81,7 +81,11 @@ public:
   float get_W_MT() const { return out_W_MT; }
 
   unsigned get_nVetoLepton() const { return out_nVetoLepton; }
+  unsigned get_nGoodElectron() const { return out_nGoodElectron; }
+  unsigned get_nGoodMuon() const { return out_nGoodMuon; }
+  unsigned get_nGoodLepton() const { return out_nGoodElectron + out_nGoodMuon; }
   short get_GoodLeptonCode() const { return out_GoodLeptonCode; }
+  
   unsigned get_nGoodJet()   const { return out_nGoodJet; }
   std::vector<float> get_GoodJet_pt()   const { return out_GoodJet_p4[0]; }
   std::vector<float> get_GoodJet_eta()  const { return out_GoodJet_p4[1]; }
@@ -143,6 +147,7 @@ private:
   bool _doCppOutput = false;
 
   float out_LeadingMuon_p4[4], out_LeadingElectron_p4[4];
+  float out_Lepton_p4[4];
   float out_Lepton1_p4[4], out_Lepton2_p4[4], out_Lepton3_p4[4];
   int out_Lepton1_pdgId, out_Lepton2_pdgId, out_Lepton3_pdgId;
   float out_LeadingLepton_pt;
@@ -157,7 +162,10 @@ private:
   float out_W_MT;
 
   short out_GoodLeptonCode;
+  unsigned short out_GoodLepton;
   unsigned short out_nVetoLepton;
+  unsigned short out_nGoodElectron;
+  unsigned short out_nGoodMuon;
   unsigned short out_nGoodJet, out_nBjet;
   std::vector<float> out_GoodJet_p4[4];
   std::vector<float> out_GoodJet_CSVv2;
