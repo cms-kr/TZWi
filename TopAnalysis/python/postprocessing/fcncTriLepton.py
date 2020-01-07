@@ -46,7 +46,10 @@ class FCNCTriLepton(Module, object):
         self.out.branch("TriLepton_WleptonZdR", "F")
         self.out.branch("Z_charge", "I")
         self.out.branch("nVetoLepton", "i")
+        self.out.branch("nGoodLepton", "i")
         self.out.branch("GoodLeptonCode", "I")
+        self.out.branch("nGoodElectron", "i")
+        self.out.branch("nGoodMuon", "i")
         #self.out.branch("nGoodJet", "i")
         self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
         for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
@@ -104,7 +107,7 @@ class FCNCTriLepton(Module, object):
                 self.out.fillBranch("%s_%s" % (objName, varName), getattr(event._tree, 'b_out_%s_%s' % (objName, varName)))
         for varName in ["MET_pt", "MET_phi", "Lepton1_pdgId", "Lepton2_pdgId", "Lepton3_pdgId", "LeadingLepton_pt",
                         "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
-                        "nVetoLepton", "GoodLeptonCode", "Z_charge", "W_MT",
+                        "nVetoLepton", "nGoodElectron", "nGoodMuon", "nGoodLepton", "GoodLeptonCode", "Z_charge", "W_MT",
                         #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
                         "GoodJet_index", "GoodJet_CSVv2",
                         "nBjet",]:

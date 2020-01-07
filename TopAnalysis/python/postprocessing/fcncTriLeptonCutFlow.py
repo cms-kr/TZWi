@@ -26,9 +26,11 @@ class FCNCTriLeptonCutFlow(Module, object):
         while True:
             if abs(event._tree.b_out_GoodLeptonCode) != 111: break
             cutStep += 1
-            if event._tree.b_out_GoodLeptonCode < 0: break
+            #if event._tree.b_out_GoodLeptonCode < 0: break
+            if event._tree.b_out_GoodLepton != 3: break
             cutStep += 1
-            if event._tree.b_out_nVetoLepton > 0: break
+            #if event._tree.b_out_nVetoLepton > 0: break
+            if not (82.5 <= event._tree.b_out_Z_mass <= 97.5): break
             cutStep += 1
             if not (1 <= event._tree.b_out_nGoodJet <= 3): break
             cutStep += 1

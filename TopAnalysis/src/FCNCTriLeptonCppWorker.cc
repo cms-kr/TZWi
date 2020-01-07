@@ -1,6 +1,7 @@
 #include "../interface/FCNCTriLeptonCppWorker.h"
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 //190306 KST 15:44 : just copy this code from FCNCTriLeptonCppWorker.cc
 //
@@ -79,6 +80,7 @@ void FCNCTriLeptonCppWorker::resetValues() {
   out_MET_pt = out_MET_phi = 0;
   out_W_MT = 0;
   out_GoodLeptonCode = out_nVetoLepton = 0;
+  out_nGoodElectron = out_nGoodMuon = 0;
   out_nGoodJet = out_nBjet = 0;
   for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
   out_GoodJet_CSVv2.clear();
@@ -210,6 +212,8 @@ bool FCNCTriLeptonCppWorker::analyze() {
   // Select leptons
   std::vector<unsigned> muonIdxs;
   std::vector<unsigned> electronIdxs;
+  //std::vector<unsigned> npMuonIdxs;
+  //std::vector<unsigned> npElectronIdxs;
   int npMuonIdx = -1, npElectronIdx = -1;
   double npMuonPt = 0, npElectronPt = 0;
   unsigned nVetoMuons = 0, nVetoElectrons = 0;
@@ -222,6 +226,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
       npMuonIdx = i;
       npMuonPt = pt;
     }
+    //if ( doNonPromptLepton_ and isNPMuon(i) ) npMuonIdxs.push_back(i);
   }
   for ( unsigned i=0, n=in_Electrons_p4[0]->GetSize(); i<n; ++i ) {
     if ( isGoodElectron(i) ) electronIdxs.push_back(i);
@@ -232,24 +237,31 @@ bool FCNCTriLeptonCppWorker::analyze() {
       npElectronIdx = i;
       npElectronPt = pt;
     }
+    //if ( doNonPromptLepton_ and isNPElectron(i) ) npElectronIdxs.push_back(i);
   }
 
   std::sort(muonIdxs.begin(), muonIdxs.end(), [&](const int i, const int j){
             return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
   std::sort(electronIdxs.begin(), electronIdxs.end(), [&](const int i, const int j){
             return in_Electrons_p4[0]->At(i) > in_Electrons_p4[0]->At(j);});
+  //std::sort(npMuonIdxs.begin(), npMuonIdxs.end(), [&](const int i, const int j){
+  //          return in_Muons_p4[0]->At(i) > in_Muons_p4[0]->At(j);});
+  //std::sort(npElectronIdxs.begin(), npElectronIdxs.end(), [&](const int i, const int j){
+  //          return in_Electrons_p4[0]->At(i) > in_Electrons_p4[0]->At(j);});
 
   const int nGoodMuons = muonIdxs.size();
   const int nGoodElectrons = electronIdxs.size();
   nVetoMuons -= nGoodMuons;
   nVetoElectrons -= nGoodElectrons;
+  out_nGoodMuon = nGoodMuons;
+  out_nGoodElectron = nGoodElectrons;
   out_nVetoLepton = nVetoMuons + nVetoElectrons;
   TLorentzVector lepton1P4, lepton2P4, lepton3P4;
 
   // Select event by decay mode
   auto actualMode = mode_;
   if ( actualMode == MODE::MuElEl ) {
-    if ( actualMode == MODE::MuElEl and nGoodMuons >= 1 ) {
+    if ( nGoodMuons >= 1 ) {
       lepton1P4 = buildP4(in_Muons_p4, muonIdxs[0]);
       out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
       setOutputP4(out_LeadingMuon_p4, lepton1P4);
@@ -265,7 +277,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
     }
   }
   else if ( actualMode == MODE::ElMuMu ) {
-    if ( actualMode == MODE::ElMuMu and nGoodElectrons >= 1 ) {
+    if ( nGoodElectrons >= 1 ) {
       lepton1P4 = buildP4(in_Electrons_p4, electronIdxs[0]);
       out_Lepton1_pdgId = -11*in_Electrons_charge->At(electronIdxs[0]);
       setOutputP4(out_LeadingElectron_p4, lepton1P4);
@@ -293,6 +305,21 @@ bool FCNCTriLeptonCppWorker::analyze() {
     if ( nGoodElectrons >= 3 ) {
       lepton3P4 = buildP4(in_Electrons_p4, electronIdxs[2]);
       out_Lepton3_pdgId = -11*in_Electrons_charge->At(electronIdxs[2]);
+    }
+  }
+  else if ( actualMode == MODE::MuMuMu ) {
+    if ( nGoodMuons >= 1 ) {
+      lepton1P4 = buildP4(in_Muons_p4, muonIdxs[0]);
+      out_Lepton1_pdgId = -13*in_Muons_charge->At(muonIdxs[0]);
+      setOutputP4(out_LeadingMuon_p4, lepton1P4);
+    }
+    if ( nGoodMuons >= 2 ) {
+      lepton2P4 = buildP4(in_Muons_p4, muonIdxs[1]);
+      out_Lepton2_pdgId = -13*in_Muons_charge->At(muonIdxs[1]);
+    }
+    if ( nGoodMuons >= 3 ) {
+      lepton3P4 = buildP4(in_Muons_p4, muonIdxs[2]);
+      out_Lepton3_pdgId = -13*in_Muons_charge->At(muonIdxs[2]);
     }
   }
 
@@ -338,7 +365,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Rearrange lepton1,lepton2,lepton3 to fit to our purpose
   if ( out_GoodLeptonCode >= 111 and
-       (actualMode == MODE::MuMuMu or actualMode == MODE::ElElEl ) ) {
+       ( actualMode == MODE::MuMuMu or actualMode == MODE::ElElEl ) ) {
 /*
     // Algorithm1: arrange by charge
     // Rearrange leptons to form charge configurations like +(+-)
@@ -370,6 +397,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
       std::swap(out_Lepton1_pdgId, out_Lepton2_pdgId);
     }
   }
+  
   if ( out_GoodLeptonCode >= 100 ) setOutputP4(out_Lepton1_p4, lepton1P4);
   if ( out_GoodLeptonCode >= 110 ) setOutputP4(out_Lepton2_p4, lepton2P4);
   if ( out_GoodLeptonCode >= 111 ) setOutputP4(out_Lepton3_p4, lepton3P4);
