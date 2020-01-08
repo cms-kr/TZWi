@@ -57,7 +57,7 @@ if [ ${DATATYPE::2} == "MC" ]; then
     #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyMCBranch"
 
     #ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer lepSF"
-    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.modules.common.lepSFProducer lepSF
+    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.modules.common.lepSFProducer lepSF"
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight_${YEAR}"
 
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF${YEAR}"
