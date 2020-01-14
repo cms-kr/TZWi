@@ -127,7 +127,7 @@ class lepSFProducer(Module):
             sf_muerr_ISO.append(sqrt(0.54778**2 * sf_muerr_ISO_BF[i]**2 + 0.45222**2 * sf_muerr_ISO_GH[i]**2))
 
         eventSFset = sf_el + sf_mu
-        eventSFerrset = sf_elerr + sf_muerr_Trig + sf_muerr_ID + sf_muerr_ISO
+        eventSFerrset = sf_elerr + sf_muerr
         evsfval = 1.
         evsferrval = 0
         for sfval in eventSFset:
