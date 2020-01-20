@@ -9,4 +9,24 @@ keep LHEScaleWeight
 keep PSWeight
 keep genTtbarId
 keep luminosityBlock
-
+keep HLT
+keep MET_pt
+keep MET_phi
+keep Lepton*
+keep Leading*
+keep TriLepton*
+keep Z*
+keep nVetoLepton
+keep nGoodLepton
+keep GoodLeptonCode
+keep nGoodElectron
+keep nGoodMuon
+keep nGoodJet
+keep GoodJet*
+keep nBjet
+keep W_MT
+keep CutStep
+keep puWeight
+keep puWeightUp
+keep puWeightDown
+keep BtagWeight*
