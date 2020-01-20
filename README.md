@@ -19,8 +19,9 @@ We'd like to cover:
 
 ## Installation
 ```bash
-cmsrel CMSSW_10_2_11
-cd CMSSW_10_2_11/src
+#unset SCRAM_ARCH ## just in case if you need this...
+cmsrel CMSSW_10_2_19
+cd CMSSW_10_2_19/src
 cmsenv
 git-cms-init
 git cms-merge-topic cms-nanoAOD:master-102X
