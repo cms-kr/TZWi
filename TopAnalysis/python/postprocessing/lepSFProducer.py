@@ -17,9 +17,9 @@ class lepSFProducer(Module):
         if electronSelectionTag=="TightWP_2016":
             el_f = ["TightWP_2016.root"]
             el_h = ["EGamma_SF2D"]
-        mu_f_BF = ["%s/src/TZWi/TopAnalysis/python/postprocessing/data/leptonSF/" % os.environ['CMSSW_BASE'] + f for f in mu_f_BF]
-        mu_f_GH = ["%s/src/TZWi/TopAnalysis/python/postprocessing/data/leptonSF/" % os.environ['CMSSW_BASE'] + f for f in mu_f_GH]
-        el_f = ["%s/src/TZWi/TopAnalysis/python/postprocessing/data/leptonSF/" % os.environ['CMSSW_BASE'] + f for f in el_f]
+        mu_f_BF = ["%s/src/TZWi/TopAnalysis/data/leptonSF/" % os.environ['CMSSW_BASE'] + f for f in mu_f_BF]
+        mu_f_GH = ["%s/src/TZWi/TopAnalysis/data/leptonSF/" % os.environ['CMSSW_BASE'] + f for f in mu_f_GH]
+        el_f = ["%s/src/TZWi/TopAnalysis/data/leptonSF/" % os.environ['CMSSW_BASE'] + f for f in el_f]
 
         mu_f_Trig_BF = [mu_f_BF[0]]
         mu_f_Trig_GH = [mu_f_GH[0]]
