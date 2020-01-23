@@ -20,8 +20,8 @@ We'd like to cover:
 ## Installation
 ```bash
 #unset SCRAM_ARCH ## just in case if you need this...
-cmsrel CMSSW_10_2_19
-cd CMSSW_10_2_19/src
+cmsrel CMSSW_10_2_20_UL
+cd CMSSW_10_2_20_UL/src
 cmsenv
 git-cms-init
 git cms-merge-topic cms-nanoAOD:master-102X
