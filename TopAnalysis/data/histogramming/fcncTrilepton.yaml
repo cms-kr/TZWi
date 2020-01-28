@@ -107,7 +107,23 @@ steps:
               "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
               "MET_pt", "MET_phi",]
 
+    - name: "WZCR_0b"
+      cuts: ["CutStep >= 2", "nGoodJet>=1", "nGoodJet<=3", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5", "nBjet==0"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "MET_pt", "MET_phi",]
 
+    - name: "WZCR_23jet"
+      cuts: ["CutStep >= 2", "nGoodJet>=2", "nGoodJet<=3", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)<7.5"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "MET_pt", "MET_phi",]
 
 hists:
     nPV_noWeight:
