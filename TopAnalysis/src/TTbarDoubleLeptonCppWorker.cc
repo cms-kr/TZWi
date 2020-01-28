@@ -69,6 +69,7 @@ void TTbarDoubleLeptonCppWorker::resetValues() {
     out_Z_p4[i] = 0;
   }
   out_Lepton1_pdgId = out_Lepton2_pdgId = 0;
+  out_Z_charge = 0;
   out_MET_pt = out_MET_phi = 0;
   out_nGoodJet = out_nBjet = 0;
   for ( unsigned i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
@@ -188,6 +189,7 @@ bool TTbarDoubleLeptonCppWorker::analyze() {
   out_Z_p4[1] = zP4.Eta();
   out_Z_p4[2] = zP4.Phi();
   out_Z_p4[3] = zP4.M();
+  out_Z_charge = 0;
   const int sumId = out_Lepton1_pdgId+out_Lepton2_pdgId;
   if      ( sumId <= (-11-11) ) out_Z_charge = +2;
   else if ( sumId >= (+11+11) ) out_Z_charge = -2;

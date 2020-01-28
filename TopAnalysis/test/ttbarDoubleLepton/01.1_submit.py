@@ -21,6 +21,7 @@ for proc in procInfo:
 
         for dataset in datasetInfo[datasetGroup]:
             fLists = glob("%s/*/%s/%s.txt" % (baseDir, datasetGroup, dataset.replace('/','.')[1:]))
+            print fLists
             for fList in fLists:
                 if fList not in toSubmit: toSubmit[fList] = []
                 toSubmit[fList].extend(procInfo[proc]['modes'] if 'modes' in procInfo[proc] else modes)
