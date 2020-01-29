@@ -2,7 +2,7 @@
 
 [ _$RESUBMIT == _ ] && RESUBMIT=0
 
-for i in submit_2016/*NANOAOD/ submit_2016/*NANOAODSIM/; do
+for i in submit/*NANOAOD/ submit/*NANOAODSIM/; do
     cd $i
     [ -f failed.txt ] && rm -f failed.txt
     for j in result*.tgz; do
@@ -11,7 +11,7 @@ for i in submit_2016/*NANOAOD/ submit_2016/*NANOAODSIM/; do
     cd ../..
 done
 
-for i in submit_2016/*NANOAOD/ submit_2016/*NANOAODSIM/; do
+for i in submit/*NANOAOD/ submit/*NANOAODSIM/; do
     [ -f $i/failed.txt ] || continue
 
     echo $i
