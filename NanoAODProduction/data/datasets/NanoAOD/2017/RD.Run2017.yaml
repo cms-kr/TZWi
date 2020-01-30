@@ -70,14 +70,14 @@ dataset:
         - /store/data/Run2017F/SingleMuon/NANOAOD/Nano1June2019-v1/30000
         - /store/data/Run2017F/SingleMuon/NANOAOD/Nano1June2019-v1/710000
 luminosity:
-    Run2017B-Nano1June2019-v1: 4.77
-    Run2017C-Nano1June2019-v1: 9.58
-    Run2017D-Nano1June2019-v1: 4.22
-    Run2017E-Nano1June2019-v1: 9.26
-    Run2017F-Nano1June2019-v1: 13.46
+    Run2017B-Nano1June2019-v1: 4.794
+    Run2017C-Nano1June2019-v1: 9.633
+    Run2017D-Nano1June2019-v1: 4.248
+    Run2017E-Nano1June2019-v1: 9.315
+    Run2017F-Nano1June2019-v1: 13.540
 runrange:
-    Run2017B-Nano1June2019-v1: 297046-299329
+    Run2017B-Nano1June2019-v1: 297047-299329
     Run2017C-Nano1June2019-v1: 299368-302029
-    Run2017D-Nano1June2019-v1: 302030-303434
-    Run2017E-Nano1June2019-v1: 303824-304797
+    Run2017D-Nano1June2019-v1: 302030-302663
+    Run2017E-Nano1June2019-v1: 303818-304797
     Run2017F-Nano1June2019-v1: 305040-306462
