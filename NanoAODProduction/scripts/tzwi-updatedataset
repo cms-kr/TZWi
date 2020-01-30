@@ -19,7 +19,7 @@ def getSEBaseURL(fName):
     #    ff = xrdFile.open(seBaseURL+fName)
     #    if xrdFile.is_open() and xrdFile.stat()[0].status == 0: return seBaseURL
     if os.path.exists("/xrootd"+fName): return "root://cms-xrdr.private.lo:2094//xrd/"
-    elif os.path.exists("/T2_KR_KISTI"+fName): return "root://cms-t2-se01.sdfarm.kr:1094//pnfs/sdfarm.kr/data/cms/"
+    elif os.path.exists("/T2_KR_KISTI"+fName): return "root://cms-t2-se01.sdfarm.kr:1095/"
     #else:
     #    seBaseURL = "root://cms-t2-se01.sdfarm.kr:1094//pnfs/sdfarm.kr/data/cms/"
     #    xrdFile = xrdclient.File()
