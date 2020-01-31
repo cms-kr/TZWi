@@ -49,7 +49,8 @@ dataset:
             - /store/mc/RunIIFall17NanoAODv6/W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/270000
     MC2017.W3Jets:
         ? /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/NANOAODSIM
-        : []
+        :   - /store/mc/RunIIFall17NanoAODv6/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/260000
+            - /store/mc/RunIIFall17NanoAODv6/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/70000
     MC2017.W4Jets:
         ? /W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM
         :   - /store/mc/RunIIFall17NanoAODv6/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_new_pmx_102X_mc2017_realistic_v7-v1/70000
@@ -93,9 +94,10 @@ dataset:
             - /store/mc/RunIIFall17NanoAODv6/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_new_pmx_102X_mc2017_realistic_v7-v1/260000
     MC2017.WZZ:
         ? /WZZ_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_ext_102X_mc2017_realistic_v7-v1/NANOAODSIM
-        : []
+        :   - /store/mc/RunIIFall17NanoAODv6/WZZ_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_ext_102X_mc2017_realistic_v7-v1/270000
     MC2017.ZZ:
-        /ZZ_TuneCP5_13TeV-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/NANOAODSIM: []
+        /ZZ_TuneCP5_13TeV-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/NANOAODSIM:
+        - /store/mc/RunIIFall17NanoAODv6/ZZ_TuneCP5_13TeV-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v2/260000
     MC2017.ZZTo2L2Nu:
         /ZZTo2L2Nu_13TeV_powheg_pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/NANOAODSIM:
         - /store/mc/RunIIFall17NanoAODv6/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_102X_mc2017_realistic_v7-v1/270000
@@ -107,7 +109,8 @@ dataset:
         :   - /store/mc/RunIIFall17NanoAODv6/ZZTo4L_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_new_pmx_102X_mc2017_realistic_v7-v1/280000
     MC2017.ZZZ:
         ? /ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_ext_102X_mc2017_realistic_v7-v1/NANOAODSIM
-        : []
+        :   - /store/mc/RunIIFall17NanoAODv6/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_ext_102X_mc2017_realistic_v7-v1/270000
+            - /store/mc/RunIIFall17NanoAODv6/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_ext_102X_mc2017_realistic_v7-v1/260000
     MC2017.ttbb:
         ? /ttbb_4FS_ckm_NNPDF31_TuneCP5_amcatnlo_madspin_pythia/RunIIFall17NanoAODv6-PU2017_12Apr2018_Nano25Oct2019_new_pmx_102X_mc2017_realistic_v7-v1/NANOAODSIM
         :   - /store/mc/RunIIFall17NanoAODv6/ttbb_4FS_ckm_NNPDF31_TuneCP5_amcatnlo_madspin_pythia/NANOAODSIM/PU2017_12Apr2018_Nano25Oct2019_new_pmx_102X_mc2017_realistic_v7-v1/260000
