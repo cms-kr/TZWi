@@ -15,15 +15,15 @@ class FCNCKinematicReco(Module, object):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.out.branch("SMTop_pt", "F")
-        self.out.branch("SMTop_eta", "F")
-        self.out.branch("SMTop_phi", "F")
-        self.out.branch("SMTop_mass", "F")
-        self.out.branch("FCNCTop_pt", "F")
-        self.out.branch("FCNCTop_eta", "F")
-        self.out.branch("FCNCTop_phi", "F")
-        self.out.branch("FCNCTop_mass", "F")
-        self.out.branch("Reconstructed", "i")
+        self.out.branch("KinTopWb_pt", "F")
+        self.out.branch("KinTopWb_eta", "F")
+        self.out.branch("KinTopWb_phi", "F")
+        self.out.branch("KinTopWb_mass", "F")
+        self.out.branch("KinTopZq_pt", "F")
+        self.out.branch("KinTopZq_eta", "F")
+        self.out.branch("KinTopZq_phi", "F")
+        self.out.branch("KinTopZq_mass", "F")
+        self.out.branch("KinTop_status", "i")
 
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -83,13 +83,17 @@ class FCNCKinematicReco(Module, object):
         OriginTmass = 172.5 # Fixed T mass
 
         ## initialize ##
-        SMTKinVal = []
-        FCNCKinVal = []
+        SMTKinVal = [0,0,0,0]
+        FCNCKinVal = [0,0,0,0]
+        consted = 0
 
-        if ( event._tree.b_out_GoodLeptonCode != 111 ): return False
-        if ( event._tree.b_out_nGoodLepton > 3 ): return False
-        if not ( 2 <= event._tree.b_out_nGoodJet <= 3 ): return False
-        #if ( event._tree.b_out_nBjet < 1): break
+        while True:
+            if ( event._tree.b_out_GoodLeptonCode != 111 ): break
+            if ( event._tree.b_out_nGoodLepton > 3 ): break
+            if not ( 2 <= event._tree.b_out_nGoodJet <= 3 ): break
+            if ( event._tree.b_out_nBjet < 1): break
+            break
+
         # Variable construct : Lepton vars = [pt, eta, phi, mass]
         Zlep1var = [event._tree.b_out_Lepton2_pt, event._tree.b_out_Lepton2_eta, event._tree.b_out_Lepton2_phi, event._tree.b_out_Lepton2_mass]
         Zlep2var = [event._tree.b_out_Lepton3_pt, event._tree.b_out_Lepton3_eta, event._tree.b_out_Lepton3_phi, event._tree.b_out_Lepton3_mass]
@@ -153,16 +157,15 @@ class FCNCKinematicReco(Module, object):
         FCNCEs = [qjet[3], Zlep1[3], Zlep2[3]]
         FCNCTKinVal = self.getTPEPM(FCNCpxs, FCNCpys, FCNCpzs, FCNCEs)
 
-        self.out.fillBranch("Reconstructed", consted)
-        if ( consted == 0 ): return False
-        self.out.fillBranch("SMTop_pt", SMTKinVal[0])
-        self.out.fillBranch("SMTop_eta", SMTKinVal[1])
-        self.out.fillBranch("SMTop_phi", SMTKinVal[2])
-        self.out.fillBranch("SMTop_mass", SMTKinVal[3])
-        self.out.fillBranch("FCNCTop_pt", FCNCTKinVal[0])
-        self.out.fillBranch("FCNCTop_eta", FCNCTKinVal[1])
-        self.out.fillBranch("FCNCTop_phi", FCNCTKinVal[2])
-        self.out.fillBranch("FCNCTop_mass", FCNCTKinVal[3])
+        self.out.fillBranch("KinTop_status", consted)
+        self.out.fillBranch("KinTopWb_pt", SMTKinVal[0])
+        self.out.fillBranch("KinTopWb_eta", SMTKinVal[1])
+        self.out.fillBranch("KinTopWb_phi", SMTKinVal[2])
+        self.out.fillBranch("KinTopWb_mass", SMTKinVal[3])
+        self.out.fillBranch("KinTopZq_pt", FCNCTKinVal[0])
+        self.out.fillBranch("KinTopZq_eta", FCNCTKinVal[1])
+        self.out.fillBranch("KinTopZq_phi", FCNCTKinVal[2])
+        self.out.fillBranch("KinTopZq_mass", FCNCTKinVal[3])
 
         ## for debugging
         #print " Coefficients A/B/aterm/bterm/cterm : ", metpz[3], metpz[4], metpz[5], metpz[6], metpz[7]
