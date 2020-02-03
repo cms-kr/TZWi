@@ -30,6 +30,4 @@ keep puWeight
 keep puWeightUp
 keep puWeightDown
 keep BtagWeight*
-keep SMTop*
-keep FCNCTop*
-keep Reconstructed
+keep KinTop*
