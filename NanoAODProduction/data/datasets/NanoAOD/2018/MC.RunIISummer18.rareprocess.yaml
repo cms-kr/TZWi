@@ -1,22 +1,33 @@
 dataset:
     MC2018.ST_FCNC-TLL_zct:
-        ? /ST_FCNC-TLL_Tleptonic_kappa_zct-Madgraph5-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_new_pmx_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
-        : []
+        ? /ST_FCNC-TLL_Tleptonic_kappa_zct-Madgraph5-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_tauDecays_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/ST_FCNC-TLL_Tleptonic_kappa_zct-Madgraph5-pythia8/NANOAODSIM/Nano25Oct2019_tauDecays_102X_upgrade2018_realistic_v20-v1/230000
     MC2018.ST_FCNC-TLL_zut:
-        ? /ST_FCNC-TLL_Tleptonic_kappa_zut-Madgraph5-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_new_pmx_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
-        : []
+        ? /ST_FCNC-TLL_Tleptonic_kappa_zut-Madgraph5-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_tauDecays_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/ST_FCNC-TLL_Tleptonic_kappa_zut-Madgraph5-pythia8/NANOAODSIM/Nano25Oct2019_tauDecays_102X_upgrade2018_realistic_v20-v1/230000
+            - /store/mc/RunIIAutumn18NanoAODv6/ST_FCNC-TLL_Tleptonic_kappa_zut-Madgraph5-pythia8/NANOAODSIM/Nano25Oct2019_tauDecays_102X_upgrade2018_realistic_v20-v1/250000
     MC2018.TTWJetsToLNu:
-        ? /TTWJetsToLNu_TuneCP5_PSweights_13TeV-amcatnloFXFX-madspin-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_new_pmx_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        ? /TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
         : []
+        ? /TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/240000
+            - /store/mc/RunIIAutumn18NanoAODv6/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/250000
     MC2018.TTWJetsToQQ:
         ? /TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
         :   - /store/mc/RunIIAutumn18NanoAODv6/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/60000
     MC2018.TTZToLLNuNu:
-        ? /TTZToLLNuNu_M-10_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        ? /TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
         : []
+        ? /TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/240000
+            - /store/mc/RunIIAutumn18NanoAODv6/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/40000
+            - /store/mc/RunIIAutumn18NanoAODv6/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/610000
     MC2018.TTZToQQ:
         /TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM:
         - /store/mc/RunIIAutumn18NanoAODv6/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/250000
+        ? /TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/250000
+            - /store/mc/RunIIAutumn18NanoAODv6/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20_ext1-v1/240000
     MC2018.TT_FCNC-T2ZJ_zct:
         ? /TT_FCNC-T2ZJ_aTleptonic_ZToll_kappa_zct-MadGraph5-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
         : []
@@ -30,11 +41,13 @@ dataset:
         ? /TT_FCNC-aT2ZJ_Tleptonic_ZToll_kappa_zut-MadGraph5-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
         : []
     MC2018.tZq_ll:
-        ? /tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_new_pmx_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        ? /tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
         : []
     MC2018.ttHToNonbb:
-        ? /ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_new_pmx_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
-        : []
+        ? /ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/230000
     MC2018.ttHTobb:
-        ? /ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_new_pmx_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
-        : []
+        ? /ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/60000
+        ? /ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_ext1_102X_upgrade2018_realistic_v20-v1/NANOAODSIM
+        :   - /store/mc/RunIIAutumn18NanoAODv6/ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/Nano25Oct2019_ext1_102X_upgrade2018_realistic_v20-v1/120000

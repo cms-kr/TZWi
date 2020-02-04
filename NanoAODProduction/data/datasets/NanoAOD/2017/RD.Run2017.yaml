@@ -17,8 +17,8 @@ dataset:
         - /store/data/Run2017B/DoubleMuon/NANOAOD/Nano25Oct2019-v1/230000
         /DoubleMuon/Run2017C-Nano25Oct2019-v1/NANOAOD:
         - /store/data/Run2017C/DoubleMuon/NANOAOD/Nano25Oct2019-v1/60000
-        - /store/data/Run2017C/DoubleMuon/NANOAOD/Nano25Oct2019-v1/40000
         - /store/data/Run2017C/DoubleMuon/NANOAOD/Nano25Oct2019-v1/240000
+        - /store/data/Run2017C/DoubleMuon/NANOAOD/Nano25Oct2019-v1/40000
         /DoubleMuon/Run2017D-Nano25Oct2019-v1/NANOAOD:
         - /store/data/Run2017D/DoubleMuon/NANOAOD/Nano25Oct2019-v1/30000
         /DoubleMuon/Run2017E-Nano25Oct2019-v1/NANOAOD:
