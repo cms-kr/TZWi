@@ -76,9 +76,10 @@ for i, ch in enumerate(chlist):
     nDYJets = hnlist[2]
 
     totMC = nWZJets+nZZs+nDYJets
-    rWZ = nWZJets/totMC
-    rZZ = nZZs/totMC
-    rDY = nDYJets/totMC
+    totData = hrd.Integral()
+    rWZ = 35900*nWZJets/totData
+    rZZ = 35900*nZZs/totData
+    rDY = 35900*nDYJets/totData
 
     print "initial RWZ = ", rWZ
     print "initial RZZ = ", rZZ
@@ -89,12 +90,12 @@ for i, ch in enumerate(chlist):
     fWZ = RooRealVar("fWZ", "fWZ", rWZ, 0.0, 0.9)
     fZZ = RooRealVar("fZZ", "fZZ", rZZ, 0.0, 0.9)
     fDY = RooRealVar("fDY", "fDY", rDY, 0.0, 0.9)
-    nWZ = RooRealVar("nWZ", "nWZ", nWZJets, nWZJets, nWZJets)
-    nZZ = RooRealVar("nZZ", "nZZ", nZZs, nZZs, nZZs)
-    nDY = RooRealVar("nDY", "nWZ", nDYJets, nDYJets, nDYJets)
-    ntot = RooRealVar("ntot", "ntot", totMC, totMC, totMC)
-    k = RooRealVar("k", "Normalization Factor", 1, 0.7, 1.3)
-    ktot = RooFormulaVar("ktot", "number of tot event after fitting", "k*ntot", RooArgList(k, ntot))
+    #nWZ = RooRealVar("nWZ", "nWZ", nWZJets, nWZJets, nWZJets)
+    #nZZ = RooRealVar("nZZ", "nZZ", nZZs, nZZs, nZZs)
+    #nDY = RooRealVar("nDY", "nWZ", nDYJets, nDYJets, nDYJets)
+    #ntot = RooRealVar("ntot", "ntot", totMC, totMC, totMC)
+    #k = RooRealVar("k", "Normalization Factor", 1, 0.7, 1.3)
+    #ktot = RooFormulaVar("ktot", "number of tot event after fitting", "k*ntot", RooArgList(k, ntot))
 
     xArg = RooArgList(x)
     data = RooDataHist("data", "data point with x", xArg, hrd)
@@ -109,18 +110,24 @@ for i, ch in enumerate(chlist):
     #model = RooAddPdf("model", "model", RooArgList(WZpdf, DYpdf, ZZpdf), RooArgList(fWZ, fDY)) # ZZ
     #model = RooAddPdf("model", "model", RooArgList(ZZpdf, WZpdf, DYpdf), RooArgList(fZZ, fWZ)) # DY
 
-    model2 = RooAddPdf("model2", "model2", RooArgList(model), RooArgList(ktot))
-    model2.fitTo(data)
-    k.Print()
-    #fWZ.Print()
-    fZZ.Print()
-    fDY.Print()
-
+    #model2 = RooAddPdf("model2", "model2", RooArgList(model), RooArgList(ktot))
+    model.fitTo(data)
+    
+    # WZ fix
     fracZZ = fZZ.getVal()
     fracDY = fDY.getVal()
     fracWZ = 1-fracZZ-fracDY
-    fitk = k.getVal()
 
+    # ZZ Fix
+    #fracDY = fDY.getVal()
+    #fracWZ = fWZ.getVal()
+    #fracZZ = 1-fracDY-fracWZ
+
+    # DY fix
+    #fracWZ = fWZ.getVal()
+    #fracZZ = fZZ.getVal()
+    #fracDY = 1-fracWZ-fracZZ
+    
     fraclist = [fracWZ, fracZZ, fracDY]
 
     cplot = TCanvas("cplot", "cplot", 1)
@@ -131,14 +138,6 @@ for i, ch in enumerate(chlist):
     #DYJets.plotOn(xframe, RooFit.LineColor(3), RooFit.LineStyle(9), RooFit.Rescale(fracWZ))
     xframe.Draw()
     cplot.SaveAs("fitresult_WZCR_%s.png"%ch)
-
-    #entriesWZ = WZpdf.getAnalyticalIntegral(RooArgSet(xArg), RooArgSet(xArg))
-    #entriesZZ = ZZpdf.getAnalyticalIntegral(RooArgSet(xArg), RooArgSet(xArg))
-    #entriesDY = DYpdf.getAnalyticalIntegral(RooArgSet(xArg), RooArgSet(xArg))
-
-    #print "WZ after fit is = ", 36500*entriesWZ
-    #print "ZZ after fit is = ", 36500*entriesZZ
-    #print "DY after fit is = ", 36500*entriesDY
 
     # Ratio calculation
     ratio0b = []
@@ -175,29 +174,26 @@ for i, ch in enumerate(chlist):
     tcplot.SaveAs("LinearCheck_TTCR_%s.png"%ch)
 
     ## Save TTCR fit Result
-
     nttsr = hTTSR.Integral()
-    errttsr = calcError(hTTSR)
+    nt1 = hTT_all.Integral(hTT_all.FindBin(30), hTT_all.FindBin(70)-1)
+    nt2 = hTT_all.Integral(hTT_all.FindBin(110), hTT_all.FindBin(150))
 
-    linmodel.fitTo(TTdata, RooFit.Range(30, 70))
-    coef1.Print()
+    Tmodel.fitTo(TTdata, RooFit.Range(30, 70))
+    k1.Print()
     ttplot = TCanvas("ttplot", "ttplot", 1)
     tframe = y.frame()
     TTdata.plotOn(tframe)
-    linmodel.plotOn(tframe)
-    #tframe.Draw()
-    t1 = coef1.getVal()
-    linmodel.fitTo(TTdata, RooFit.Range(110, 150))
-    coef1.Print()
-    linmodel.plotOn(tframe)
+    Tmodel.plotOn(tframe)
+    t1 = k1.getVal()
+
+    Tmodel.fitTo(TTdata, RooFit.Range(110, 150))
+    k1.Print()
+    Tmodel.plotOn(tframe)
     tframe.Draw()
-    t2 = coef1.getVal()
+    t2 = k1.getVal()
     ttplot.SaveAs("fitresult_TTCR_%s.png"%ch)
-    t11 = hTT_all.Integral(30, 70)
-    t22 = hTT_all.Integral(110, 150) 
     file = open(result, "a")
-    tline = "%s TT %f %f\n"%(ch, 15*(abs(t1)+abs(t2)), 35900*nttsr)
-    #tline = "%s TT %f %f\n"%(ch, 36500*(t11+t22)*15/80, 36500*nttsr)
+    tline = "%s TT %f %f\n"%(ch, (t1*nt1*35900*15/80)+(t2*nt2*35900*15/80), 36500*nttsr)
     file.write(tline)
     file.close()
 
