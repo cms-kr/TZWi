@@ -150,12 +150,14 @@ for i, ch in enumerate(chlist):
 ### For TTCR
     y = RooRealVar("y", "y", 30, 150)
     coef1 = RooRealVar("a", "a", -0.1, 0.1)
-  
     yArg = RooArgList(y)
     k1 = RooRealVar("k1", "k1", 0, -0.1, 0.1)
+    
     TTdata = RooDataHist("TTdata", "Data point with x", yArg, hTTrd)
     TT = RooDataHist("TT", "TT point with x", yArg, hTT_all)
+    TTpdf = RooHistPdf("TTpdf", "TTpdf", RooArgSet(RooArgList(y)), TT)
     linmodel = RooPolynomial("linmodel", "linmodel", y, RooArgList(coef1)) # Model for linear check
+    Tmodel = RooAddPdf("Tmodel", "Tmodel", RooArgList(TTpdf), RooArgList(k1))
 
     ## Save Linear check result
     linmodel.fitTo(TT)
