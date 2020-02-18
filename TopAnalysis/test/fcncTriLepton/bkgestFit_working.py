@@ -150,8 +150,8 @@ for i, ch in enumerate(chlist):
 ### For TTCR
     y = RooRealVar("y", "y", 30, 150)
     coef1 = RooRealVar("a", "a", -0.1, 0.1)
+    k1 = RooRealVar("k1", "k1", 1, 0.7, 1.3)
     yArg = RooArgList(y)
-    k1 = RooRealVar("k1", "k1", 0, -0.1, 0.1)
     
     TTdata = RooDataHist("TTdata", "Data point with x", yArg, hTTrd)
     TT = RooDataHist("TT", "TT point with x", yArg, hTT_all)
