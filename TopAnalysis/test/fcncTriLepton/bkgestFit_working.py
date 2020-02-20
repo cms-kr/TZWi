@@ -219,11 +219,11 @@ for i, ch in enumerate(chlist):
         n0b23j = histb.Integral(1,1)
         ratio23j.append(n1b23j/n0b23j)
         ### Should be changed!!! ###
-        estedWZCR = 35900 * totMC * fitk * fraclist[i] * ratio0b[i] * ratio23j[i]
+        estedWZCR = 35900 * totMC * fraclist[i] * ratio0b[i] * ratio23j[i]
         ###
 
         file = open(result, "a")
-        wline = "%s %s %f %f %f %f %f %f\n" %(ch, mc, hnlist[i]*35900, 35900*totMC*fitk*fraclist[i], ratio0b[i], ratio23j[i], estedWZCR, nexplist[i]*35900)
+        wline = "%s %s %f %f %f %f %f %f\n" %(ch, mc, hnlist[i]*35900, 35900*totMC*fraclist[i], ratio0b[i], ratio23j[i], estedWZCR, nexplist[i]*35900)
         file.write(wline)
         file.close()
 
