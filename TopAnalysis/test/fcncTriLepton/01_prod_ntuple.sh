@@ -43,7 +43,7 @@ ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.flags flags_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT hlt_${HLTMODULE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}_${YEAR}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
-#ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncKinematicReco fcncKinReco "
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncKinematicReco fcncKinReco "
 
 #CMD="nano_postproc.py --friend"
 #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
