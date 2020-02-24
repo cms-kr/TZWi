@@ -30,3 +30,4 @@ keep puWeight
 keep puWeightUp
 keep puWeightDown
 keep BtagWeight*
+keep KinTop*
