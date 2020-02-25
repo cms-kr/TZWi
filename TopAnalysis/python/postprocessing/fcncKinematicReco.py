@@ -156,9 +156,9 @@ class FCNCKinematicReco(Module, object):
 
             posTMass = self.getTPEPM(SMpxs, SMpys, posSMpzs, posSMEs)[3]
             negTMass = self.getTPEPM(SMpxs, SMpys, negSMpzs, negSMEs)[3]
-        
+
             ## Top mass variance comparison and reconsruct SM Top KinVals
-           if ( math.fabs(posTMass - OriginTmass) < math.fabs(negTMass - OriginTmass) ):
+            if ( math.fabs(posTMass - OriginTmass) < math.fabs(negTMass - OriginTmass) ):
                 SMTMass = posTMass
                 SMTKinVal = self.getTPEPM(SMpxs, SMpys, posSMpzs, posSMEs)
             else:
