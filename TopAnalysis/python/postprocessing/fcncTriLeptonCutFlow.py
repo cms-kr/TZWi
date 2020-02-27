@@ -27,7 +27,7 @@ class FCNCTriLeptonCutFlow(Module, object):
             if abs(event._tree.b_out_GoodLeptonCode) != 111: break
             cutStep += 1
             #if event._tree.b_out_GoodLeptonCode < 0: break
-            if 'NPL' in mode:
+            if 'NPL' in self.mode:
               if (event._tree.b_out_nGoodLepton != 2 and event._tree.b_out_nVetoLepton > 0): break
             else:
               if event._tree.b_out_nGoodLepton != 3: break
