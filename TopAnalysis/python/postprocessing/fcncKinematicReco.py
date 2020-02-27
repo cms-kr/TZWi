@@ -3,6 +3,7 @@ import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 import os
+from ROOT import TLorentzVector
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
