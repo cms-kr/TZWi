@@ -79,8 +79,9 @@ void FCNCTriLeptonCppWorker::resetValues() {
   out_Z_charge = 0;
   out_MET_pt = out_MET_phi = 0;
   out_W_MT = 0;
-  out_GoodLeptonCode = out_nVetoLepton = 0;
+  out_GoodLeptonCode = 0;
   out_nGoodElectron = out_nGoodMuon = 0;
+  out_nVetoElectron = out_nVetoMuon = 0;
   out_nGoodJet = out_nBjet = 0;
   for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
   out_GoodJet_CSVv2.clear();
@@ -255,6 +256,9 @@ bool FCNCTriLeptonCppWorker::analyze() {
   nVetoElectrons -= nGoodElectrons;
   out_nGoodMuon = nGoodMuons;
   out_nGoodElectron = nGoodElectrons;
+  out_nVetoMuon = nVetoMuons;
+  out_nVetoElectron = nVetoElectrons;
+  
   //out_nVetoLepton = nVetoMuons + nVetoElectrons;
   TLorentzVector lepton1P4, lepton2P4, lepton3P4;
 
@@ -413,11 +417,12 @@ bool FCNCTriLeptonCppWorker::analyze() {
         else ++nVetoMuons;
       }
     }
+    out_nVetoMuon = nVetoMuons;
+    out_nVetoElectron = nVetoElectrons;
   }
 
   // Done for the leptons
 
-  out_nVetoLepton = nVetoMuons + nVetoElectrons;
   out_GoodLeptonCode = 0; // GoodLepton "code". 
   //leading lepton> 25GeV, 2nd,3rd lepton> 20GeV (in GoodMu, Ele object: just >20GeV cut applied)
   // 111: all matched with the desired channel/mode
