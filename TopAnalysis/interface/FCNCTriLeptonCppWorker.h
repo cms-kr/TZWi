@@ -80,7 +80,9 @@ public:
 
   float get_W_MT() const { return out_W_MT; }
 
-  unsigned get_nVetoLepton() const { return out_nVetoLepton; }
+  unsigned get_nVetoElectron() const { return out_nVetoElectron; }
+  unsigned get_nVetoMuon() const { return out_nVetoMuon; }
+  unsigned get_nVetoLepton() const { return out_nVetoElectron + out_nVetoMuon; }
   unsigned get_nGoodElectron() const { return out_nGoodElectron; }
   unsigned get_nGoodMuon() const { return out_nGoodMuon; }
   unsigned get_nGoodLepton() const { return out_nGoodElectron + out_nGoodMuon; }
@@ -163,9 +165,11 @@ private:
 
   short out_GoodLeptonCode;
   unsigned short out_GoodLepton;
-  unsigned short out_nVetoLepton;
   unsigned short out_nGoodElectron;
   unsigned short out_nGoodMuon;
+  unsigned short out_nVetoLepton;
+  unsigned short out_nVetoElectron;
+  unsigned short out_nVetoMuon;
   unsigned short out_nGoodJet, out_nBjet;
   std::vector<float> out_GoodJet_p4[4];
   std::vector<float> out_GoodJet_CSVv2;
