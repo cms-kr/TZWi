@@ -52,7 +52,7 @@ class FCNCTriLepton(Module, object):
         self.out.branch("nGoodMuon", "i")
         #self.out.branch("nGoodJet", "i")
         self.out.branch("GoodJet_index", "i", lenVar="nGoodJet")
-        for varName in ["pt", "eta", "phi", "mass", "CSVv2"]:
+        for varName in ["pt", "eta", "phi", "mass", "DeepFlavB"]:
             self.out.branch("GoodJet_%s" % varName, "F", lenVar="nGoodJet")
         self.out.branch("nBjet", "i")
         self.out.branch("W_MT", "F")
@@ -81,7 +81,7 @@ class FCNCTriLepton(Module, object):
         objName = "Jet"
         setattr(self, "b_n%s" % objName, tree.valueReader("n%s" % objName))
         for varName in ["pt", "eta", "phi", "mass",
-                        "jetId", "puId", "btagCSVV2",]:
+                        "jetId", "puId", "btagDeepFlavB",]:
             setattr(self, "b_%s_%s" % (objName, varName), tree.arrayReader("%s_%s" % (objName, varName)))
 
         self.worker.setMET(self.b_MET_pt, self.b_MET_phi)
@@ -91,7 +91,7 @@ class FCNCTriLepton(Module, object):
         self.worker.setMuons(self.b_Muon_pt, self.b_Muon_eta, self.b_Muon_phi, self.b_Muon_mass, self.b_Muon_charge,
                              self.b_Muon_pfRelIso04_all, self.b_Muon_tightId, self.b_Muon_isGlobal, self.b_Muon_isPFcand, self.b_Muon_isTracker)
         self.worker.setJets(self.b_Jet_pt, self.b_Jet_eta, self.b_Jet_phi, self.b_Jet_mass,
-                            self.b_Jet_jetId, self.b_Jet_btagCSVV2)
+                            self.b_Jet_jetId, self.b_Jet_btagDeepFlavB)
         self._ttreereaderversion = tree._ttreereaderversion
 
         pass
@@ -109,7 +109,7 @@ class FCNCTriLepton(Module, object):
                         "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
                         "nVetoLepton", "nGoodElectron", "nGoodMuon", "nGoodLepton", "GoodLeptonCode", "Z_charge", "W_MT",
                         #"nGoodJet", #We do not keep nGoodJet here, it have to be done by the framework
-                        "GoodJet_index", "GoodJet_CSVv2",
+                        "GoodJet_index", "GoodJet_DeepFlavB",
                         "nBjet",]:
             setattr(event._tree, "b_out_%s" % (varName), getattr(self.worker, 'get_%s' % (varName))())
             self.out.fillBranch(varName, getattr(event._tree, "b_out_%s" % varName))

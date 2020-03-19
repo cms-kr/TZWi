@@ -119,15 +119,21 @@ class FCNCKinematicReco(Module, object):
             qvar = TLorentzVector()
             bvar.SetPtEtaPhiM(event._tree.b_out_GoodJet_pt[0], event._tree.b_out_GoodJet_eta[0], event._tree.b_out_GoodJet_phi[0], event._tree.b_out_GoodJet_mass[0])
             qvar.SetPtEtaPhiM(event._tree.b_out_GoodJet_pt[1], event._tree.b_out_GoodJet_eta[1], event._tree.b_out_GoodJet_phi[1], event._tree.b_out_GoodJet_mass[1])
-            bjetCSV, qjetCSV = event._tree.b_out_GoodJet_CSVv2[0], event._tree.b_out_GoodJet_CSVv2[1]
+            #bjetCSV, qjetCSV = event._tree.b_out_GoodJet_CSVv2[0], event._tree.b_out_GoodJet_CSVv2[1]
+            bjetDeepFlavB, qjetDeepFlavB = event._tree.b_out_GoodJet_DeepFlavB[0], event._tree.b_out_GoodJet_DeepFlavB[1]
             # Variable condtruct : Neutrino vars = [MET, phi]
             metvar = TLorentzVector()
             metvar.SetPtEtaPhiM(event._tree.b_out_MET_pt, 0, event._tree.b_out_MET_phi, 0)
 
+            ## b jet assign by CSVv2 discriminator
+            #if ( bjetCSV < qjetCSV ):
+            #    bvar, qvar = qvar, bvar
+            #    bjetCSV, qjetCSV = qjetCSV, bjetCSV
+
             # b jet assign by CSVv2 discriminator
-            if ( bjetCSV < qjetCSV ):
+            if ( bjetDeepFlavB < qjetDeepFlavB ):
                 bvar, qvar = qvar, bvar
-                bjetCSV, qjetCSV = qjetCSV, bjetCSV
+                bjetDeepFlavB, qjetDeepFlavB = qjetDeepFlavB, bjetDeepFlavB
 
             # pxyzE calculation & construction : [px, py, pz, E]
             Zlep1 = self.getKinVar(Zlep1var.Pt(), Zlep1var.Eta(), Zlep1var.Phi(), 0.)
