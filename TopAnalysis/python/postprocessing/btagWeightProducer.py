@@ -9,7 +9,7 @@ class btagWeightProducer(Module, object):
         #super(TTbarDoubleLepton, self).__init__(*args, **kwargs)
         self.jetIndexBrName = kwargs["jetIndex"] if "jetIndex" in kwargs else ""
 
-        sfName = "Jet_btagSF_shape" if "btagAlgo" not in kwargs else kwargs["btagAlgo"]
+        sfName = "Jet_btagSF_deepjet_shape" if "btagAlgo" not in kwargs else kwargs["btagAlgo"]
         self.sfNames = [sfName]
         for syst in ["jes", "lf", "hf", "hfstats1", "hfstats2", "lfstats1", "lfstats2", "cferr1", "cferr2"]:
             for d in ["up", "down"]:

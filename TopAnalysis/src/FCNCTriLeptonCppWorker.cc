@@ -53,12 +53,12 @@ void FCNCTriLeptonCppWorker::setMuons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TR
 }
 
 void FCNCTriLeptonCppWorker::setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
-                                         TRAI id, TRAF CSVv2) {
+                                         TRAI id, TRAF DeepFlavB) {
   in_Jet_p4[0] = pt;
   in_Jet_p4[1] = eta;
   in_Jet_p4[2] = phi;
   in_Jet_p4[3] = mass;
-  in_Jet_CSVv2 = CSVv2;
+  in_Jet_DeepFlavB = DeepFlavB;
   in_Jet_id = id;
 }
 
@@ -84,7 +84,7 @@ void FCNCTriLeptonCppWorker::resetValues() {
   out_nVetoElectron = out_nVetoMuon = 0;
   out_nGoodJet = out_nBjet = 0;
   for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].clear();
-  out_GoodJet_CSVv2.clear();
+  out_GoodJet_DeepFlavB.clear();
   out_GoodJet_index.clear();
 
 }
@@ -510,15 +510,15 @@ bool FCNCTriLeptonCppWorker::analyze() {
 
   // Continue to the Jets
   std::vector<unsigned short> jetIdxs;
-  jetIdxs.reserve(in_Jet_CSVv2->GetSize());
-  for ( unsigned i=0, n=in_Jet_CSVv2->GetSize(); i<n; ++i ) {
+  jetIdxs.reserve(in_Jet_DeepFlavB->GetSize());
+  for ( unsigned i=0, n=in_Jet_DeepFlavB->GetSize(); i<n; ++i ) {
     if ( !isGoodJet(i) ) continue;
     TLorentzVector jetP4 = buildP4(in_Jet_p4, i);
     if ( lepton1P4.Pt() > 0 and lepton1P4.DeltaR(jetP4) < 0.35 ) continue;
     if ( lepton2P4.Pt() > 0 and lepton2P4.DeltaR(jetP4) < 0.35 ) continue;
     if ( lepton3P4.Pt() > 0 and lepton3P4.DeltaR(jetP4) < 0.35 ) continue;
     jetIdxs.push_back(i);
-    if ( in_Jet_CSVv2->At(i) > minBjetBDiscr_ ) ++out_nBjet;
+    if ( in_Jet_DeepFlavB->At(i) > minBjetBDiscr_ ) ++out_nBjet;
   }
   out_nGoodJet = jetIdxs.size();
   // Sort jets by pt
@@ -527,7 +527,7 @@ bool FCNCTriLeptonCppWorker::analyze() {
   for ( unsigned k=0, n=out_nGoodJet; k<n; ++k ) {
     const unsigned kk = jetIdxs.at(k);
     for ( int i=0; i<4; ++i ) out_GoodJet_p4[i].push_back(in_Jet_p4[i]->At(kk));
-    out_GoodJet_CSVv2.push_back(in_Jet_CSVv2->At(kk));
+    out_GoodJet_DeepFlavB.push_back(in_Jet_DeepFlavB->At(kk));
     out_GoodJet_index.push_back(kk);
   }
 

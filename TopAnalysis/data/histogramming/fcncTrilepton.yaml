@@ -59,7 +59,7 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR", 
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
     - name: "STCR"
@@ -68,7 +68,7 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
     - name: "STSR"
@@ -77,7 +77,7 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
     - name: "TTCR_allZ"
@@ -86,7 +86,7 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
     - name: "TTCR"
@@ -95,7 +95,7 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
     - name: "TTSR"
@@ -104,7 +104,7 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
     - name: "WZCR_0b"
@@ -113,7 +113,7 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt", "Lepton1_eta", "Lepton2_eta", "Lepton3_eta",
               "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
     - name: "WZCR_23jet"
@@ -122,8 +122,24 @@ steps:
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt", "Lepton1_eta", "Lepton2_eta", "Lepton3_eta", 
               "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
               "Z_pt", "Z_mass", "W_MT",
-              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_CSVv2",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
+
+    - name: "more1jet_0bjet"
+      cuts: ["CutStep >= 2", "LeadingLepton_pt>25", "nGoodJet>=1", "nBjet==0"] #exactly 3 lepton
+      hists: ["Z_pt", "Z_mass","nGoodJet_nBjet",]
+
+    - name: "more1jet_more1bjet"
+      cuts: ["CutStep >= 2", "LeadingLepton_pt>25", "nGoodJet>=1", "nBjet>=1"] #exactly 3 lepton
+      hists: ["Z_pt", "Z_mass","nGoodJet_nBjet",]
+
+    - name: "23jet_0bjet"
+      cuts: ["CutStep >= 2", "LeadingLepton_pt>25", "nGoodJet>=2", "nGoodJet<=3", "nBjet==0"] #exactly 3 lepton
+      hists: ["Z_pt", "Z_mass","nGoodJet_nBjet",]
+
+    - name: "23jet_more1bjet"
+      cuts: ["CutStep >= 2", "LeadingLepton_pt>25", "nGoodJet>=2", "nGoodJet<=3", "nBjet>=1"] #exactly 3 lepton
+      hists: ["Z_pt", "Z_mass","nGoodJet_nBjet",]
 
 hists:
     nPV_noWeight:
@@ -262,12 +278,12 @@ hists:
             nbinsY: 10
             ymin: 0
             ymax: 10
-    GoodJet_CSVv2:
-        title: "GoodJet_CSVv2;FCNC jet CSVv2"
+    GoodJet_DeepFlavB:
+        title: "GoodJet_DeepFlavB;FCNC jet DeepFlavB"
         bins:
             nbinsX: 15
             xmin: 0
-            xmax: 0.6
+            xmax: 0.1
     W_MT:
         title: "W_MT;Transeverse mass of W boson;Events"
         bins:

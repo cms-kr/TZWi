@@ -27,7 +27,7 @@ public:
   void setElectrons(TRAF pt, TRAF eta, TRAF phi, TRAF mass, TRAI charge,
                     TRAF relIso, TRAI id, TRAF dEtaSC, TRAF eCorr, TRAI vidBitmap);
   void setJets(TRAF pt, TRAF eta, TRAF phi, TRAF mass,
-               TRAI id, TRAF CSVv2);
+               TRAI id, TRAF DeepFlavB);
   void setMET(TTreeReaderValue<float>* pt, TTreeReaderValue<float>* phi);
 
   void resetValues();
@@ -93,7 +93,7 @@ public:
   std::vector<float> get_GoodJet_eta()  const { return out_GoodJet_p4[1]; }
   std::vector<float> get_GoodJet_phi()  const { return out_GoodJet_p4[2]; }
   std::vector<float> get_GoodJet_mass() const { return out_GoodJet_p4[3]; }
-  std::vector<float> get_GoodJet_CSVv2() const { return out_GoodJet_CSVv2; }
+  std::vector<float> get_GoodJet_DeepFlavB() const { return out_GoodJet_DeepFlavB; }
   std::vector<unsigned short> get_GoodJet_index() const { return out_GoodJet_index; }
   unsigned get_nBjet() const { return out_nBjet; }
 
@@ -101,8 +101,9 @@ private:
   const double minMuonPt_ = 20, maxMuonEta_ = 2.4; //Signal & veto reco. cuts are same
   const double minElectronPt_ = 20, maxElectronEta_ = 2.4; //Signal & veto reco. cuts are same
   const double minJetPt_ = 30, maxJetEta_ = 2.4;
-  const double minBjetBDiscr_ = 0.5426; // FIXME: give updated number (here, use Loose Working Point)
-  //const double minBjetBDiscr_ = 0.5803; // FIXME: 2017, Loose Working Point (Midium: 0.8838, Tight: 0.9693)
+  //const double minBjetBDiscr_ = 0.5426; // FIXME: give updated number (2016 CSVv2, use Loose Working Point)
+  const double minBjetBDiscr_ = 0.0614; // FIXME: 2016 DeepFlavB (Loose: 0.0614, Midium: 0.3093, Tight: 0.7221)
+  //const double minBjetBDiscr_ = 0.5803; // FIXME: 2017 CSVv2, Loose Working Point (Midium: 0.8838, Tight: 0.9693)
   const double maxMuonRelIso_ = 0.15;
   const double maxVetoMuonRelIso_ = 0.25;
 
@@ -143,7 +144,7 @@ private:
 
   TRAF in_Jet_p4[4];
   TRAI in_Jet_id = nullptr;
-  TRAF in_Jet_CSVv2 = nullptr;
+  TRAF in_Jet_DeepFlavB = nullptr;
 
 private:
   bool _doCppOutput = false;
@@ -172,7 +173,7 @@ private:
   unsigned short out_nVetoMuon;
   unsigned short out_nGoodJet, out_nBjet;
   std::vector<float> out_GoodJet_p4[4];
-  std::vector<float> out_GoodJet_CSVv2;
+  std::vector<float> out_GoodJet_DeepFlavB;
   std::vector<unsigned short> out_GoodJet_index;
 
 };
