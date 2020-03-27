@@ -31,8 +31,8 @@ git clone https://github.com/cms-kr/TZWi
 scram b -j
 ```
 ## Changing the module file in the NanoAODTools
-After [#151](https://github.com/cms-kr/TZWi/pull/151) was merged,
-you need to change the 'btagSFproducer.py' in the NanoAODTools before producing the ntuple with deepflavour discriminator
+After [#151](https://github.com/cms-kr/TZWi/pull/151) was merged,   
+you need to change the 'btagSFproducer.py' in the NanoAODTools before producing the ntuple with deepflavour discriminator.   
 Go to the **nanoAOD-tools/tree/master/python/postprocessing/modules/btv** directory,
 ```bash
 #Modifying the btagSFproducer.py file
