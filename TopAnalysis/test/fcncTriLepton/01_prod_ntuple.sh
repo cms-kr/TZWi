@@ -60,9 +60,11 @@ if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.lepSFProducer lepSF"
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight_${YEAR}"
 
-    #ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF${YEAR}"
     #Legacy: only for 2016 deepcsv or deepjet disc.
-    ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSFLegacy${YEAR}" 
+    if [ ${DATATYPE:(-4)} == "2016" ]; then
+        ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSFLegacy${YEAR}"
+    else
+        ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF${YEAR}"
     ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.btagWeightProducer btagWeight"
 else
     if [ $DATATYPE == "Run2016" ]; then
