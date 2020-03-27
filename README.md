@@ -30,6 +30,26 @@ git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODT
 git clone https://github.com/cms-kr/TZWi
 scram b -j
 ```
+## Changing the module file in the NanoAODTools
+After [#151](https://github.com/cms-kr/TZWi/pull/151) was merged,
+you need to change the 'btagSFproducer.py' in the NanoAODTools before producing the ntuple with deepflavour discriminator
+Go to the **nanoAOD-tools/tree/master/python/postprocessing/modules/btv** directory,
+```bash
+#Modifying the btagSFproducer.py file
+1. line 35
+#This modification should be substitute to change the '01_proc_ntuple.sh' or the 'btagWeightProducer.py' ASAP.
+change the algo='csvv2' -> algo='deepjet' & selectedWPs=['M', 'shape_corr'] -> selectedWPs=['L', 'shape_corr']
+
+* origin:
+def __init__(self, era, algo='csvv2', selectedWPs=['M', 'shape_corr'], sfFileName=None, verbose=0, jesSystsForShape=["jes"]):
+* change:
+def __init__(self, era, algo='deepjet', selectedWPs=['L', 'shape_corr'], sfFileName=None, verbose=0, jesSystsForShape=["jes"]):
+
+2. after the line 325
+Adding the new lambda function "btagSFLegacy2016" because key of deepjet for 2016 name is "Legacy2016"
+btagSFLegacy2016 = lambda : btagSFProducer("Legacy2016")
+
+```
 
 ## (Optional) Customized NanoAOD production
 ```bash
