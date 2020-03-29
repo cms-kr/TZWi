@@ -5,61 +5,61 @@ from array import array
 
 gROOT.SetBatch(True)
 def addLegendCMS():
-  #tex2 = TLatex(0.3715952,0.9146667,"Preliminary")
-  tex2 = TLatex(-20.,50.,"Preliminary")
-  tex2.SetNDC()
-  tex2.SetTextAlign(12)
-  tex2.SetX(0.25)
-  tex2.SetY(0.97)
-  tex2.SetTextColor(2)
-  tex2.SetTextFont(42)
-  tex2.SetTextSize(0.05)
-  tex2.SetTextSizePixels(24)
-  #tex2.Draw()
+    #tex2 = TLatex(0.3715952,0.9146667,"Preliminary")
+    tex2 = TLatex(-20.,50.,"Preliminary")
+    tex2.SetNDC()
+    tex2.SetTextAlign(12)
+    tex2.SetX(0.25)
+    tex2.SetY(0.97)
+    tex2.SetTextColor(2)
+    tex2.SetTextFont(42)
+    tex2.SetTextSize(0.05)
+    tex2.SetTextSizePixels(24)
+    #tex2.Draw()
 
-  return tex2
+    return tex2
 
 def make_legend(xmin,ymin,xmax,ymax):
-  #leg = TLegend(0.65,0.7, 0.89,0.89)
-  leg = TLegend(xmin,ymin,xmax,ymax)
-  leg.SetFillColor(0)
-  leg.SetLineColor(1)
-  leg.SetTextFont(62)
-  leg.SetTextSize(0.03)
+    #leg = TLegend(0.65,0.7, 0.89,0.89)
+    leg = TLegend(xmin,ymin,xmax,ymax)
+    leg.SetFillColor(0)
+    leg.SetLineColor(1)
+    leg.SetTextFont(62)
+    leg.SetTextSize(0.03)
 
-  leg.SetBorderSize(1)
-  leg.SetLineStyle(1)
-  leg.SetLineWidth(1)
-  leg.SetLineColor(0)
+    leg.SetBorderSize(1)
+    leg.SetLineStyle(1)
+    leg.SetLineWidth(1)
+    leg.SetLineColor(0)
 
-  return leg
+    return leg
 
 def calcError(hist, binstart, binend):
-  herr = 0.
-  h = hist
-  for i in range(binstart, binend):
-    herr += (h.GetBinError(i))**2
-    sqrterr = math.sqrt(herr)
-  return sqrterr
+    herr = 0.
+    h = hist
+    for i in range(binstart, binend):
+        herr += (h.GetBinError(i))**2
+        sqrterr = math.sqrt(herr)
+    return sqrterr
 
 # Error calculation for f=AB or f=A/B
 def getRErr(AR, BR, AE, BE, funcType):
-  if ( funcType == 0 ):
-    func = AR*BR
-  else:
-    func = AR/BR
-  ratA = (AE/AR)**2
-  ratB = (BE/BR)**2
-  RatioErr = func*(math.sqrt(ratA+ratB))
-  return RatioErr
+    if ( funcType == 0 ):
+        func = AR*BR
+    else:
+        func = AR/BR
+    ratA = (AE/AR)**2
+    ratB = (BE/BR)**2
+    RatioErr = func*(math.sqrt(ratA+ratB))
+    return RatioErr
 
 # Error calculation for f=ABC
 def getRErr2(AR, BR, CR, AE, BE, CE):
-  ratA = (AE/AR)**2
-  ratB = (BE/BR)**2
-  ratC = (CE/CR)**2
-  RatioErr = math.sqrt(ratA+ratB+ratC)
-  return RatioErr
+    ratA = (AE/AR)**2
+    ratB = (BE/BR)**2
+    ratC = (CE/CR)**2
+    RatioErr = math.sqrt(ratA+ratB+ratC)
+    return RatioErr
 
 name = "bkgEst"
 result = "fitresult_%s.txt" % name
