@@ -62,8 +62,17 @@ steps:
               "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
               "MET_pt", "MET_phi",]
 
+    - name: "STCR_allZ"
+      cuts: ["CutStep >= 2", "W_MT <= 300", "nGoodJet==1", "nBjet==1", "LeadingLepton_pt>25", "Z_charge == 0"]
+      hists: ["nPV", "nPV_noWeight",
+              "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
+              "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
+              "Z_pt", "Z_mass", "W_MT",
+              "nGoodJet", "nBjet", "nGoodJet_nBjet", "GoodJet_DeepFlavB",
+              "MET_pt", "MET_phi",]
+
     - name: "STCR"
-      cuts: ["CutStep >= 2", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>7.5", "TMath::Abs(Z_mass-91.2)<30", "nGoodJet==1", "nBjet==1", "LeadingLepton_pt>25", "Z_charge == 0"]
+      cuts: ["CutStep >= 2", "W_MT <= 300", "TMath::Abs(Z_mass-91.2)>20", "TMath::Abs(Z_mass-91.2)<60", "nGoodJet==1", "nBjet==1", "LeadingLepton_pt>25", "Z_charge == 0"]
       hists: ["nPV", "nPV_noWeight",
               "Lepton1_pt", "Lepton2_pt", "Lepton3_pt",
               "Lepton1_eta", "TriLepton_mass", "TriLepton_pt", "TriLepton_WleptonZdPhi", "TriLepton_WleptonZdR",
