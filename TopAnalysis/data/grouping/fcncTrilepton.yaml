@@ -83,10 +83,17 @@ processes:
         cut: "HLT"
         datasets:
             - MC2016.ST_s_4f_lepton
-            - MC2016.ST_t
             - MC2016.ST_tW
-            - MC2016.STbar_t
             - MC2016.STbar_tW
+#ST_t and STbar_t samples have genWeigh==1 & LHEWeight==0.9999999
+    SingleTop2:
+        title: "SingleTop"
+        longTitle: "Single top"
+        weight: "genWeight*puWeight*BtagWeight*LeptonSF"
+        cut: "HLT"
+        datasets:
+            - MC2016.ST_t
+            - MC2016.STbar_t
     TTJets:
         title: "ttJets"
         longTitle: "t#bar{t}"
@@ -95,22 +102,22 @@ processes:
         datasets: [MC2016.TT.powheg]
     STZct:
         title: "STZct"
-        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight*LeptonSF"
+        weight: "genWeight*puWeight*BtagWeight*LeptonSF"
         datasets: [MC2016.ST_FCNC-TLL_zct]
         cut: "HLT"
     STZut:
         title: "STZut"
-        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight*LeptonSF"
+        weight: "genWeight*puWeight*BtagWeight*LeptonSF"
         datasets: [MC2016.ST_FCNC-TLL_zut]
         cut: "HLT"
     TTZct:
         title: "TTZct"
-        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight*LeptonSF"
+        weight: "genWeight*puWeight*BtagWeight*LeptonSF"
         datasets: [MC2016.TT_FCNC-T2ZJ_zct, MC2016.TT_FCNC-aT2ZJ_zct]
         cut: "HLT"
     TTZut:
         title: "TTZut"
-        weight: "(LHEWeight_originalXWGTUP == 0 ? genWeight : genWeight/abs(LHEWeight_originalXWGTUP))*puWeight*BtagWeight*LeptonSF"
+        weight: "genWeight*puWeight*BtagWeight*LeptonSF"
         datasets: [MC2016.TT_FCNC-T2ZJ_zut, MC2016.TT_FCNC-aT2ZJ_zut]
         cut: "HLT"
 ######checking for tqH signal
