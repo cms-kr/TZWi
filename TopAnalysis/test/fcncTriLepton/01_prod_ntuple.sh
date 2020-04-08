@@ -65,6 +65,7 @@ if [ ${DATATYPE::2} == "MC" ]; then
         ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSFLegacy${YEAR}"
     else
         ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer btagSF${YEAR}"
+    fi
     ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.btagWeightProducer btagWeight"
 else
     if [ $DATATYPE == "Run2016" ]; then
