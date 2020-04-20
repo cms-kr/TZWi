@@ -43,7 +43,8 @@ ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.flags flags_${DATATYPE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonHLT hlt_${HLTMODULE}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLepton fcnc_${CHANNEL}_${YEAR}"
 ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncTriLeptonCutFlow cutFlow_${CHANNEL}"
-ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncKinematicReco fcncKinReco "
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncKinematicReco fcncKinReco_${CHANNEL}"
+ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.fcncMVAinput fcncMVAinput"
 
 #CMD="nano_postproc.py --friend"
 #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyBranch"
@@ -57,7 +58,7 @@ if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="-I PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule countHistogramsModule $ARGS"
     #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyMCBranch"
 
-    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.lepSFProducer lepSF"
+    #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.lepSFProducer lepSF"
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight_${YEAR}"
 
     #Legacy: only for 2016 deepcsv or deepjet disc.

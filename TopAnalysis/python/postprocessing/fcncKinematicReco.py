@@ -9,6 +9,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 class FCNCKinematicReco(Module, object):
     def __init__(self, *args, **kwargs):
+        self.mode = kwargs.get("mode")
         pass
     def beginJob(self):
         pass
@@ -88,11 +89,22 @@ class FCNCKinematicReco(Module, object):
         FCNCTKinVal = [0,0,0,0]
         consted = 0
 
+        # For NPL Selecton
+        NPLflag = 1
+        if 'NPL' in self.mode:
+            if (event._tree.b_out_nGoodLepton != 2 and event._tree.b_out_nVetoLepton > 0):
+                NPLflag = 0
+            else: NPLflag = 1
+        else:
+            if (event._tree.b_out_nGoodLepton != 3):
+                NPLflag = 0
+            else: NPLflag = 1
+
         # Check basic event selection
         if event._tree.b_out_GoodLeptonCode != 111 or\
-           event._tree.b_out_nGoodLepton > 3 or\
            not( 2 <= event._tree.b_out_nGoodJet <= 3 ) or\
-           event._tree.b_out_nBjet < 1:
+           event._tree.b_out_nBjet < 1 or\
+           NPLflag == 0:
 
             self.out.fillBranch("KinTop_status", 0)
             self.out.fillBranch("KinTopWb_pt", 0)
@@ -203,4 +215,11 @@ class FCNCKinematicReco(Module, object):
 
         return True
 
-fcncKinReco = lambda: FCNCKinematicReco()
+fcncKinReco_ElElEl = lambda: FCNCKinematicReco(mode="ElElEl")
+fcncKinReco_ElMuMu = lambda: FCNCKinematicReco(mode="ElMuMu")
+fcncKinReco_MuElEl = lambda: FCNCKinematicReco(mode="MuElEl")
+fcncKinReco_MuMuMu = lambda: FCNCKinematicReco(mode="MuMuMu")
+fcncKinReco_NPLElElEl = lambda: FCNCKinematicReco(mode="NPLElElEl")
+fcncKinReco_NPLElMuMu = lambda: FCNCKinematicReco(mode="NPLElMuMu")
+fcncKinReco_NPLMuElEl = lambda: FCNCKinematicReco(mode="NPLMuElEl")
+fcncKinReco_NPLMuMuMu = lambda: FCNCKinematicReco(mode="NPLMuMuMu")
