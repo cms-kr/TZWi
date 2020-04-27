@@ -80,8 +80,7 @@ for i, ch in enumerate(chlist):
     hZZ = f.Get("WZCR/hW_MT/ZZ")
     hDYJets = f.Get("WZCR/hW_MT/DYJets")
     hrd = f.Get("WZCR/hW_MT/Data")
-    hTT_all = f.Get("TTCR_allZ/hZ_mass/ttJets")
-    hTTrd = f.Get("TTCR/hZ_mass/Data")
+    hTTrd = f.Get("TTCR/hZ_mass/Data") # For fitting (allZ)
     hTTtt = f.Get("TTCR/hZ_mass/ttJets")
     hTTDY = f.Get("TTCR/hZ_mass/DYJets")
     hTTWZ = f.Get("TTCR/hZ_mass/WZ")
@@ -131,7 +130,45 @@ for i, ch in enumerate(chlist):
     model = RooAddPdf("model", "model", RooArgList(ZZpdf, DYpdf, WZpdf), RooArgList(fZZ, fDY)) # WZ fix 
 
     #model.fitTo(data) # Without gaussian constraint
-    model.fitTo(data, RooFit.ExternalConstraints(RooArgSet(fZZ_cnt, fDY_cnt))) # With gaussian constraint
+    model.fitTo(data, RooFit.ExternalConstraints(RooArgSet(fZZ_cnt, fDY_cnt)), RooFit.Save()) # With gaussian constraint
+
+    ### Draw NLL (Contour)
+    nllcanv = TCanvas("nllcanv", "nllcanv", 1)
+    nll = model.createNLL(data)
+    m = RooMinuit(nll)
+    frameNLLcontour = m.contour(fZZ, fDY, 1, 2, 3)
+    frameNLLcontour.GetXaxis().SetTitle("fZZ (ZZ/total)")
+    frameNLLcontour.GetYaxis().SetTitle("fDY (DY/total)")
+    frameNLLcontour.SetMarkerStyle(21)
+    frameNLLcontour.Draw()
+    nllcanv.SaveAs("NLLcontour_%s.png"%ch)
+
+    ### Draw NLL
+    ZZnllcanv = TCanvas("ZZnllcanv", "ZZnllcanv", 1)
+    ZZnll = model.createNLL(data)
+    ZZnllframe = fZZ.frame()
+    ZZnll.plotOn(ZZnllframe, RooFit.ShiftToZero())
+    ZZnllframe.SetMaximum(4.);ZZnllframe.SetMinimum(0)
+    ZZnllframe.GetXaxis().SetTitle("fZZ (ZZ/total)")
+    ZZnllframe.SetTitle("NLL of fZZ")
+    ZZnllframe.Draw()
+    line1 = TLine(ZZnllframe.GetXaxis().GetXmin(), 0.5, ZZnllframe.GetXaxis().GetXmax(), 0.5)
+    line1.SetLineColor(kRed)
+    line1.Draw()
+    ZZnllcanv.SaveAs("fZZ_NLL_%s.png"%ch)
+
+    DYnllcanv = TCanvas("DYnllcanv", "DYnllcanv", 1)
+    DYnll = model.createNLL(data)
+    DYnllframe = fDY.frame()
+    DYnll.plotOn(DYnllframe, RooFit.ShiftToZero())
+    DYnllframe.SetMaximum(4.);DYnllframe.SetMinimum(0)
+    DYnllframe.GetXaxis().SetTitle("fDY (DY/total)")
+    DYnllframe.SetTitle("NLL of fDY")
+    DYnllframe.Draw()
+    line1 = TLine(DYnllframe.GetXaxis().GetXmin(), 0.5, DYnllframe.GetXaxis().GetXmax(), 0.5)
+    line1.SetLineColor(kRed)
+    line1.Draw()
+    DYnllcanv.SaveAs("fDY_NLL_%s.png"%ch)
 
     ## Central value
     # WZ fix
@@ -220,23 +257,27 @@ for i, ch in enumerate(chlist):
     #Tmodel = RooAddPdf("Tmodel", "Tmodel", RooArgList(TTttpdf, TTDYpdf, TTTVpdf), RooArgList(fTTtt, fTTDY)) # TTjets+DY+TTV
 
     #Tmodel.fitTo(TTdata) # Without gaussian constraint
-    Tmodel.fitTo(TTdata, RooFit.ExternalConstraints(RooArgSet(fTTtt_cnt, fTTDY_cnt, fTTWZ_cnt)))
+    Tmodel.fitTo(TTdata, RooFit.ExternalConstraints(RooArgSet(fTTtt_cnt, fTTDY_cnt, fTTWZ_cnt)), RooFit.Save())
+
+    # Draw NLL for fTTtt(tt+jet)
+    Tnllcanv = TCanvas("Tnllcanv", "Tnllcanv", 1)
+    Tnll = Tmodel.createNLL(TTdata)
+    Tnllframe = fTTtt.frame()
+    Tnll.plotOn(Tnllframe, RooFit.ShiftToZero())
+    Tnllframe.SetMaximum(4.);Tnllframe.SetMinimum(0)
+    Tnllframe.GetXaxis().SetTitle("fTTtt (Ttjets/total)")
+    Tnllframe.SetTitle("NLL of fTTtt")
+    Tnllframe.Draw()
+    line1 = TLine(Tnllframe.GetXaxis().GetXmin(), 0.5, Tnllframe.GetXaxis().GetXmax(), 0.5)
+    line1.SetLineColor(kRed)
+    line1.Draw()
+    Tnllcanv.SaveAs("TTjets_NLL_%s.png"%ch)
 
     ## Central value
-    fracTTtt = fTTtt.getVal()
-    #fracTTDY = fTTDY.getVal()
-    #fracTTWZ = fTTWZ.getVal()
-    #fracTTTV = 1-fracTTtt-fracTTDY-fracTTWZ
-
-    #fracTTlist = [fracTTtt, fracTTDY, fracTTWZ, fracTTTV]
+    fracTTtt = fTTtt.getVal() 
 
     ## Error
     errTTtt = fTTtt.getError()
-    #errTTDY = fTTDY.getError()
-    #errTTWZ = fTTWZ.getError()
-    #errTTTV = math.sqrt(errTTtt**2+errTTDY**2+errTTWZ**2)
-
-    #errTTlist = [errTTtt, errTTDY, errTTWZ, errTTTV]
 
     TTcplot = TCanvas("TTcplot", "TTcplot", 1)
     yframe = y.frame()
@@ -246,11 +287,19 @@ for i, ch in enumerate(chlist):
     TTcplot.SaveAs("fitresult_TTCR_%s.png"%ch)
 
     TTdataerr = calcError(hTTrd, hTTrd.FindBin(30), hTTrd.FindBin(150))
-    TTerr = getRErr(fracTTtt, totTTData, errTTtt, TTdataerr, 0)
-    nttsr = hTTSR.Integral()
+    TTerr = getRErr(fracTTtt, totTTData, errTTtt, TTdataerr, 0) # N_CR err from fitting
+    nttsr = hTTSR.Integral() # N_SR
+    nttsrerr = calcError(hTTSR, hTTSR.FindBin(30), hTTSR.FindBin(150)) # N_SR_err
+    nttcr = hTTtt.Integral() # N_CR
+    nttcrerr = calcError(hTTtt, hTTtt.FindBin(30), hTTtt.FindBin(150)) # N_CR err
+    TTratio = nttsr/nttcr # N_SR/N_CR
+    TTratioerr = getRErr(nttsr, nttcr, nttsrerr, nttcrerr, 1) # N_SR/N_CR err
+
+    estedNSR = TTratio*totTTData*fracTTtt 
+    estedNSRerr = getRErr(TTratio, totTTData*fracTTtt, TTratioerr, TTerr, 0) 
 
     file = open(result, "a")
-    wline = "%s TT %f %f %f\n" %(ch, totTTData*fracTTtt*15/80, TTerr*15/80, 35900*nttsr)
+    wline = "%s TT %f %f %f\n" %(ch, estedNSR, estedNSRerr, 35900*nttsr)
     file.write(wline)
     file.close()
 
