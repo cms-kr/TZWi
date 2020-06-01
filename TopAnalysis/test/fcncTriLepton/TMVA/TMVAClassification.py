@@ -211,6 +211,12 @@ def main():
     # input variables, the response values of all trained MVAs, and the spectator variables
     #factory.AddSpectator( "spec1:=var1*2",  "Spectator 1", "units", 'F' )
     #factory.AddSpectator( "spec2:=var1*3",  "Spectator 2", "units", 'F' )
+
+    # Set individual event weights (the variables must exist in the original TTree)
+    #    for signal    : factory.SetSignalWeightExpression    ("weight1*weight2");
+    #    for background: factory.SetBackgroundWeightExpression("weight1*weight2");
+    dataloader.SetWeightExpression("xsecNorm")
+
     dataloader.AddSpectator( "GoodLeptonCode" )
     dataloader.AddSpectator( "nGoodLepton" )
     dataloader.AddSpectator( "LeadingLepton_pt" )
@@ -230,8 +236,6 @@ def main():
       if 'dataset' not in datasetInfo: datasetInfo["dataset"] = {}
       datasetInfo["dataset"].update(yaml.load(open(f).read())["dataset"])
 
-    #chain_sig = TChain("Events")
-    #chain_bkg = TChain("Events")
     modes = mode
 
     fLists_sig = []
@@ -285,16 +289,6 @@ def main():
         if (t_bkg.GetEntries() == 0): break
         dataloader.AddBackgroundTree( t_bkg, backgroundWeight )
         trees.append([f, t_bkg])
-
-    # Global event weights (see below for setting event-wise weights)
-    #signalWeight     = 1.0
-    #backgroundWeight = 1.0
-
-    # Set individual event weights (the variables must exist in the original TTree)
-    #    for signal    : factory.SetSignalWeightExpression    ("weight1*weight2");
-    #    for background: factory.SetBackgroundWeightExpression("weight1*weight2");
-    #dataloader.SetBackgroundWeightExpression( "weight" )
-    #dataloader.SetWeightExpression("xsecNorm")
 
     # Apply additional cuts on the signal and background sample.
  
