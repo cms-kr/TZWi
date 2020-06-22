@@ -58,7 +58,7 @@ if [ ${DATATYPE::2} == "MC" ]; then
     ARGS="-I PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule countHistogramsModule $ARGS"
     #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.CopyBranch copyMCBranch"
 
-    #ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.lepSFProducer lepSF"
+    ARGS="$ARGS -I TZWi.TopAnalysis.postprocessing.lepSFProducer lepSF_${CHANNEL}"
     ARGS="$ARGS -I PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer puWeight_${YEAR}"
 
     #Legacy: only for 2016 deepcsv or deepjet disc.
