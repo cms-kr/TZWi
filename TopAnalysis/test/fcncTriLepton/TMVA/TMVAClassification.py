@@ -54,7 +54,8 @@ DEFAULT_INFNAME  = "tmva_class_example.root"
 DEFAULT_TREESIG  = "TreeS"
 DEFAULT_TREEBKG  = "TreeB"
 #DEFAULT_METHODS  = "Likelihood,LikelihoodD,MLPBNN,BDT,BDTG"
-DEFAULT_METHODS = "BDT,BDTG,BDT850,BDT200,BDT100,BDT50"
+#DEFAULT_METHODS = "BDT,BDTG,BDT850,BDT200,BDT100,BDT50,BDTG200,BDTG225,BDTGt1,BDTG200t1"
+DEFAULT_METHODS = "BDT,BDTG,BDTG200,BDTG225,BDTGt1,BDTG200t1"
 DEFAULT_WEIGHTDIR = "dataset"
 DEFAULT_MODE = ["ElElEl", "MuElEl", "MuMuMu", "ElMuMu"]
 DEFAULT_CUT = ""
@@ -247,10 +248,13 @@ def main():
     inputSigList = channel
     if DEFAULT_CHANNEL == channel:
       print("There are no particular signal region. No cut and all signals will be contained")
-    inputBkgList = ["DYJets", "ttJets", "ZZ", "WZ"] #high fraction in the Top pair Signal Region: WZ > DYjet > ZZ > ttjet
-    #inputBkgList = ["ZZ", "WZ"]
+    # WZ, DY, ZZ -> Treatment in WZCR estimation, ttjet -> Treatment in TTCR estimation
+    #high fraction in the Single Top Signal Region & all channel: WZ > DYjet > ZZ > ttjets > SingleTopV(tZq) > ttV > others
+    #inputBkgList = ["DYJets", "ttJets", "ZZ", "WZ"] 
+    #high fraction in the Top pair Signal Region & all channel: WZ > DYjet > ttV > ZZ > SingleTopV(tZq) > ttjets > others
+    #inputBkgList = ["WZ", "DYJets", "ttV", "ZZ"]
+    inputBkgList = ["WZ", "ZZ"]
     #inputBkgList = ["DYJets", "ttJets"]
-    #inputBkgList = ["DYJets", "SingleTop", "ttJets", "ZZ", "WZ", "WW", "SingleTopV", "ttV", "ttH"]
 
     for mo in modes:
       for proc in procInfo:
@@ -286,7 +290,7 @@ def main():
       for file_l in file_list:
         f = TFile.Open(fbkg[0]+"/"+file_l)
         t_bkg = f.Get("Events")
-        if (t_bkg.GetEntries() == 0): break
+        if (t_bkg.GetEntries() == 0): continue
         dataloader.AddBackgroundTree( t_bkg, backgroundWeight )
         trees.append([f, t_bkg])
 
@@ -294,12 +298,12 @@ def main():
  
     # TTSR
     if "TTZct" or "TTZut" in channel:
-      mycutSig = TCut( "TMath::Abs(Z_mass-91.2)<7.5 && nGoodJet>=2 && nGoodJet<=3 && nBjet>=1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt >25 && Z_charge == 0 && W_MT <= 300" )
-      mycutBkg = TCut( "TMath::Abs(Z_mass-91.2)<7.5 && nGoodJet>=2 && nGoodJet<=3 && nBjet>=1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt >25 && Z_charge == 0 && W_MT <= 300" )
+      mycutSig = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet >= 2 && nGoodJet <= 3 && nBjet >= 1 && TMath::Abs(GoodLeptonCode) == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
+      mycutBkg = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet >= 2 && nGoodJet <= 3 && nBjet >= 1 && TMath::Abs(GoodLeptonCode) == 111 && nGoodLepton == 3 && LeadingLepton_pt >25 && Z_charge == 0 && W_MT <= 300" )
     # STSR
     elif "STZct" or "STZut" in channel:
-      mycutSig = TCut( "TMath::Abs(Z_mass-91.2)<7.5 && nGoodJet==1 && nBjet==1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt >25 && Z_charge == 0 && W_MT <= 300" )
-      mycutBkg = TCut( "TMath::Abs(Z_mass-91.2)<7.5 && nGoodJet==1 && nBjet==1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt >25 && Z_charge == 0 && W_MT <= 300" )
+      mycutSig = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet == 1 && nBjet == 1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
+      mycutBkg = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet == 1 && nBjet == 1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
     elif DEFAULT_CHANNEL == channel:
       mycutSig = TCut( cut )
       mycutBkg = TCut( cut )
@@ -308,8 +312,17 @@ def main():
     # used for TMVA training and testing
     # "SplitMode=Random" means that the input events are randomly shuffled before
     # splitting them into training and test samples
-    dataloader.PrepareTrainingAndTestTree( mycutSig, mycutBkg,
-                                        "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" )
+    #if channel == "TTZct":
+    if "TTZct" in channel:
+      #options = "nTrain_Signal=85291:nTrain_Background=425919:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 8:2
+      options = "nTrain_Signal=74630:nTrain_Background=58420:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
+      #options = "nTrain_Signal=63968:nTrain_Background=319439:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 6:4
+      #options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+    if "TTZut" in channel:
+      #options = "nTrain_Signal=:nTrain_Background=:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
+      options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+
+    dataloader.PrepareTrainingAndTestTree( mycutSig, mycutBkg, options )
 
     # --------------------------------------------------------------------------------------------------
 
@@ -322,37 +335,34 @@ def main():
 
     # Cut optimisation
 
-    # Likelihood ("naive Bayes estimator")
-    if "Likelihood" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kLikelihood, "Likelihood",
-                            "H:!V:!TransformOutput:PDFInterpol=Spline2:NSmoothSig[0]=20:NSmoothBkg[0]=20:NSmoothBkg[1]=10:NSmooth=1:NAvEvtPerBin=50" )
-
-    # Decorrelated likelihood
-    if "LikelihoodD" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kLikelihood, "LikelihoodD",
-                            "!H:!V:TransformOutput:PDFInterpol=Spline2:NSmoothSig[0]=20:NSmoothBkg[0]=20:NSmooth=5:NAvEvtPerBin=50:VarTransform=Decorrelate" )
-
-    if "MLPBNN" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kMLP, "MLPBNN", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=600:HiddenLayers=N+5:TestRate=5:TrainingMethod=BFGS:UseRegulator" ) # BFGS training with bayesian regulators
-
     # Boosted Decision Trees
+    # BDTG Default: NTrees=400:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=20:MaxDepth=2
     if "BDTG" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG", "!H:!V:NTrees=400:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=20:MaxDepth=2")
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG", "!H:!V:NTrees=400:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.20:UseBaggedBoost:BaggedSampleFraction=0.8:SeparationType=GiniIndex:nCuts=15:MaxDepth=3")
+    if "BDTG200" in mlist:
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG200", "!H:!V:NTrees=200:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.20:UseBaggedBoost:BaggedSampleFraction=0.8:SeparationType=GiniIndex:nCuts=15:MaxDepth=3")
+    if "BDTG225" in mlist:
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG225", "!H:!V:NTrees=225:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.20:UseBaggedBoost:BaggedSampleFraction=0.8:SeparationType=GiniIndex:nCuts=15:MaxDepth=3:NegWeightTreatment=Pray")
+    if "BDTGt1" in mlist:
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTGt1", "!H:!V:NTrees=400:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5")
+    if "BDTG200t1" in mlist:
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG200t1", "!H:!V:NTrees=200:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5")
 
+    # BDT Defalut: MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20
     if "BDT" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT", "!H:!V:NTrees=400:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT", "!H:!V:NTrees=400:MinNodeSize=5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
 
     if "BDT200" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT200", "!H:!V:NTrees=200:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT200", "!H:!V:NTrees=200:MinNodeSize=5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
 
     if "BDT100" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT100", "!H:!V:NTrees=100:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT100", "!H:!V:NTrees=100:MinNodeSize=5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
 
     if "BDT850" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT850", "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT850", "!H:!V:NTrees=850:MinNodeSize=5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
 
     if "BDT50" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT50", "!H:!V:NTrees=50:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDT50", "!H:!V:NTrees=50:MinNodeSize=5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" )
 
 
 
