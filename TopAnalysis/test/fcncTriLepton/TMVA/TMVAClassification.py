@@ -54,8 +54,8 @@ DEFAULT_INFNAME  = "tmva_class_example.root"
 DEFAULT_TREESIG  = "TreeS"
 DEFAULT_TREEBKG  = "TreeB"
 #DEFAULT_METHODS  = "Likelihood,LikelihoodD,MLPBNN,BDT,BDTG"
-#DEFAULT_METHODS = "BDT,BDTG,BDT850,BDT200,BDT100,BDT50,BDTG200,BDTG225,BDTGt1,BDTG200t1"
-DEFAULT_METHODS = "BDT,BDTG,BDTG200,BDTG225,BDTGt1,BDTG200t1"
+DEFAULT_METHODS = "BDT,BDTG,BDT850,BDT200,BDT100,BDT50,BDTG200,BDTG225,BDTGt1,BDTG_TT"
+#DEFAULT_METHODS = "BDTG_TT"
 DEFAULT_WEIGHTDIR = "dataset"
 DEFAULT_MODE = ["ElElEl", "MuElEl", "MuMuMu", "ElMuMu"]
 DEFAULT_CUT = ""
@@ -133,6 +133,7 @@ def main():
             channel = a.replace(' ',',').split(',')
 
     # Print methods
+    print channel
     mlist = methods.replace(' ',',').split(',')
     print "=== TMVAClassification: use method(s)..."
     for m in mlist:
@@ -253,8 +254,11 @@ def main():
     #inputBkgList = ["DYJets", "ttJets", "ZZ", "WZ"] 
     #high fraction in the Top pair Signal Region & all channel: WZ > DYjet > ttV > ZZ > SingleTopV(tZq) > ttjets > others
     #inputBkgList = ["WZ", "DYJets", "ttV", "ZZ"]
+
+    # Backgrounds for training in TTZct (Since June 24th)
     inputBkgList = ["WZ", "ZZ"]
-    #inputBkgList = ["DYJets", "ttJets"]
+    # Backgrounds are excepted when training with TTZct signal 
+    #inputBkgList = ["DYJets", "SingleTop", "ttJets", "WW", "SingleTopV", "ttV", "ttH"]
 
     for mo in modes:
       for proc in procInfo:
@@ -295,15 +299,16 @@ def main():
         trees.append([f, t_bkg])
 
     # Apply additional cuts on the signal and background sample.
- 
+
+    print channel 
     # TTSR
-    if "TTZct" or "TTZut" in channel:
+    if "TTZct" in channel or "TTZut" in channel:
       mycutSig = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet >= 2 && nGoodJet <= 3 && nBjet >= 1 && TMath::Abs(GoodLeptonCode) == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
       mycutBkg = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet >= 2 && nGoodJet <= 3 && nBjet >= 1 && TMath::Abs(GoodLeptonCode) == 111 && nGoodLepton == 3 && LeadingLepton_pt >25 && Z_charge == 0 && W_MT <= 300" )
     # STSR
-    elif "STZct" or "STZut" in channel:
-      mycutSig = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet == 1 && nBjet == 1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
-      mycutBkg = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet == 1 && nBjet == 1 && GoodLeptonCode == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
+    elif "STZct" in channel or "STZut" in channel:
+      mycutSig = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet == 1 && nBjet == 1 && TMath::Abs(GoodLeptonCode) == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
+      mycutBkg = TCut( "HLT == 1 && TMath::Abs(Z_mass-91.2) < 7.5 && nGoodJet == 1 && nBjet == 1 && TMath::Abs(GoodLeptonCode) == 111 && nGoodLepton == 3 && LeadingLepton_pt > 25 && Z_charge == 0 && W_MT <= 300" )
     elif DEFAULT_CHANNEL == channel:
       mycutSig = TCut( cut )
       mycutBkg = TCut( cut )
@@ -312,15 +317,78 @@ def main():
     # used for TMVA training and testing
     # "SplitMode=Random" means that the input events are randomly shuffled before
     # splitting them into training and test samples
-    #if channel == "TTZct":
-    if "TTZct" in channel:
-      #options = "nTrain_Signal=85291:nTrain_Background=425919:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 8:2
-      options = "nTrain_Signal=74630:nTrain_Background=58420:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
-      #options = "nTrain_Signal=63968:nTrain_Background=319439:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 6:4
-      #options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
-    if "TTZut" in channel:
-      #options = "nTrain_Signal=:nTrain_Background=:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
-      options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+
+    #by mode
+    # 1. Train:Test = 7:3
+    # 1) (number of entries of each mode)*0.7
+    sig_num_TTZct = ['11194', '15014', '28438', '19983']
+    sig_num_TTZut = ['10382', '13913', '26353', '18392']
+    sig_num_STZct = ['7456', '10296', '17715', '12443']
+    sig_num_STZut= ['5789', '7905', '13828', '9750']
+    bkg_num_TT = ['17973', '10651', '21398', '33436'] # bkg = WZ, ZZ
+    bkg_num_ST = ['27525', '12827', '25801', '53956'] # bkg = WZ, ZZ
+    bkg_num_others = ['43284', '58631', '110085', '77351']
+    # 2) total number of entries
+    tot_sig_num_TTZct = 106614
+    tot_sig_num_TTZut = 98627
+    tot_sig_num_STZct = 68442
+    tot_sig_num_STZut = 53246
+    tot_bkg_num_TT = 119224 # bkg = WZ, ZZ
+    tot_bkg_num_ST = 171585 # bkg = WZ, ZZ
+    mode_num = -1 # Using @ all mode (For test BDT option)
+    if len(modes) == 1:
+        for mo in modes:
+            if mo == "ElElEl": mode_num = 0
+            elif mo == "MuElEl": mode_num = 1
+            elif mo == "MuMuMu": mode_num = 2
+            elif mo == "ElMuMu": mode_num = 3
+
+    if len(inputSigList) == 1:
+        if "TTZct" in channel:
+             #options = "nTrain_Signal=85291:nTrain_Background=425919:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 8:2
+            # For test all mode (3E,1M2E,3M,1E2M) & bkg: WZ & ZZ 
+            if mode_num < 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+str(tot_sig_num_TTZct*0.7)+":nTrain_Background="+str(tot_bkg_num_TT*0.7)+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+            # For training (bkg: WZ & ZZ)
+            elif mode_num >= 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+sig_num_TTZct[mode_num]+":nTrain_Background="+bkg_num_TT[mode_num]+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
+            # For evaluation (get a mva score)
+            elif mode_num >= 0 and len(inputBkgList) != 2:
+                options = "nTrain_Signal="+sig_num_TTZct[mode_num]+":nTrain_Background="+bkg_num_others[mode_num]+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
+            else:
+                options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+
+                #options = "nTrain_Signal=63968:nTrain_Background=319439:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 6:4
+                #options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+        elif "TTZut" in channel:
+            #options = "nTrain_Signal=:nTrain_Background=:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
+            # For test all mode (3E,1M2E,3M,1E2M) & bkg: WZ & ZZ
+            if mode_num < 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+str(tot_sig_num_TTZut*0.7)+":nTrain_Background="+str(tot_bkg_num_TT*0.7)+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+            # For training (bkg: WZ & ZZ)
+            elif mode_num >= 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+sig_num_TTZut[mode_num]+":nTrain_Background="+bkg_num_TT[mode_num]+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+            # For evaluation (get a mva score)
+            elif mode_num >= 0 and len(inputBkgList) != 2:
+                options = "nTrain_Signal="+sig_num_TTZut[mode_num]+":nTrain_Background="+bkg_num_others[mode_num]+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+            else:
+                options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+        elif "STZct" in channel:
+            if mode_num < 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+str(tot_sig_num_STZct*0.7)+":nTrain_Background="+str(tot_bkg_num_ST*0.7)+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+            elif mode_num >= 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+sig_num_STZct[mode_num]+":nTrain_Background="+bkg_num_ST[mode_num]+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
+            else:
+                options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+        elif "STZut" in channel:
+            if mode_num < 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+str(tot_sig_num_STZut*0.7)+":nTrain_Background="+str(tot_bkg_num_ST*0.7)+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+            elif mode_num >= 0 and len(inputBkgList) == 2:
+                options = "nTrain_Signal="+sig_num_STZut[mode_num]+":nTrain_Background="+bkg_num_ST[mode_num]+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
+            else:
+                options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
+        else:
+            options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
 
     dataloader.PrepareTrainingAndTestTree( mycutSig, mycutBkg, options )
 
@@ -345,8 +413,8 @@ def main():
         factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG225", "!H:!V:NTrees=225:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.20:UseBaggedBoost:BaggedSampleFraction=0.8:SeparationType=GiniIndex:nCuts=15:MaxDepth=3:NegWeightTreatment=Pray")
     if "BDTGt1" in mlist:
         factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTGt1", "!H:!V:NTrees=400:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5")
-    if "BDTG200t1" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG200t1", "!H:!V:NTrees=200:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5")
+    if "BDTG_TT" in mlist:
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG_TT", "!H:!V:NTrees=200:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5")
 
     # BDT Defalut: MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20
     if "BDT" in mlist:
@@ -405,7 +473,7 @@ def main():
     factory.TestAllMethods()
     
     # Evaluate MVAs
-    factory.EvaluateAllMethods()    
+    factory.EvaluateAllMethods()
     
     # Save the output.
     outputFile.Close()
