@@ -102,7 +102,7 @@ def main():
     mode        = DEFAULT_MODE
     cut         = DEFAULT_CUT
     channel     = DEFAULT_CHANNEL
-    
+
     for o, a in opts:
         if o in ("-?", "-h", "--help", "--usage"):
             usage()
@@ -217,7 +217,7 @@ def main():
     # Set individual event weights (the variables must exist in the original TTree)
     #    for signal    : factory.SetSignalWeightExpression    ("weight1*weight2");
     #    for background: factory.SetBackgroundWeightExpression("weight1*weight2");
-    dataloader.SetWeightExpression("xsecNorm")
+    #dataloader.SetWeightExpression("xsecNorm")
 
     dataloader.AddSpectator( "GoodLeptonCode" )
     dataloader.AddSpectator( "nGoodLepton" )
@@ -227,9 +227,13 @@ def main():
     # Read input data
     #if gSystem.AccessPathName( infname ) != 0: gSystem.Exec( "wget http://root.cern.ch/files/" + infname )
     rootDir = '%s/src/TZWi/TopAnalysis/test/fcncTriLepton/' % os.environ["CMSSW_BASE"]
+    kisti_store = '/xrootd/store/user/heewon/'
     ntupleDir = 'ntuple_2016'
     dName = rootDir + ntupleDir
+
     procInfo = yaml.load(open(rootDir+"config/grouping.yaml").read())["processes"]
+    crosssection = yaml.load(open(rootDir+"config/crosssection.yaml").read())["crosssection"]
+    entries = yaml.load(open(rootDir+"config/crosssection.yaml").read())["Entries"]
     datasetInfo = {}
     #for f in glob(rootDir+"config/dataset/MC*16*.yaml"):
     #  for datasetGroup, dataset in yaml.load(open(f).read())['dataset'].iteritems():
@@ -275,6 +279,15 @@ def main():
                 fLists_bkg.append(glob(dName+"/*/%s/%s" % (mo, datasetName[1:].replace('/','.'))))
     print(fLists_sig)
 
+    # Because of xsecNorm bug
+    # LHEScaleWeight[4] : norminal
+    # 1. weight before apply TriggerSF & seperate el/mu SF
+    dataloader.SetSignalWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*LeptonSF*xsecNorm")
+    dataloader.SetBackgroundWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*LeptonSF")
+    # 2. weight after apply TriggerSF & seperate el/mu SF
+    #dataloader.SetSignalWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*Trigger_SF*Electron_SF*MuonID_SF*MuonISO_SF*xsecNorm")
+    #dataloader.SetBackgroundWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*Trigger_SF*Electron_SF*MuonID_SF*MuonISO_SF")
+
     trees = []
     for fsig in fLists_sig:
       #print(fsig[0])
@@ -289,7 +302,12 @@ def main():
 
     for fbkg in fLists_bkg:
       #print(fbkg[0])
-      backgroundWeight = 1.0
+      #backgroundWeight = 1.0
+      for xsec in crosssection:
+          for num in entries:
+              if xsec in fbkg[0] and num == xsec :
+                  backgroundWeight = (crosssection[xsec]/entries[num])*35900
+      print backgroundWeight
       file_list = os.listdir(fbkg[0])
       for file_l in file_list:
         f = TFile.Open(fbkg[0]+"/"+file_l)
