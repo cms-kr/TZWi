@@ -166,7 +166,8 @@ def main():
     # All TMVA output can be suppressed by removing the "!" (not) in 
     # front of the "Silent" argument in the option string
     factory = TMVA.Factory( "TMVAClassification", outputFile, 
-                            "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" )
+                            #"!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" )
+                            "!V:!Silent:Color:DrawProgressBar:AnalysisType=Classification" )
 
     # Set verbosity
     factory.SetVerbose( verbose )
@@ -284,6 +285,7 @@ def main():
     # 1. weight before apply TriggerSF & seperate el/mu SF
     dataloader.SetSignalWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*LeptonSF*xsecNorm")
     dataloader.SetBackgroundWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*LeptonSF")
+    #dataloader.SetBackgroundWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)")
     # 2. weight after apply TriggerSF & seperate el/mu SF
     #dataloader.SetSignalWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*Trigger_SF*Electron_SF*MuonID_SF*MuonISO_SF*xsecNorm")
     #dataloader.SetBackgroundWeightExpression("LHEScaleWeight[4]*genWeight/abs(genWeight)*puWeight*BtagWeight*Trigger_SF*Electron_SF*MuonID_SF*MuonISO_SF")
@@ -301,13 +303,18 @@ def main():
         trees.append([f, t_sig])
 
     for fbkg in fLists_bkg:
-      #print(fbkg[0])
-      #backgroundWeight = 1.0
+      print(fbkg[0])
+      backgroundWeight = 1.0
       for xsec in crosssection:
           for num in entries:
-              if xsec in fbkg[0] and num == xsec :
-                  backgroundWeight = (crosssection[xsec]/entries[num])*35900
-      print backgroundWeight
+              if num == "TT":
+                  name = "MC2016." + num + ".powheg"
+              else:
+                  name = "MC2016." + num
+              for dataset_key in datasetInfo["dataset"][name].keys():
+                  if dataset_key[1:] == (fbkg[0].split('/')[-1]).replace('.','/') and num == xsec:
+                      backgroundWeight = (crosssection[xsec]/entries[num])*35900
+      #print backgroundWeight
       file_list = os.listdir(fbkg[0])
       for file_l in file_list:
         f = TFile.Open(fbkg[0]+"/"+file_l)
@@ -364,6 +371,7 @@ def main():
     if len(inputSigList) == 1:
         if "TTZct" in channel:
              #options = "nTrain_Signal=85291:nTrain_Background=425919:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 8:2
+             #options = "nTrain_Signal=63968:nTrain_Background=319439:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 6:4
             # For test all mode (3E,1M2E,3M,1E2M) & bkg: WZ & ZZ 
             if mode_num < 0 and len(inputBkgList) == 2:
                 options = "nTrain_Signal="+str(tot_sig_num_TTZct*0.7)+":nTrain_Background="+str(tot_bkg_num_TT*0.7)+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
@@ -376,10 +384,7 @@ def main():
             else:
                 options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
 
-                #options = "nTrain_Signal=63968:nTrain_Background=319439:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 6:4
-                #options = "nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
         elif "TTZut" in channel:
-            #options = "nTrain_Signal=:nTrain_Background=:nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V" #train:test = 7:3
             # For test all mode (3E,1M2E,3M,1E2M) & bkg: WZ & ZZ
             if mode_num < 0 and len(inputBkgList) == 2:
                 options = "nTrain_Signal="+str(tot_sig_num_TTZut*0.7)+":nTrain_Background="+str(tot_bkg_num_TT*0.7)+":nTest_Signal=0:nTest_Background=0:SplitMode=Random:NormMode=NumEvents:!V"
@@ -432,7 +437,7 @@ def main():
     if "BDTGt1" in mlist:
         factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTGt1", "!H:!V:NTrees=400:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5")
     if "BDTG_TT" in mlist:
-        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG_TT", "!H:!V:NTrees=200:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5")
+        factory.BookMethod( dataloader, TMVA.Types.kBDT, "BDTG_TT", "!H:!V:NTrees=200:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.50:SeparationType=GiniIndex:nCuts=20:MaxDepth=5:NegWeightTreatment=Pray:NegWeightTreatment=IgnoreNegWeightsInTraining")
 
     # BDT Defalut: MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20
     if "BDT" in mlist:
