@@ -2,6 +2,8 @@ import ROOT
 import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
+import yaml
+from glob import *
 import os
 from ROOT import TLorentzVector
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
@@ -18,20 +20,12 @@ class FCNCMVAinput(Module, object):
         self.out = wrappedOutputTree
         # Basic input variables
         self.out.branch("MVAinput_Status", "i")
-        self.out.branch("MVAinput_nGoodJet", "i")
         self.out.branch("MVAinput_WLZL1_dPhi", "F")
         self.out.branch("MVAinput_WLZL1_dR", "F")
         self.out.branch("MVAinput_WLZL2_dPhi", "F")
         self.out.branch("MVAinput_WLZL2_dR", "F")
         self.out.branch("MVAinput_ZL1ZL2_dPhi", "F")
         self.out.branch("MVAinput_ZL1ZL2_dR", "F")
-        self.out.branch("MVAinput_Z_mass", "F")
-        self.out.branch("MVAinput_W_mass", "F")
-        self.out.branch("MVAinput_ZWL_dPhi", "F")
-        self.out.branch("MVAinput_ZWL_dR", "F")
-        self.out.branch("MVAinput_MET", "F")
-        self.out.branch("MVAinput_MET_Phi", "F")
-        self.out.branch("MVAinput_TLepton_mass", "F")
         # Inputs for WZCR
         self.out.branch("MVAinput_J1_DeepJetB", "F")
         self.out.branch("MVAinput_J1_pt", "F")
@@ -42,7 +36,6 @@ class FCNCMVAinput(Module, object):
         self.out.branch("MVAinput_WLJ1_dPhi", "F")
         self.out.branch("MVAinput_WLJ1_dR", "F")
         # Inputs for TTCR
-        self.out.branch("MVAinput_nbJet", "i")
         self.out.branch("MVAinput_bJ_DeepJetB", "F")
         self.out.branch("MVAinput_qJ_DeepJetB", "F")
         self.out.branch("MVAinput_bJ_pt", "F")
@@ -61,10 +54,7 @@ class FCNCMVAinput(Module, object):
         self.out.branch("MVAinput_ZL2bJ_dR", "F")
         self.out.branch("MVAinput_ZL2qJ_dPhi", "F")
         self.out.branch("MVAinput_ZL2qJ_dR", "F")
-        #self.out.branch("MVAinput_SMTop_mass", "F")
-        #self.out.branch("MVAinput_FCNCTop_mass", "F")
-        #self.out.branch("MVAinput_TopTop_dEta", "F")
-        #self.out.branch("MVAinput_TopTop_dPhi", "F")
+        self.out.branch("xsecNorm", "F")
 
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -73,35 +63,59 @@ class FCNCMVAinput(Module, object):
     def analyze(self, event):
 
         ## initialize ##
+        info = {}
+        xsecfile = "%s/src/TZWi/TopAnalysis/test/fcncTriLepton/config/crosssection.yaml" % os.environ["CMSSW_BASE"]
+        info.update(yaml.load(open(xsecfile)))
+        #info.update(yaml.load(open("../../test/fcncTriLepton/config/datasets/MC.RunIISummer16.central.yaml")))
+        info.update(yaml.load(open("%s/src/TZWi/TopAnalysis/test/fcncTriLepton/config/datasets/MC.RunIISummer16.central.yaml" % os.environ["CMSSW_BASE"])))
+        info['dataset'].update(yaml.load(open("%s/src/TZWi/TopAnalysis/test/fcncTriLepton/config/datasets/MC.RunIISummer16.rareprocess.yaml" % os.environ["CMSSW_BASE"]))['dataset'])
 
-        # Just copy from former parts
-        self.out.fillBranch("MVAinput_nGoodJet", event._tree.b_out_nGoodJet)
-        self.out.fillBranch("MVAinput_Z_mass", event._tree.b_out_Z_mass)
-        self.out.fillBranch("MVAinput_W_mass", event._tree.b_out_W_MT)
-        self.out.fillBranch("MVAinput_ZWL_dPhi", event._tree.b_out_TriLepton_WleptonZdPhi)
-        self.out.fillBranch("MVAinput_ZWL_dR", event._tree.b_out_TriLepton_WleptonZdR)
-        self.out.fillBranch("MVAinput_MET", event._tree.b_out_MET_pt)
-        self.out.fillBranch("MVAinput_MET_Phi", event._tree.b_out_MET_phi)
-        self.out.fillBranch("MVAinput_TLepton_mass", event._tree.b_out_TriLepton_mass)
-        self.out.fillBranch("MVAinput_nbJet", event._tree.b_out_nBjet)
+        rootpath = ROOT.gDirectory.GetPath()
+        rootsample1 = rootpath.split('/')[3]
+        rootsample = rootsample1.split('.')[0]
+
+        xsecitem = info['crosssection'].items()
+        entryitem = info['Entries'].items()
+        dataitem = info['dataset'].items()
+
+        fileset = []
+        fileroute = []
+
+        for i, items in enumerate(dataitem):
+            fileset0 = items[0]
+            fileset1 = fileset0.split('.')[1]
+            fileset.append(fileset1)
+            fileroutekey0 = items[1].keys()
+            fileroute.append(fileroutekey0)
+
+        for j, routes in enumerate(fileroute):
+            for k, routeitem in enumerate(routes):
+                if rootsample in routeitem:
+                    findsample = fileset[j]
+
+        targetxsecweight = 1.0
+        targetentry = 1
+        if ( ( rootsample == "DoubleEG" ) or ( rootsample == "DoubleMuon" ) ):
+            targetxsecweight = 1.0
+        else:
+            for i, xsecslot in enumerate(xsecitem):
+                if ( findsample == xsecslot[0] ):
+                    targetxsec = xsecslot[1]
+            for i, entryslot in enumerate(entryitem):
+                if ( findsample == entryslot[0] ):
+                    targetentry = entryslot[1]
+
+            targetxsecweight = (targetxsec/targetentry)*35900
 
         # Basic event selection for WZCR/TTCR
         if ( ( event._tree.b_out_GoodLeptonCode != 111 ) or ( event._tree.b_out_nGoodLepton > 3 ) or ( event._tree.b_out_W_MT > 300 ) ):
             self.out.fillBranch("MVAinput_Status", 0)
-            #self.out.fillBranch("MVAinput_nGoodJet", 0)
             self.out.fillBranch("MVAinput_WLZL1_dPhi", 0)
             self.out.fillBranch("MVAinput_WLZL1_dR", 0)
             self.out.fillBranch("MVAinput_WLZL2_dPhi", 0)
             self.out.fillBranch("MVAinput_WLZL2_dR", 0)
             self.out.fillBranch("MVAinput_ZL1ZL2_dPhi", 0)
             self.out.fillBranch("MVAinput_ZL1ZL2_dR", 0)
-            #self.out.fillBranch("MVAinput_Z_mass", 0)
-            #self.out.fillBranch("MVAinput_W_mass", 0)
-            #self.out.fillBranch("MVAinput_ZWL_dPhi", 0)
-            #self.out.fillBranch("MVAinput_ZWL_dR", 0)
-            #self.out.fillBranch("MVAinput_MET", 0)
-            #self.out.fillBranch("MVAinput_MET_Phi", 0)
-            #self.out.fillBranch("MVAinput_TLepton_mass", 0)
             self.out.fillBranch("MVAinput_J1_DeepJetB", 0)
             self.out.fillBranch("MVAinput_J1_pt", 0)
             self.out.fillBranch("MVAinput_ZL1J1_dPhi", 0)
@@ -110,7 +124,6 @@ class FCNCMVAinput(Module, object):
             self.out.fillBranch("MVAinput_ZL2J1_dR", 0)
             self.out.fillBranch("MVAinput_WLJ1_dPhi", 0)
             self.out.fillBranch("MVAinput_WLJ1_dR", 0)
-            #self.out.fillBranch("MVAinput_nbJet", 0)
             self.out.fillBranch("MVAinput_bJ_DeepJetB", 0)
             self.out.fillBranch("MVAinput_qJ_DeepJetB", 0)
             self.out.fillBranch("MVAinput_bJ_pt", 0)
@@ -129,10 +142,7 @@ class FCNCMVAinput(Module, object):
             self.out.fillBranch("MVAinput_ZL2bJ_dR", 0)
             self.out.fillBranch("MVAinput_ZL2qJ_dPhi", 0)
             self.out.fillBranch("MVAinput_ZL2qJ_dR", 0)
-            #self.out.fillBranch("MVAinput_SMTop_mass", 0)
-            #self.out.fillBranch("MVAinput_FCNCTop_mass", 0)
-            #self.out.fillBranch("MVAinput_TopTop_dEta", 0)
-            #self.out.fillBranch("MVAinput_TopTop_dPhi", 0)
+            self.out.fillBranch("xsecNorm", targetxsecweight)
 
             return True
         else:
@@ -161,7 +171,7 @@ class FCNCMVAinput(Module, object):
 
             # For WZCR case
 
-            if ( ( abs( ConstZ.M() - 91.2) < 7.5 ) and ( event._tree.b_out_nGoodJet >= 1 ) and\
+            if ( ( abs( ConstZ.M() - 91.2) < 7.5 ) and ( event._tree.b_out_nGoodJet >= 1 ) and ( event._tree.b_out_W_MT <= 300) and\
                ( event._tree.b_out_nBjet == 0 ) and ( event._tree.b_out_LeadingLepton_pt > 25 ) and ( event._tree.b_out_Z_charge == 0 ) ):
 
                 Jet1.SetPtEtaPhiM(event._tree.b_out_GoodJet_pt[0], event._tree.b_out_GoodJet_eta[0], event._tree.b_out_GoodJet_phi[0], event._tree.b_out_GoodJet_mass[0])
@@ -175,11 +185,12 @@ class FCNCMVAinput(Module, object):
                 self.out.fillBranch("MVAinput_WLJ1_dPhi", WLepton.DeltaPhi(Jet1))
                 self.out.fillBranch("MVAinput_WLJ1_dR", WLepton.DeltaR(Jet1))
                 self.out.fillBranch("MVAinput_Status", 1) # Status flag 1 : WZCR
+                self.out.fillBranch("xsecNorm", targetxsecweight)
 
                 return True
             # For TTCR case
 
-            elif ( not( 20 < abs(ConstZ.M() - 91.2) < 60 ) and ( 2 <= event._tree.b_out_nGoodJet <= 3) and\
+            elif (  ( 2 <= event._tree.b_out_nGoodJet <= 3) and ( event._tree.b_out_W_MT <= 300) and\
                     ( event._tree.b_out_nBjet >= 1 ) and ( event._tree.b_out_LeadingLepton_pt > 25 ) and ( event._tree.b_out_Z_charge == 0 ) ):
 
                 BJet = TLorentzVector()
@@ -192,11 +203,6 @@ class FCNCMVAinput(Module, object):
                 if ( btagBj < btagQj ):
                     BJet, QJet = QJet, BJet
                     btagBj, btagQj = btagBj, btagQj
-
-                #SMTop = TLorentzVector()
-                #FCNCTop = TLorentzVector()
-                #SMTop.SetPtEtaPhiM(event._tree.b_out_KinTopWb_pt, event._tree.b_out_KinTopWb_eta, event._tree.b_out_KinTopWb_phi, event._tree.b_out_KinTopWb_mass)
-                #FCNCTop.SetPtEtaPhiM(event._tree.b_out_KinTopZq_pt, event._tree.b_out_KinTopZq_eta, event._tree.b_out_KinTopZq_phi, event._tree.b_out_KinTopZq_mass)
 
                 self.out.fillBranch("MVAinput_bJ_DeepJetB", btagBj)
                 self.out.fillBranch("MVAinput_qJ_DeepJetB", btagQj)
@@ -216,20 +222,8 @@ class FCNCMVAinput(Module, object):
                 self.out.fillBranch("MVAinput_ZL2bJ_dR", Z2Lepton.DeltaR(BJet))
                 self.out.fillBranch("MVAinput_ZL2qJ_dPhi", Z2Lepton.DeltaPhi(QJet))
                 self.out.fillBranch("MVAinput_ZL2qJ_dR", Z2Lepton.DeltaR(QJet))
-            # Top varlables not handled at here.
-            #    if ( event._tree.b_out_KinTop_status == 1 ): # Check 2 top are reconstructed
-            #    self.out.fillBranch("MVAinput_SMTop_mass", SMTop[3])
-            #    self.out.fillBranch("MVAinput_FCNCTop_mass", FCNCTop[3])
-            #    self.out.fillBranch("MVAinput_TopTop_dEta", abs(SMTop[1] - FCNCTop[1]))
-            #    self.out.fillBranch("MVAinput_TopTop_dPhi", abs(SMTop[2] - FCNCTop[2]))
-            #    self.out.fillBranch("MVAinput_Status", 2) # Status flag 2 : TTCR
-            #    else:
-            #        self.out.fillBranch("MVAinput_SMTop_mass", 0)
-            #        self.out.fillBranch("MVAinput_FCNCTop_mass", 0)
-            #        self.out.fillBranch("MVAinput_TopTop_dEta", 0)
-            #        self.out.fillBranch("MVAinput_TopTop_dPhi", 0)
-            #        self.out.fillBranch("MVAinput_Status", 3) # Status flag 3 : TTCR but 2 top are not reconstructed
-
+                self.out.fillBranch("MVAinput_Status", 2) # Status flag 2 : TTCR/SR
+                self.out.fillBranch("xsecNorm", targetxsecweight)
         return True
 
 fcncMVAinput = lambda: FCNCMVAinput()

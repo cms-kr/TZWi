@@ -31,3 +31,5 @@ keep puWeightUp
 keep puWeightDown
 keep BtagWeight*
 keep KinTop*
+keep MVAinput*
+keep xsecNorm

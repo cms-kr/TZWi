@@ -96,3 +96,41 @@ crosssection:
   TT_FCNC-TtoHJ_aTleptonic_hct: 0.0943
   TT_FCNC-aTtoHJ_Tleptonic_hut: 0.0943
   TT_FCNC-aTtoHJ_Tleptonic_hct: 0.0943
+
+Entries:
+  DYJetsToLL_M-50    : 80924255
+  DYJetsToLL_M-10to50: 78843820
+
+  TT            : 76915549
+
+  ST_s_4f_lepton: 622990
+  ST_t          : 67105876
+  ST_tW         : 6952830
+  STbar_t       : 38811017
+  STbar_tW      : 6933094
+
+  TTZToQQ     : 351164
+  TTZToLLNuNu : 6420825
+  TTWJetsToQQ : 430310
+  TTWJetsToLNu: 2716249
+
+  ZZTo4L   : 88247607
+  ZZTo2L2Nu: 57586850
+  ZZTo2L2Q : 496436
+
+  WZTo2L2Q   : 15879472
+  WZTo3LNu   : 22260518
+
+  WWTo2L2Nu: 1999000
+
+  tZq_ll : 3618998
+
+  ttHTobb   : 3799066
+  ttHToNonbb: 3905798
+
+  ST_FCNC-TLL_zut: 1999031
+  ST_FCNC-TLL_zct: 2000000
+  TT_FCNC-T2ZJ_zut: 1042395
+  TT_FCNC-T2ZJ_zct: 988009
+  TT_FCNC-aT2ZJ_zut: 1046339
+  TT_FCNC-aT2ZJ_zct: 1055193
